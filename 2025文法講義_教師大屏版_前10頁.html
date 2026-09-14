@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025 英文文法講義 V7 ｜ 教師大屏互動版（前10頁完整全覽）</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14pt; }
+body {
+  font-family: "Times New Roman", "標楷體", "DFKai-SB", "BiauKai", serif;
+  background: #eef4fb;
+  color: #1a1a2e;
+  padding-top: 60px;
+  line-height: 1.65;
+}
+.classroom-toolbar {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.95); border-radius: 40px;
+  padding: 6px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+}
+.tool-btn {
+  background: none; border: none; font-size: 1.35rem; cursor: pointer;
+  border-radius: 50%; width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .1s;
+}
+.tool-btn:hover { background: #dbeafe; transform: scale(1.08); }
+.toolbar-divider { width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px; }
+.pen-options { display: none; align-items: center; gap: 5px; }
+.pen-options.open { display: flex; }
+.color-dot {
+  width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: border-color .15s, transform .1s;
+}
+.color-dot:hover { transform: scale(1.15); }
+.color-dot.active { border-color: #1e40af; transform: scale(1.15); }
+.size-btn {
+  background: #f1f5f9; border: 1px solid #cbd5e1;
+  border-radius: 6px; padding: 2px 8px; font-size: 0.72rem;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.size-btn.active, .size-btn:hover { background: #bfdbfe; font-weight: bold; }
+.sub-divider { width: 1px; height: 16px; background: #cbd5e1; margin: 0 3px; }
+.toc-wrapper { position: relative; }
+.toc-menu {
+  display: none; position: absolute; top: 46px; left: 0;
+  background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  min-width: 300px; max-height: 80vh; overflow-y: auto; padding: 8px 0; z-index: 2000;
+}
+.toc-menu.open { display: block; }
+.toc-menu-title {
+  padding: 6px 16px 4px; font-size: 0.75rem; color: #64748b; font-weight: bold;
+  letter-spacing: .05em; border-bottom: 1px solid #f1f5f9;
+}
+.toc-menu-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 16px; cursor: pointer; transition: background .1s; font-size: 0.84rem;
+}
+.toc-menu-item:hover { background: #eff6ff; }
+.toc-page-badge {
+  font-size: 0.7rem; background: #dbeafe; color: #1e40af; border-radius: 8px; padding: 2px 8px; font-weight: bold;
+}
+.page-container {
+  display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 15px 16px 80px;
+}
+.page {
+  background: white; width: 210mm; min-height: 297mm; padding: 13mm 16mm;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12); border-radius: 4px;
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+}
+.chapter-banner {
+  background: linear-gradient(135deg, #0f4c81, #0284c7); color: white;
+  border-radius: 8px; padding: 10px 18px 8px; margin-bottom: 12px;
+}
+.chapter-banner .ch-tag { font-size: 0.72rem; opacity: .85; letter-spacing: .08em; margin-bottom: 2px; }
+.chapter-banner h1 { font-size: 1.12rem; font-weight: bold; letter-spacing: .04em; }
+.chapter-banner .ch-sub { font-size: 0.74rem; opacity: .9; margin-top: 3px; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.toc-item {
+  display: flex; align-items: center; gap: 8px; background: #f0f7fc;
+  border-radius: 8px; padding: 8px 12px; font-size: 0.82rem; cursor: pointer;
+  transition: background .15s, transform .1s; border-left: 3px solid #0284c7;
+}
+.toc-item:hover { background: #dbeafe; transform: translateY(-1px); }
+.toc-item .pg { font-size: 0.72rem; color: #0284c7; margin-left: auto; font-weight: bold; }
+.task-box {
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+  padding: 8px 12px; margin-bottom: 10px; font-size: 0.84rem;
+}
+.task-item { margin-bottom: 4px; line-height: 1.5; }
+.task-item:last-child { margin-bottom: 0; }
+.badge-task {
+  display: inline-block; padding: 1px 6px; border-radius: 4px;
+  font-size: 0.72rem; font-weight: bold; color: white; margin-right: 4px;
+}
+.badge-blue { background: #1f4e79; }
+.badge-red { background: #9c0006; }
+.badge-green { background: #548235; }
+.info-box {
+  background: #f0f7fc; border-left: 4px solid #0284c7; border-radius: 0 8px 8px 0;
+  padding: 7px 12px; margin: 6px 0; font-size: 0.86rem;
+}
+.info-box.tip { border-color: #059669; background: #ecfdf5; }
+.info-box.warn { border-color: #d97706; background: #fffbeb; }
+.info-box.danger { border-color: #dc2626; background: #fef2f2; }
+.info-box .label { font-weight: bold; font-size: 0.78rem; letter-spacing: .04em; color: #0f4c81; margin-bottom: 2px; }
+.info-box.tip .label { color: #065f46; }
+.info-box.warn .label { color: #92400e; }
+.info-box.danger .label { color: #b91c1c; }
+.pos-title-bar {
+  display: flex; align-items: center; gap: 8px; margin: 10px 0 6px;
+  font-weight: bold; font-size: 0.95rem; border-bottom: 2px solid #0284c7;
+  padding-bottom: 3px; color: #0f4c81;
+}
+.pos-badge {
+  background: #0f4c81; color: white; border-radius: 20px;
+  padding: 2px 10px; font-size: 0.78rem; font-weight: bold; white-space: nowrap;
+}
+.custom-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 8px 0; }
+.custom-table th { background: #0f4c81; color: white; padding: 5px 8px; text-align: center; font-weight: bold; }
+.custom-table td { border: 1px solid #cbd5e1; padding: 5px 8px; text-align: center; vertical-align: middle; }
+.custom-table tr:nth-child(even) td { background: #f8fafc; }
+.custom-table td.col-head { background: #eff6ff; font-weight: bold; color: #0f4c81; }
+.pron-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin: 8px 0; }
+.pron-table th { background: #0f4c81; color: white; padding: 4px 5px; text-align: center; font-size: 0.72rem; }
+.pron-table td { border: 1px solid #cbd5e1; padding: 5px 4px; text-align: center; cursor: pointer; transition: background .15s; }
+.pron-table td:hover { background: #eff6ff; }
+.pron-table tr:nth-child(odd) td { background: #f8fafc; }
+.pron-table .ph { background: #eff6ff !important; font-weight: bold; cursor: default; font-size: 0.72rem; color: #0f4c81; }
+.ans-reveal {
+  color: transparent; font-weight: bold; transition: color .25s;
+  border-bottom: 2px dashed #94a3b8; min-width: 24px; display: inline-block;
+  text-align: center; padding: 0 4px;
+}
+.interactive-item {
+  cursor: pointer; border-radius: 6px; padding: 4px 8px; margin: 2px 0;
+  transition: background .15s, border-left-color .15s; border-left: 3px solid transparent; font-size: 0.86rem;
+}
+.interactive-item:hover { background: #f0f7fc; border-left-color: #0284c7; }
+.interactive-item.show-one { border-left-color: #dc2626; background: #fef2f2; }
+.qa-block {
+  display: flex; align-items: flex-start; gap: 8px; cursor: pointer;
+  padding: 4px 8px; border-radius: 6px; margin: 3px 0; transition: background .15s; font-size: 0.86rem;
+}
+.qa-block:hover { background: #f0f7fc; }
+.qa-block.show-one { background: #fef2f2; }
+.qa-num {
+  min-width: 28px; background: #e2e8f0; border-radius: 4px; text-align: center;
+  padding: 1px 4px; font-size: 0.8rem; font-weight: bold; flex-shrink: 0; margin-top: 2px; color: #1e293b;
+}
+.qa-block.show-one .qa-num { background: #fecaca; color: #dc2626; }
+.qa-body { flex: 1; }
+.choices-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px; margin-top: 3px; font-size: 0.82rem;
+}
+.correct-choice { display: inline; padding: 0 2px; transition: all .2s; }
+.show-one .correct-choice, .show-ans .correct-choice {
+  color: #dc2626 !important; font-weight: bold !important; border: 2px solid #dc2626 !important;
+  border-radius: 14px !important; background: #fef2f2 !important; padding: 0 6px !important;
+}
+.show-one .ans-reveal, .show-ans .ans-reveal {
+  color: #dc2626 !important; border-bottom-color: #dc2626;
+}
+.body-p { font-size: 0.86rem; margin: 4px 0; line-height: 1.6; }
+.sub-title { font-weight: bold; font-size: 0.88rem; color: #0f4c81; margin: 8px 0 4px; }
+.example-p { font-size: 0.84rem; color: #334155; margin: 2px 0 2px 12px; }
+.highlight { background: #fef9c3; padding: 0 3px; border-radius: 3px; font-weight: bold; }
+.red-txt { color: #dc2626; font-weight: bold; }
+.blue-txt { color: #1d4ed8; font-weight: bold; }
+.reading-box {
+  background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px;
+  padding: 9px 14px; font-size: 0.81rem; line-height: 1.72; margin: 6px 0; color: #334155;
+}
+.blank-box {
+  display: inline-block; min-width: 28px; background: #dbeafe; border-radius: 4px;
+  padding: 0 4px; text-align: center; font-weight: bold; color: #1e40af; font-size: 0.8rem;
+}
+.page-footer {
+  margin-top: auto; padding-top: 8px; border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: #94a3b8;
+}
+.footer-label { font-weight: bold; color: #0f4c81; }
+.drawing-canvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none;
+}
+body.pen-mode .drawing-canvas { pointer-events: auto; cursor: crosshair; }
+body.show-ans .ans-reveal { color: #dc2626 !important; border-bottom-color: #dc2626; }
+body.show-ans .correct-choice {
+  color: #dc2626 !important; font-weight: bold !important; border: 2px solid #dc2626 !important;
+  border-radius: 14px !important; background: #fef2f2 !important; padding: 0 6px !important;
+}
+@media print {
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+  html, body { width: 100% !important; background: transparent !important; padding: 0 !important; }
+  .classroom-toolbar, .no-print, .drawing-canvas, .toc-menu { display: none !important; }
+  body { padding-top: 0 !important; }
+  .page-container { padding: 0 !important; gap: 0 !important; }
+  .page {
+    box-shadow: none !important; margin: 0 !important; width: 100% !important;
+    height: 275mm !important; max-height: 275mm !important; min-height: 0 !important;
+    padding: 8mm 12mm !important; page-break-after: always !important; break-after: page !important;
+    overflow: hidden !important;
+  }
+  .page:last-child { page-break-after: avoid !important; break-after: avoid !important; }
+  .correct-choice { color: inherit !important; font-weight: normal !important; border: none !important; background: transparent !important; padding: 0 !important; }
+  .ans-reveal { color: transparent !important; border-bottom-color: #94a3b8 !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="classroom-toolbar no-print">
+  <div class="toc-wrapper">
+    <button class="tool-btn" onclick="toggleToc(event)" title="章節目錄導覽">📑</button>
+    <div class="toc-menu" id="tocMenu">
+      <div class="toc-menu-title">📖 講義章節目錄導覽</div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc1')"><span>🗺 TABLE OF CONTENTS｜學習地圖</span><span class="toc-page-badge">封面</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc2')"><span>📋 全書章節目錄</span><span class="toc-page-badge">目錄</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc3')"><span>📌 基礎一：名詞 · 動詞概念</span><span class="toc-page-badge">P.1</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc4')"><span>📌 動詞三大特性 · 主動一致性練習</span><span class="toc-page-badge">P.2</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc5')"><span>📌 形容詞比較級 · 副詞用途與例句</span><span class="toc-page-badge">P.3</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc6')"><span>📌 副詞辨析 · 介詞練習 · 連接詞</span><span class="toc-page-badge">P.4</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc7')"><span>📌 助動詞 (情態/文法) · 可能性量尺</span><span class="toc-page-badge">P.5</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc8')"><span>📌 限定詞 · 疑問詞 · 統測實戰 Q1-8</span><span class="toc-page-badge">P.6</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc9')"><span>📌 統測閱讀題組 Q9-23</span><span class="toc-page-badge">P.7</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc10')"><span>📌 統測Q24 · 代名詞格表 · 主動搭配</span><span class="toc-page-badge">P.8</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc11')"><span>📌 主動搭配Q10 · 動詞三態 · 中英不同</span><span class="toc-page-badge">P.9</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc12')"><span>📌 基礎二：英文五大句型 (句型 1-4)</span><span class="toc-page-badge">P.10</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-doc13')"><span>📌 基礎二：第五大句型 · 實戰練習 20題</span><span class="toc-page-badge">P.11</span></div>
+    </div>
+  </div>
+  <button class="tool-btn" onclick="toggleAllAnswers()" title="一鍵全開/全隱答案"><span id="ansIcon">👁️</span></button>
+  <button class="tool-btn" id="penBtn" onclick="togglePenMode()" title="螢光筆/板書筆">✏️</button>
+  <div class="pen-options" id="penOptions">
+    <div style="display:flex;gap:4px">
+      <span class="color-dot active" style="background:#facc15" onclick="setPenColor('rgba(250,204,21,0.45)',this)" title="螢光黃"></span>
+      <span class="color-dot" style="background:#ef4444" onclick="setPenColor('rgba(239,68,68,0.8)',this)" title="紅筆"></span>
+      <span class="color-dot" style="background:#3b82f6" onclick="setPenColor('rgba(59,130,246,0.8)',this)" title="藍筆"></span>
+      <span class="color-dot" style="background:#10b981" onclick="setPenColor('rgba(16,185,129,0.8)',this)" title="綠筆"></span>
+    </div>
+    <div class="sub-divider"></div>
+    <div style="display:flex;gap:3px">
+      <button class="size-btn active" onclick="setPenSize(4,this)">細</button>
+      <button class="size-btn" onclick="setPenSize(10,this)">中</button>
+      <button class="size-btn" onclick="setPenSize(20,this)">粗</button>
+    </div>
+  </div>
+  <button class="tool-btn" onclick="clearAllDrawings()" title="清除所有筆跡">🧹</button>
+  <div class="toolbar-divider"></div>
+  <button class="tool-btn" onclick="window.print()" title="列印為學生白紙考卷">🖨️</button>
+</div>
+<div class="page-container">
+
+<div class="page" id="p-doc1" style="justify-content:center; align-items:center; text-align:center; background:linear-gradient(145deg,#0a2e5c,#0284c7); color:white;">
+  <canvas class="drawing-canvas"></canvas>
+  <div style="max-width:85%;">
+    <div style="font-size:1.1rem; letter-spacing:.15em; opacity:.85; margin-bottom:12px;">2025 英文文法講義 V7 完整優化版</div>
+    <h1 style="font-size:2.4rem; font-weight:bold; letter-spacing:.08em; line-height:1.3; margin-bottom:20px; border-bottom:2px solid rgba(255,255,255,0.4); padding-bottom:16px;">
+      TABLE OF CONTENTS<br>｜ 學習地圖
+    </h1>
+    <div style="font-size:1rem; opacity:.9; margin-bottom:30px;">教師端大屏／投影雙模式互動電子書</div>
+    <button onclick="jumpTo('p-doc2')" style="background:white; color:#0f4c81; border:none; border-radius:30px; padding:10px 28px; font-size:1rem; font-weight:bold; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.25);">
+      開啟目錄學習地圖 ➔
+    </button>
+  </div>
+  <div class="page-footer" style="position:absolute; bottom:12mm; left:16mm; right:16mm; border-top-color:rgba(255,255,255,0.2); color:rgba(255,255,255,0.7);">
+    <span>2025 英文文法講義 V7</span>
+    <span>封面 / 學習地圖</span>
+    <span>Cover</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc2">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">TABLE OF CONTENTS ｜ 學習地圖</div>
+    <h1>全書單元章節目錄</h1>
+    <div class="ch-sub">點擊即可跳轉至已建置章節</div>
+  </div>
+  <div class="toc-grid">
+    <div class="toc-item" onclick="jumpTo('p-doc3')"><span>基礎一｜詞類與句子成分</span><span class="pg">1</span></div>
+    <div class="toc-item" onclick="jumpTo('p-doc12')"><span>基礎二｜英文五大句型</span><span class="pg">10</span></div>
+    <div class="toc-item"><span>動詞系統一｜英文時態</span><span class="pg">14</span></div>
+    <div class="toc-item"><span>修飾系統｜比較級與最高級</span><span class="pg">19</span></div>
+    <div class="toc-item"><span>句型轉換｜疑問句、否定句與倒裝句</span><span class="pg">22</span></div>
+    <div class="toc-item"><span>易錯進階｜倒裝句</span><span class="pg">24</span></div>
+    <div class="toc-item"><span>動詞系統二｜主動語態與被動語態</span><span class="pg">27</span></div>
+    <div class="toc-item"><span>複句系統｜名詞、副詞與形容詞子句</span><span class="pg">32</span></div>
+    <div class="toc-item"><span>非限定動詞｜不定詞、動名詞與分詞</span><span class="pg">43</span></div>
+    <div class="toc-item"><span>概念整理｜情緒動詞</span><span class="pg">51</span></div>
+    <div class="toc-item"><span>句子簡化｜分詞構句</span><span class="pg">52</span></div>
+    <div class="toc-item"><span>語氣系統｜事實、假設與祈使</span><span class="pg">58</span></div>
+    <div class="toc-item"><span>假設法｜if、wish、as if、if only</span><span class="pg">60</span></div>
+    <div class="toc-item"><span>祈使句｜命令、請求與條件轉換</span><span class="pg">63</span></div>
+    <div class="toc-item"><span>It 的用法｜虛主詞與虛受詞</span><span class="pg">66</span></div>
+    <div class="toc-item"><span>特殊句型｜使役動詞 make、have、let</span><span class="pg">68</span></div>
+    <div class="toc-item"><span>進階子句｜關係子句進階用法</span><span class="pg">71</span></div>
+    <div class="toc-item"><span>整合應用｜句子修飾語與統測閱讀</span><span class="pg">76</span></div>
+  </div>
+  <div class="info-box tip" style="margin-top:16px;">
+    <div class="label">🎯 本次電子書建置進度</div>
+    包含完整「基礎一｜詞類與句子成分」(講義 P.1 ~ P.9) 與「基礎二｜英文五大句型」(講義 P.10 ~ P.11)，100% 忠實呈現原始講義所有文字、表格與題目。
+  </div>
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>學習地圖目錄</span>
+    <span>Page TOC</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc3">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類與句子成分 (講義 P.1)</div>
+    <h1>基礎一｜詞類與句子成分</h1>
+  </div>
+
+  <div class="task-box">
+    <div class="task-item"><span class="badge-task badge-blue">【本章任務】</span>能辨認常見詞類，並在句中定位主詞、動詞、受詞、補語與修飾語。</div>
+    <div class="task-item"><span class="badge-task badge-red">【核心概念】</span>詞類說明單字的功能；句子成分說明它在這一句中負責的工作。</div>
+    <div class="task-item"><span class="badge-task badge-green">【判斷流程】</span>圈主要動詞 → 找誰做事（S）→ 找承受者或補充說明（O／C）→ 標出修飾語。</div>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge">1. Noun 名詞</span> 1. 名詞 (Noun):</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">
+      • <strong>可數 N (cn):</strong> 若說話者視某物為固定整體，就是可數。(room, glass, chicken, paper)<br>
+      　可數的話，記得加上 前 <span class="ans-reveal">冠詞 a/an/the</span> 或 後 <span class="ans-reveal">複數字尾 -(e)s</span>。<br>
+      　例外：有些名詞的複數不太一樣，child → <span class="ans-reveal">children</span>，woman → <span class="ans-reveal">women</span>，sheep → <span class="ans-reveal">sheep</span>。
+    </div>
+    <div class="body-p">
+      • <strong>不可數 N (un):</strong> (1) 抽象　(2) 無固定形狀<br>
+      • 名詞在句子當中可當 <span class="red-txt">主詞(S)</span> 或者是 <span class="red-txt">受詞(O)</span>。(詳見〈英文五大句型〉)
+    </div>
+    <div class="example-p">She is <span class="highlight">a</span> beautiful girl. ／ They are student<span class="highlight">s</span>.</div>
+  </div>
+
+  <div class="body-p" style="margin-top:6px;">除此之外，若想要表示名詞的數量，也要考慮這個名詞是可數還是不可數。</div>
+
+  <table class="custom-table">
+    <tr><th>可數</th><th>不可數</th><th>兩者皆可</th></tr>
+    <tr>
+      <td>many<br>a number of / a couple of<br>few / a few → fewer</td>
+      <td>much<br>a ~ amount of<br>little / a little → less</td>
+      <td style="vertical-align:middle;">a lot of, plenty of, some, all, no, any, more</td>
+    </tr>
+  </table>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="example-p">There is <span class="ans-reveal">little</span> water in the glass.</div>
+    <div class="example-p"><span class="ans-reveal">A great number of</span> children are playing in the park.</div>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)" style="margin-top:4px;">
+    <div class="body-p"><strong>名詞片語 / 短語</strong> = (限定詞) + (形容詞) + 名詞。</div>
+    <div class="example-p">例：a new book, many good students, his beautiful wife, those sweet roses<br>例外 (後位修飾)：something <span class="ans-reveal">special</span></div>
+    <div class="body-p" style="margin-top:4px;"><strong>名詞字尾：</strong>crea<span class="highlight">tion</span>, differen<span class="highlight">ce</span>, friend<span class="highlight">ship</span>, kind<span class="highlight">ness</span>, govern<span class="highlight">ment</span>, abili<span class="highlight">ty</span></div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:10px;"><span class="pos-badge" style="background:#059669;">2. Verb 動詞</span> 2. 動詞 (Verb)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">
+      • 及物動詞 (Vt) + 受詞 (Object): I <span class="ans-reveal">love</span> you.<br>
+      • 不及物動詞 (Vi) + (介詞 + 受詞): I <span class="ans-reveal">live in</span> Taipei.<br>
+      ▲▼ <strong>動詞的特性：必要性、變化性、一致性。</strong> △▽
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>基礎一 ｜ 詞類與句子成分</span>
+    <span>P.1 (DOCX P.3)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc4">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類與句子成分 (講義 P.2)</div>
+    <h1>動詞三大特性 · 主動一致性練習</h1>
+  </div>
+
+  <div class="info-box">
+    <div class="body-p"><strong>必要性：</strong>動詞在英文中佔有很重要的一席之地，是絕對必要、絕對不可缺少的。<strong>一個文法正確的英文句子裡，一定要有動詞。</strong></div>
+    <div class="example-p">Keep your room clean, John. ／ Be good. ／ It is important to have good habits. ／ I might be able to help you.</div>
+    <div class="body-p"><strong>變化性：</strong>英文的動詞會因為動作發生的時間不同而有所變化，共有三態變化。</div>
+    <div class="body-p"><strong>一致性：</strong>英文的動詞必須與主詞相互搭配一致，視主詞的人稱、數量來決定動詞。</div>
+  </div>
+
+  <div class="sub-title">📝 動詞一致性 fill-in 練習</div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">1</div><div class="qa-body">I <span class="ans-reveal">am</span> talking now. (beV) &nbsp;&nbsp; You <span class="ans-reveal">are</span> a student. (beV)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">2</div><div class="qa-body">John / Sue / He / She / Miss Li / ㄊㄚ <span class="ans-reveal">is</span> friendly. (beV)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">3</div><div class="qa-body">Mr. Brown / Miss Wu / The doctor / ㄊㄚ <span class="ans-reveal">lives</span> (live) in the city.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">4</div><div class="qa-body">Mr. and Mrs. Brown <span class="ans-reveal">live</span> (live) in the country.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">5</div><div class="qa-body">One of my brothers <span class="ans-reveal">lives</span> (live) in Taipei.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">6</div><div class="qa-body">Nobody <span class="ans-reveal">likes</span> (like) it. &nbsp;&nbsp; None of the money <span class="ans-reveal">is</span> (beV) mine.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">7</div><div class="qa-body">None of the apples <span class="ans-reveal">is / are</span> (beV) good to eat. <span class="blue-txt">[有兩個答案]</span></div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">8</div><div class="qa-body">Getting up early <span class="ans-reveal">makes</span> us healthy. (make)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">9</div><div class="qa-body">What he said <span class="ans-reveal">is</span> a lie. (beV)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">10</div><div class="qa-body">Two thousand dollars <span class="ans-reveal">is</span> (beV) a large sum for me.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">11</div><div class="qa-body">All work and no play <span class="ans-reveal">makes</span> (make) Jack a dull boy.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">12</div><div class="qa-body">Either you or I <span class="ans-reveal">am</span> wrong. (beV)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">13</div><div class="qa-body">Neither you nor Susan <span class="ans-reveal">is</span> (beV) allowed(允許) to wear long hair.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">14</div><div class="qa-body">(Do, <span class="ans-reveal">Does</span>) he or his friends want to go?</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">15</div><div class="qa-body">Not only the students but also the teacher <span class="ans-reveal">wishes</span> (wish) for holidays.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">16</div><div class="qa-body">The mother along with / as well as her children <span class="ans-reveal">likes</span> (like) John.</div></div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="info-box warn">
+      <strong>挑錯：</strong>*We never alone. → <span class="ans-reveal">We are never alone. (句子必須有動詞 are)</span><br>
+      <strong>辨析：</strong>He chewed the pencil. ／ He chewed on the pencil. 意思有何不同? → <span class="ans-reveal">chewed the pencil 是把鉛筆咬下去 (及物)；chewed on 是咬著沉思、反覆咀嚼 (不及物+介詞)</span>
+    </div>
+    <div class="body-p">動詞字根：<span class="blue-txt">enable, weaken, realize, identify, create</span></div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#b45309;">3. Adj 形容詞</span> 3. 形容詞 (Adj)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">用途是用於形容或修飾 ( <span class="ans-reveal">名詞</span> )。</div>
+    <div class="example-p">He is a <span class="highlight">tall</span> boy. ／ The cake tastes <span class="highlight">good</span>.</div>
+    <div class="body-p">形容詞字根：<span class="blue-txt">-ful, -less, -able, -tive, -al, -ary, -ous, -ent</span></div>
+    <div class="body-p"><strong>形容詞還分級的喲！ 原級：</strong></div>
+    <div class="example-p">He is <span class="highlight">as good as</span> his brother. ／ She is <span class="highlight">as talkative as</span> your sister.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>動詞三大特性 · 一致性 · 形容詞</span>
+    <span>P.2 (DOCX P.4)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc5">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類與句子成分 (講義 P.3)</div>
+    <h1>形容詞比較級 · 4. 副詞 Adv</h1>
+  </div>
+
+  <div class="sub-title">【必會】基礎辨識 小試身手</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">1</div><div class="qa-body">My girlfriend is as <span class="ans-reveal">beautiful</span> (beautiful) as Susan.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">2</div><div class="qa-body">Pencils are as <span class="ans-reveal">useful</span> (useful) as pens.</div></div>
+
+  <div class="info-box">
+    <strong>比較級：</strong>當兩者互相比較時，使用比較級。(詳見〈比較級與最高級〉)
+  </div>
+
+  <div class="sub-title">林俊傑、周杰倫超級比一比</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="example-p">JJ is <span class="highlight">younger than</span> Jay.　JJ is <span class="highlight">taller than</span> Jay.</div>
+    <div class="example-p">JJ is <span class="ans-reveal">more handsome</span> (handsome) than Jay.</div>
+    <div class="example-p">JJ’s songs are <span class="ans-reveal">better / worse</span> (good/bad) than Jay’s.</div>
+  </div>
+
+  <div class="sub-title">比較級變化規則</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">• 通常只要在形容詞的字尾加上 <span class="ans-reveal">-er</span> 就能夠形成比較級了，例如：short<span class="ans-reveal">er</span>, tall<span class="ans-reveal">er</span>, small<span class="ans-reveal">er</span>。</div>
+    <div class="body-p">• 或者子音+y <span class="ans-reveal">去y加 -ier</span>，例如：happy → happ<span class="ans-reveal">ier</span>, easy → eas<span class="ans-reveal">ier</span>。</div>
+    <div class="body-p">• 單音節，短母音，有時候需要重複字尾，例如：big<span class="ans-reveal">ger</span>, thin<span class="ans-reveal">ner</span>。</div>
+    <div class="body-p">• 若是字太長，就前加上 <span class="ans-reveal">more</span> 即可，例如：<span class="ans-reveal">more</span> beautiful。</div>
+    <div class="body-p">• 但就是有一些不合群的傢伙，硬是要跟人家不同：</div>
+    <div class="example-p">good → <span class="ans-reveal">better</span>, bad → <span class="ans-reveal">worse</span>, many/much → <span class="ans-reveal">more</span>, little → <span class="ans-reveal">less</span></div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:10px;"><span class="pos-badge" style="background:#7c3aed;">4. Adv 副詞</span> 4. 副詞 (Adv)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">用途是用於修飾 ( <span class="ans-reveal">動詞</span> )、( <span class="ans-reveal">形容詞</span> )、( <span class="ans-reveal">副詞</span> )、( <span class="ans-reveal">全句</span> )。</div>
+    <div class="info-box warn">
+      <strong>&lt;!!!&gt; 副詞在英文家族當中算是小媳婦，很沒有地位的，在句子結構當中可有可無，可省。</strong>
+    </div>
+    <div class="example-p">(1) Mary dances <span class="highlight">beautifully</span>.</div>
+    <div class="example-p">(2) My students are <span class="highlight">very</span> nice.</div>
+    <div class="example-p">(3) I am a very very …very smart student.</div>
+    <div class="example-p">(4) <span class="highlight">Gradually</span>, your English will improve.</div>
+    <div class="example-p">(5) I rode the new bike <span class="highlight">happily</span> <span class="highlight">in the park</span> <span class="highlight">yesterday</span>.</div>
+    <div class="body-p" style="margin-top:6px;">
+      ◆ 副詞跟形容詞是兄弟，長得很像，所以常常可以在形容詞後加 <span class="ans-reveal">-ly</span> 就可以變成副詞了，例如：bad<span class="ans-reveal">ly</span>, sad<span class="ans-reveal">ly</span>, careful<span class="ans-reveal">ly</span>, slow<span class="ans-reveal">ly</span><br>
+      ◆ 或者子音+y變成副詞，例如：easy → eas<span class="ans-reveal">ily</span>, lucky → luck<span class="ans-reveal">ily</span>, 還有哪些例子呢？happ<span class="ans-reveal">ily</span>, heav<span class="ans-reveal">ily</span>。<br>
+      ◆ 但是也有需要整形的，長得完全不像，例如：good → <span class="ans-reveal">well</span>。<br>
+      ◆ 還有形容詞、副詞長一樣，例如：early, late, hard 天生就是副詞的命，所以字尾沒有 -ly。<br>
+      除了一個字的副詞外，還有副詞子句(詳見〈副詞子句〉)、時間副詞、地方副詞、(介詞+受詞)。
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>形容詞比較級 · 副詞用途</span>
+    <span>P.3 (DOCX P.5)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc6">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類與句子成分 (講義 P.4)</div>
+    <h1>副詞易混詞 · 5. 介詞 Prep. · 6. 連接詞 Conj</h1>
+  </div>
+
+  <div class="sub-title">◆ 常考副詞易混對比</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p"><strong>hard vs. hardly:</strong> I study <span class="highlight">hard</span> every day. ／ I can <span class="highlight">hardly</span> believe it! <span class="ans-reveal">(hard: 努力地；hardly: 幾乎不)</span></div>
+    <div class="body-p"><strong>late vs. lately:</strong> John often goes to school <span class="highlight">late</span>. ／ <span class="highlight">Lately</span>, I have been losing sleep. <span class="ans-reveal">(late: 遲到；lately: 最近)</span></div>
+    <div class="body-p"><strong>high vs. highly:</strong> He kicked the ball <span class="highlight">high</span> into the air. ／ People think <span class="highlight">highly</span> of her. <span class="ans-reveal">(high: 空間高；highly: 高度地/評價高)</span></div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#dc2626;">5. Prep. 介詞</span> 5. 介詞 (Prep.)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">介詞後面一定接 ( <span class="ans-reveal">名詞/代名詞/Ving</span> )，遇動詞則動詞須改為 ( <span class="ans-reveal">Ving</span> )。</div>
+    <div class="info-box">
+      despite, of, through, from…to.., for, about, of, among, between, for, across, beyond, around, under, over, below, above, with, without, by, at, on, in, like, unlike, regarding, including, after, before, as
+    </div>
+    <div class="example-p">I get up <span class="highlight">at</span> eight o’clock <span class="highlight">in</span> the morning <span class="highlight">on</span> Sunday.</div>
+    <div class="example-p">We go to school <span class="highlight">by</span> bus. ／ I write a letter <span class="highlight">with</span> a pen.</div>
+  </div>
+
+  <div class="sub-title">【必會】基礎辨識 小試身手</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">1</div><div class="qa-body">The computer is <span class="ans-reveal">on</span> the desk.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">2</div><div class="qa-body">The frog is <span class="ans-reveal">under</span> the desk.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">3</div><div class="qa-body">I was surprised <span class="ans-reveal">at / by</span> the news.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">4</div><div class="qa-body">She sat there <span class="ans-reveal">with</span> her eyes closed.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">5</div><div class="qa-body">By <span class="ans-reveal">practicing</span> (practice) hard, you will be better.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">6</div><div class="qa-body">Because of the <span class="ans-reveal">rain</span> (rain), the game was called off.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">7</div><div class="qa-body">This table is made <span class="ans-reveal">of</span> wood. &nbsp;&nbsp; Wine is made <span class="ans-reveal">from</span> grapes.</div></div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="info-box warn">
+      <strong>(大家來找碴)</strong><br>
+      *Mary spends 2 hours in do her homework. → <span class="ans-reveal">in doing</span><br>
+      Don't worry about attacked by sharks. → <span class="ans-reveal">being attacked</span><br>
+      *The sun rises from the east. → <span class="ans-reveal">in the east</span>
+    </div>
+    <div class="body-p">
+      ◆ 介詞片語/短語 = 介詞 + 名詞/Ving 可以放在名詞之後，當作 <span class="ans-reveal">形容詞</span>；也可以當作 <span class="ans-reveal">副詞</span>。<br>
+      <span class="example-p">The man <span class="highlight">in black</span> is Will Smith. (形容詞)　He works <span class="highlight">at a computer company</span>. (副詞)</span>
+    </div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#0891b2;">6. Conj 連接詞</span> 6. 連接詞 (Conj)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">用來連接兩個句子 (S V)。</div>
+    <div class="body-p">(1) 對等 conj (除了連接對等句子，還可以接對等的 adj, n, v, adv) : <strong>and / but / or</strong><br>(2) 附屬 conj (詳見〈副詞子句〉)</div>
+    <div class="info-box warn" style="margin-top:4px;">
+      <strong>(大家來找碴)</strong><br>
+      Because it rained yesterday, so we couldn't go out to play. → <span class="ans-reveal">刪去 so</span><br>
+      Although John is poor, but he is generous(大方的). → <span class="ans-reveal">刪去 but</span><br>
+      If it will rain tomorrow, the game will be called off. → <span class="ans-reveal">改為 rains</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>副詞辨析 · 介詞 · 連接詞</span>
+    <span>P.4 (DOCX P.6)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc7">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類與句子成分 (講義 P.5)</div>
+    <h1>連接詞 (續) · 7. 助動詞 Aux</h1>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="info-box warn">
+      <strong>(大家來找碴 續)</strong><br>
+      Although the rain, we still went out to play. → <span class="ans-reveal">改為 Although it rained 或 Despite the rain</span>
+    </div>
+    <div class="example-p">Exercising makes people relax <span class="red-txt">and</span> <span class="ans-reveal">(be) energetic</span> (精力充沛的).</div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#0f4c81;">7. Aux 助動詞</span> 7. 助動詞 (Aux)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">用來幫助 ( <span class="ans-reveal">動詞</span> )。 助動詞可分兩種：<strong>真 (語氣情態)、假 (文法)</strong></div>
+    <div class="sub-title"><strong>(1) 真心真意，永不變：(無條件幫助動詞) + 原動 (Vr~~)</strong></div>
+    <div class="body-p"><strong>(語氣情態助動詞) 表示猜測、可能性 (possibility)：</strong></div>
+    <div class="info-box">
+      ☆ 可能性高 <span class="red-txt">must 一定</span> &gt; will (&gt;would) &gt; should &gt; can (&gt;could) &gt; may &gt; <span class="blue-txt">might 可能性低</span><br>
+      → John <span class="highlight">must</span> be very careless. &nbsp;&nbsp; → It <span class="highlight">might</span> be true.
+    </div>
+    <div class="body-p"><strong>(語氣情態助動詞) 表示義務、意願、責任、能力、許可強制性 (obligation)：</strong></div>
+    <div class="example-p">→ We <span class="highlight">must</span> be very careful.</div>
+    <div class="body-p">
+      ☆ 必須、一定：must / have to<br>
+      　將會 (表示「願意，決心，承諾」)：will / would<br>
+      　應該：should / ought to<br>
+      　能夠可能 (表示「有能力，有權利」)：can / could<br>
+      　能可能 (表示「准許，許可」)：may / might<br>
+      　最好：had better
+    </div>
+  </div>
+
+  <div class="sub-title">助動詞練習</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">A</div><div class="qa-body">I / He / You / They <span class="ans-reveal">will</span> go to the party tomorrow.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">B</div><div class="qa-body">Your English must <span class="ans-reveal">be</span> excellent(傑出的).</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">C</div><div class="qa-body">You had better <span class="ans-reveal">not sit</span> in front of TV too long. (sit)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">D</div><div class="qa-body">(大家來找碴) Cans John playing basketball? → <span class="ans-reveal">Can John play basketball?</span></div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">E</div><div class="qa-body">(進階) You should study hard. ／ You should have studied hard. (意思差異) → <span class="ans-reveal">後者表示「過去本該努力卻沒努力」，表後悔或責怪。</span></div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">F</div><div class="qa-body">(進階) I would rather <span class="ans-reveal">stay</span> (stay) at home than <span class="ans-reveal">go</span> (go) out.</div></div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="info-box tip">
+      <strong>[貼心提醒]</strong><br>
+      1. would, could 和 might 這些看似過去式拼法的語氣助動詞，卻也可以用在現在時間或未來時間。(用以表達可能性較低，或者比較禮貌的用法)<br>
+      2. 語氣助動詞如果配合完成式 (have+pp.)，表示的是「相對過去的時間」。
+    </div>
+    <div class="sub-title"><strong>(2) 假仁假義，隨人變：(有條件幫助動詞，動詞要做變化)</strong></div>
+    <div class="body-p"><strong>(文法助動詞)：</strong></div>
+    <div class="example-p">• beV + Ving ~ (進行式)：I am talking. ／ You were sleeping when I called. (參見〈英文時態〉)</div>
+    <div class="example-p">• beV + p.p. (被動式)：The shoes were made in Taiwan. (參見〈被動語態〉)</div>
+    <div class="example-p">• have / has / had + p.p. ~~ (完成式)：I have been to Japan. ／ John has gone to China.</div>
+    <div class="body-p" style="margin-top:4px;"><strong>動動腦：</strong>請問 do, does, did 這三個自己生的助動詞，是真的還是假的？ 有何功用？ → <span class="ans-reveal">文法助動詞；用於否定句、疑問句及強調語氣 (例如 I DO love you.)。</span></div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>助動詞系統 (語氣情態 · 文法)</span>
+    <span>P.5 (DOCX P.7)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc8">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類與句子成分 (講義 P.6)</div>
+    <h1>8. 限定詞 · 9. 疑問詞 · 🎯 統測實戰 Q1-8</h1>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge" style="background:#b45309;">8. 限定詞</span> 8. 限定詞</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">(1) 冠詞 (a, an, the); 所有格 (my, your) &nbsp;&nbsp; (2) 指示詞 (this, that, these, those) &nbsp;&nbsp; (3) 數量詞 (參見〈詞類與句子成分〉)</div>
+    <div class="body-p">
+      (1) 冠詞所有格之後，一定要加名詞，組成名詞片語：a book, an egg, the students, my teacher<br>
+      (2) 數量詞可接名詞，或是本身就可以當代名詞：one, each, both, any, some, several, all
+    </div>
+    <div class="example-p">A. Do you have any money?　I have <span class="highlight">some</span> (money).</div>
+    <div class="example-p">B. Who do you love, Mary or Susan?　I love <span class="highlight">both</span>.</div>
+    <div class="body-p" style="margin-top:4px;">
+      (3) One shotgun is not good. 與 A shotgun is not good. 語意有何差別？ → <span class="ans-reveal">One 強調數量「一把」；A 代表「任何一把獵槍」。</span><br>
+      (4) John is a boy that wouldn’t cheat. ／ John is the boy that cheated on the English test. → <span class="ans-reveal">a boy 泛指一類；the boy 特指特定那一位。</span><br>
+      (5) Do you have time? ／ Do you have the time? 哪句是問現在此刻幾點呢? → <span class="ans-reveal">the time 是問此刻幾點。</span><br>
+      (6) Would you mind if I open the/a window? 語意有何差別？ → <span class="ans-reveal">the window 指特定的那扇窗；a window 指任何一扇窗皆可。</span>
+    </div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#0284c7;">9. 疑問詞</span> 9. 疑問詞</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">用來造？(參見〈疑問句與否定句〉英文句子)，及子句(參見〈名詞子句〉名詞子句 + 〈副詞子句〉副詞子句)</div>
+    <table class="custom-table" style="margin-top:4px;">
+      <tr><th>誰 (S)</th><th>誰 (O)</th><th>誰的</th><th>什麼</th><th>哪一</th><th>時間 (何時)</th><th>哪裡</th><th>為什麼</th><th>如何</th></tr>
+      <tr>
+        <td><span class="ans-reveal">who</span></td>
+        <td><span class="ans-reveal">whom</span></td>
+        <td><span class="ans-reveal">whose</span></td>
+        <td><span class="ans-reveal">what</span></td>
+        <td><span class="ans-reveal">which</span></td>
+        <td><span class="ans-reveal">when</span></td>
+        <td><span class="ans-reveal">where</span></td>
+        <td><span class="ans-reveal">why</span></td>
+        <td><span class="ans-reveal">how</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="sub-title" style="color:#dc2626;">【統測】統測實戰 詞類 Test yourself</div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">1</div>
+    <div class="qa-body">
+      _____ other waiters in the restaurant have worked here longer than Clark; only Lois and Lana started working here before him. [108 會考]
+      <div class="choices-grid">
+        <span>(A) All</span><span>(B) Most</span><span>(C) <span class="correct-choice">Few</span></span><span>(D) Some</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (C) Few：由「只有 Lois 和 Lana 在他之前」可知，幾乎沒有其他服務生比他資深。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">2</div>
+    <div class="qa-body">
+      His English was poor, and he knew very _____ English.
+      <div class="choices-grid">
+        <span>(A) few</span><span>(B) many</span><span>(C) <span class="correct-choice">little</span></span><span>(D) much</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (C) little：English 為不可數名詞，且語意為「幾乎不會」。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">3</div>
+    <div class="qa-body">
+      No one thought James would appear at Katie’s party. So when he ____, everyone was surprised. [104 會考]
+      <div class="choices-grid">
+        <span>(A) would</span><span>(B) was</span><span>(C) had</span><span>(D) <span class="correct-choice">did</span></span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (D) did：代動詞，代替過去式的一般動詞 appeared。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">4</div>
+    <div class="qa-body">
+      I didn't come yesterday _____ my illness.
+      <div class="choices-grid">
+        <span>(A) because</span><span>(B) <span class="correct-choice">because of</span></span><span>(C) despite</span><span>(D) in spite of</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (B) because of：後面接名詞片語 my illness；because 後須接完整子句。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">5</div>
+    <div class="qa-body">
+      Many teenagers have difficulty (in) <span class="ans-reveal">communicating</span> (communicate) with their parents.
+      <div class="ans-reveal" style="font-size:0.78rem;">→ have difficulty (in) + Ving（介詞 in 後接動名詞）。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">6</div>
+    <div class="qa-body">
+      Today, whale watching _____ a popular activity. (112 統)
+      <div class="choices-grid">
+        <span>(A) became</span><span>(B) become</span><span>(C) <span class="correct-choice">has become</span></span><span>(D) will become</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (C) has become：現在完成式，表達過去演變到現在的成果。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">7</div>
+    <div class="qa-body">
+      _____ the years, hundreds and thousands of tourists have visited Orchid Island every flying fish season. (113 統)
+      <div class="choices-grid">
+        <span>(A) About</span><span>(B) Below</span><span>(C) <span class="correct-choice">Over</span></span><span>(D) Without</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (C) Over：Over the years 意為「歷年來、多年來」，搭配現在完成式。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">8</div>
+    <div class="qa-body">
+      _____ its tropical(赤道的) location, there are many glaciers and ice fields high up on the mountain. (98 統)
+      <div class="choices-grid">
+        <span>(A) Because of</span><span>(B) Spite</span><span>(C) Even though</span><span>(D) <span class="correct-choice">Despite</span></span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (D) Despite：介詞「儘管」，後接名詞片語。</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>限定詞 · 疑問詞 · 統測實戰 Q1-8</span>
+    <span>P.6 (DOCX P.8)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc9">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 詞類實戰題組 (講義 P.7)</div>
+    <h1>🎯 統測題組閱讀測驗 (Q9–Q23)</h1>
+  </div>
+
+  <div class="sub-title">【閱讀題組一】(106 統)</div>
+  <div class="reading-box">
+    Do you prefer reading or watching television in your leisure time? Some people think that watching television is more entertaining and relaxing than reading. Reading tends to take so much time, something which the modern person cannot easily afford. <span class="blank-box">9</span> these observations might be true, at least to some extent, but reading is still very popular. When you use your <span class="blank-box">10</span>, a book can become so interesting that you can find it difficult to stop reading it. Besides, <span class="blank-box">11</span> different kinds of genres to choose from, so reading can become a hobby for every type of person. You can choose to read a romance, action, or historical novel. If you find it hard to choose a book for <span class="blank-box">12</span> enjoyment, you can read reviews or ask friends for advice. Reading can be fun.
+  </div>
+
+  <div class="choices-grid" style="margin-bottom:8px;">
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">9</div><div class="qa-body"><span>(A) Each</span> <span>(B) Some</span> <span>(C) None</span> <span>(D) <span class="correct-choice">All</span></span></div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">10</div><div class="qa-body"><span>(A) image</span> <span>(B) <span class="correct-choice">imagination</span></span> <span>(C) imagine</span> <span>(D) imagining</span></div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">11</div><div class="qa-body"><span>(A) they were</span> <span>(B) they had</span> <span>(C) <span class="correct-choice">there are</span></span> <span>(D) there have</span></div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">12</div><div class="qa-body"><span>(A) you</span> <span>(B) your</span> <span>(C) yours</span> <span>(D) <span class="correct-choice">yourself</span></span></div></div>
+  </div>
+
+  <div class="sub-title">【閱讀題組二】(106 統)</div>
+  <div class="reading-box">
+    Weight-loss diets, which help us reduce our weight, continue to rise in popularity. Yet, health experts say that such diets <strong>13.</strong> [ <span class="blank-box">13</span> ] not successful. <strong>14.</strong> [ <span class="blank-box">14</span> ], they might not really have the expected outcomes that they promise. Researchers <strong>15.</strong> [ <span class="blank-box">15</span> ] that 80% of people who lose weight on extreme diets are likely to regain it all within 3 years. ….The possibility of this <strong>16.</strong> [ <span class="blank-box">16</span> ] is low, though.
+  </div>
+
+  <div class="choices-grid" style="margin-bottom:8px;">
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">13</div><div class="qa-body"><span>is</span> <span><span class="correct-choice">are</span></span> <span>be</span> <span>have</span></div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">14</div><div class="qa-body"><span><span class="correct-choice">In fact</span></span> <span>In contrast</span> <span>In terms of</span> <span>In regard to</span></div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">15</div><div class="qa-body"><span>suggests</span> <span>suggesting</span> <span><span class="correct-choice">suggest</span></span> <span>suggestion</span></div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">16</div><div class="qa-body"><span>happened</span> <span>happen</span> <span><span class="correct-choice">happening</span></span> <span>happens</span></div></div>
+  </div>
+
+  <div class="sub-title">【單題演練】</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">17</div>
+    <div class="qa-body">
+      Ultimately through his daily massages, his iron persistence, _____ his resolute determination, he did develop the ability to stand up, then to walk with others’ help, then to walk by himself—and then—to run. (100 統)
+      <div class="choices-grid"><span>(A) <span class="correct-choice">and</span></span> <span>(B) next to</span> <span>(C) then</span> <span>(D) or</span></div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">18</div>
+    <div class="qa-body">
+      Those women, Dr. Spiegel found, fought cancer better and _____ an average of 18 months longer. (100 統)
+      <div class="choices-grid"><span>(A) survive</span> <span>(B) surviving</span> <span>(C) to survive</span> <span>(D) <span class="correct-choice">survived</span></span></div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">19</div>
+    <div class="qa-body">
+      They believed that careful self-examination can analyze and _____ our personal characters, aims, methods and attitudes. (101 統)
+      <div class="choices-grid"><span>(A) improved</span> <span>(B) improving</span> <span>(C) improves</span> <span>(D) <span class="correct-choice">improve</span></span></div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">20</div>
+    <div class="qa-body">
+      Allan: Want to try Uncle Joe’s pumpkin pie? I heard it’s quite good.<br>
+      Jamie: No, thank you. I think nobody _____ my mom can make good pies. [100 基測]
+      <div class="choices-grid"><span>(A) with</span> <span>(B) than</span> <span>(C) for</span> <span>(D) <span class="correct-choice">except</span></span></div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">21</div>
+    <div class="qa-body">
+      This dress is pretty, _____ it does not look good on me.
+      <div class="choices-grid"><span>(A) so</span> <span>(B) <span class="correct-choice">but</span></span> <span>(C) or</span> <span>(D) if</span></div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">22</div>
+    <div class="qa-body">
+      I have to catch the bus right now, _____ I’ll miss Mary’s birthday party. (103 會考)
+      <div class="choices-grid"><span>(A) and</span> <span>(B) because</span> <span>(C) <span class="correct-choice">or</span></span> <span>(D) until</span></div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">23</div>
+    <div class="qa-body">
+      Josh has planned to make a trip to New York and _____ some of his friends there. (109 會考)
+      <div class="choices-grid"><span>(A) <span class="correct-choice">visit</span></span> <span>(B) visits</span> <span>(C) visiting</span> <span>(D) visited</span></div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>統測實戰題組 Q9–23</span>
+    <span>P.7 (DOCX P.9)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc10">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 英文與中文不同之處 (講義 P.8)</div>
+    <h1>英文與中文不同之處 · 代名詞格表</h1>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)" style="margin-bottom:8px;">
+    <div class="qa-num">24</div>
+    <div class="qa-body">
+      Online dating services are _____ available. (107 統)
+      <div class="choices-grid"><span>(A) ease</span> <span>(B) easy</span> <span>(C) easier</span> <span>(D) <span class="correct-choice">easily</span></span></div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (D) easily：副詞修飾形容詞 available。</div>
+    </div>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge" style="background:#dc2626;">不同點 1</span> 1. 英文裡面有主受格之分，中文則無。</div>
+
+  <!-- 代名詞完整對照表格 -->
+  <table class="pron-table">
+    <tr>
+      <th class="ph"></th>
+      <th colspan="2">第一人稱 (我)</th>
+      <th colspan="2">第二人稱 (你)</th>
+      <th colspan="3">第三人稱單數 (ㄊㄚ)</th>
+      <th>第三人稱複數</th>
+    </tr>
+    <tr>
+      <th class="ph"></th>
+      <th>單數</th><th>複數</th>
+      <th>單數</th><th>複數</th>
+      <th>陽性</th><th>陰性</th><th>中性</th>
+      <th>複數</th>
+    </tr>
+    <tr>
+      <td class="ph">主格</td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">I</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">we</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">you</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">you</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">he</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">she</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">it</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">they</span></td>
+    </tr>
+    <tr>
+      <td class="ph">受格</td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">me</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">us</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">you</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">you</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">him</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">her</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">it</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">them</span></td>
+    </tr>
+    <tr>
+      <td class="ph">所有格</td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">my</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">our</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">your</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">your</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">his</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">her</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">its</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">their</span></td>
+    </tr>
+    <tr>
+      <td class="ph">所有格代名詞</td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">mine</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">ours</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">yours</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">yours</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">his</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">hers</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">its</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">theirs</span></td>
+    </tr>
+    <tr>
+      <td class="ph">反身代名詞</td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">myself</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">ourselves</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">yourself</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">yourselves</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">himself</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">herself</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">itself</span></td>
+      <td class="interactive-item" onclick="toggleItemAnswer(this)"><span class="ans-reveal">themselves</span></td>
+    </tr>
+  </table>
+
+  <div class="sub-title">【必會】基礎辨識 小試身手：填入適當的代名詞</div>
+  <div class="reading-box interactive-item" onclick="toggleItemAnswer(this)" style="font-size:0.84rem; line-height:1.8;">
+    Mr. and Mrs. Lin have a son. <span class="ans-reveal">His</span> name is John. John wanted to have a pet, so <span class="ans-reveal">his</span> parents bought <span class="ans-reveal">him</span> a dog. John named <span class="ans-reveal">it</span> Blacky because <span class="ans-reveal">its</span> hair was black. He also nicknamed Blacky “long hair” because its hair is much longer than <span class="ans-reveal">theirs / ours</span>. John always told the dog, “<span class="ans-reveal">I</span> will take good care of <span class="ans-reveal">you</span>.” The Lin family loved the dog very much. <span class="ans-reveal">They</span> were happy to have Blacky.
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#dc2626;">不同點 2</span> 2. 英文的主詞與動詞相互搭配。</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">1</div><div class="qa-body">Playing games on the cellphone <span class="ans-reveal">is</span> (beV) popular with high school students. (108 會)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">2</div><div class="qa-body">The number of the students at KIHS <span class="ans-reveal">is</span> (beV) about 3000.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">3</div><div class="qa-body">A large number of the students in Taiwan <span class="ans-reveal">are</span> (beV) near-sighted.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">4</div><div class="qa-body">My family (members) <span class="ans-reveal">are</span> (beV) all tall. &nbsp;&nbsp; My family <span class="ans-reveal">is</span> (beV) a large one.</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">5</div><div class="qa-body">A lot of roads <span class="ans-reveal">have</span> been damaged by the typhoon. 很多道路被颱風破壞了!</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">6</div><div class="qa-body">A lot of time <span class="ans-reveal">has</span> been wasted. 很多時間已經被浪費了!</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">7</div><div class="qa-body">The techniques of AI <span class="ans-reveal">have</span> become mature (AI 的技術已經變成熟的). (108 統) [has / have been / have / have been]</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">8</div><div class="qa-body">The best way to use computers <span class="ans-reveal">is</span> (beV) to use them only for a short period of time. (111 統)</div></div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">9</div><div class="qa-body">What <span class="ans-reveal">drives</span> (drive) explorers to leave their country? (109 統)</div></div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>英文與中文不同之處 · 代名詞格表</span>
+    <span>P.8 (DOCX P.10)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc11">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎一 ｜ 英文與中文不同之處 (講義 P.9)</div>
+    <h1>動詞三態 · 反身代名詞 · 🎯 統測中英不同 Q1-6</h1>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)" style="margin-bottom:8px;">
+    <div class="qa-num">10</div>
+    <div class="qa-body">
+      Despite the risk, the number of high school students who smoke e-cigarettes <span class="ans-reveal">has doubled</span> (double) worldwide in the past five years. (114 統)
+    </div>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge" style="background:#dc2626;">不同點 3</span> 3. 英文的動詞有三態變化，代表時間，語態的不同。(詳見附件「動詞三態表」)</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">go - went - gone &nbsp;&nbsp; | &nbsp;&nbsp; eat - ate - eaten &nbsp;&nbsp; | &nbsp;&nbsp; speak - spoke - spoken</div>
+  </div>
+
+  <div class="sub-title">其他 動動腦~~~想出其他的不同，就能夠培養出英文腦喔~</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="example-p">I’ll find it <span class="highlight">myself</span>. No need to bother you. → 我會<span class="ans-reveal">自己</span>找到它了，不用麻煩你了。</div>
+    <div class="example-p">I didn’t like the wine <span class="highlight">itself</span>, but the bottle was elegant. → 我不喜歡酒<span class="ans-reveal">本身</span>，但是它的瓶子很典雅。</div>
+    <div class="info-box tip" style="margin-top:4px;">換個英語腦訓練英文思考 // How to Think in English (阿滴英文 & Mr. Yang)</div>
+  </div>
+
+  <div class="sub-title" style="color:#dc2626; margin-top:10px;">【統測】統測實戰 中英不同 Test yourself</div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">1</div>
+    <div class="qa-body">
+      Jenny’s bag is very heavy because _____ filled with toy cars. (106 會)
+      <div class="choices-grid">
+        <span>(A) <span class="correct-choice">it is</span></span><span>(B) they are</span><span>(C) there is</span><span>(D) there are</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (A) it is：代名詞 it 代替單數名詞 Jenny's bag，搭配 be filled with。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">2</div>
+    <div class="qa-body">
+      The book under Mary’s desk is _____, but I don’t know why it is there. (108 會)
+      <div class="choices-grid">
+        <span>(A) us</span><span>(B) me</span><span>(C) myself</span><span>(D) <span class="correct-choice">mine</span></span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (D) mine：所有格代名詞 (= my book)。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">3</div>
+    <div class="qa-body">
+      My mom told me to take care of _____ in England. She worried I couldn’t eat well there. (105 會)
+      <div class="choices-grid">
+        <span>(A) me</span><span>(B) <span class="correct-choice">myself</span></span><span>(C) her</span><span>(D) herself</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (B) myself：受詞與前面的受詞 me 為同一人，須用反身代名詞。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">4</div>
+    <div class="qa-body">
+      Taking pictures _____ a good way for me to remember the experience. (100 基)
+      <div class="choices-grid">
+        <span>(A) to be</span><span>(B) <span class="correct-choice">is</span></span><span>(C) being</span><span>(D) are</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (B) is：動名詞片語 Taking pictures 當主詞，視為單數。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">5</div>
+    <div class="qa-body">
+      When I entered the house for the first time, I found _____ was a big table in the room. (100 基)
+      <div class="choices-grid">
+        <span>(A) it</span><span>(B) that</span><span>(C) <span class="correct-choice">there</span></span><span>(D) this</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (C) there：there was... 表「有...存在」。</div>
+    </div>
+  </div>
+
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">6</div>
+    <div class="qa-body">
+      Health experts say that such diets _____ not successful. (106 統)
+      <div class="choices-grid">
+        <span>(A) is</span><span>(B) <span class="correct-choice">are</span></span><span>(C) be</span><span>(D) have</span>
+      </div>
+      <div class="ans-reveal" style="font-size:0.78rem;">→ (B) are：that 子句的主詞 such diets 為複數。</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>動詞三態 · 中英不同 Test yourself</span>
+    <span>P.9 (DOCX P.11)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc12">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎二 ｜ 英文五大句型 (講義 P.10)</div>
+    <h1>基礎二｜英文五大句型 (句型 1–4)</h1>
+  </div>
+
+  <div class="task-box">
+    <div class="task-item"><span class="badge-task badge-blue">【本章任務】</span>能由主要動詞判斷五大句型，分辨受詞與補語。</div>
+    <div class="task-item"><span class="badge-task badge-red">【核心概念】</span>英文句子的骨架由動詞決定；先看動詞需要幾個必要成分。</div>
+    <div class="task-item"><span class="badge-task badge-green">【判斷流程】</span>找主要動詞 → 判斷及物／不及物／連綴 → 檢查受詞 → 判斷後方是 O 還是 C。</div>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="sub-title" style="color:#0f4c81; font-size:0.95rem;">我打你 第一大：<span class="ans-reveal">S + Vt + O</span> (主詞 + 完全及物動詞 + 受詞)</div>
+    <div class="example-p">I <span class="highlight">love</span> you.</div>
+    <div class="example-p">The early bird <span class="highlight">catches</span> the worm.</div>
+    <div class="example-p">She didn’t <span class="highlight">know</span> what she should do.</div>
+    <div class="body-p" style="color:#64748b; font-size:0.8rem; margin-left:12px;">(課本例句) ／ (自己造句)</div>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="sub-title" style="color:#0f4c81; font-size:0.95rem;">我快跑 第二大：<span class="ans-reveal">S + Vi</span> (主詞 + 完全不及物動詞)</div>
+    <div class="example-p">Time <span class="highlight">flies</span>. ／ <span class="highlight">Look</span>!</div>
+    <div class="example-p">A little girl was <span class="highlight">crying</span> (on the street).</div>
+    <div class="example-p">He <span class="highlight">waited</span> (for me).</div>
+    <div class="example-p">It <span class="highlight">rained</span> (suddenly) (on my way home).</div>
+    <div class="example-p">We <span class="highlight">work</span> (hard) (every day).</div>
+    <div class="body-p" style="color:#64748b; font-size:0.8rem; margin-left:12px;">(課本例句) ／ (自己造句)</div>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="sub-title" style="color:#0f4c81; font-size:0.95rem;">第三大：<span class="ans-reveal">S + Vt + O + OC</span> (主詞 + 不完全及物動詞 + 受詞 + 受詞補語)</div>
+    <div class="body-p" style="color:#0284c7; font-size:0.82rem;">(常考動詞：make, get, keep, find, think, consider, leave)</div>
+    <div class="example-p">You <span class="highlight">make</span> me <span class="ans-reveal">angry (adj)</span>.</div>
+    <div class="example-p">He <span class="highlight">had</span> his hair <span class="ans-reveal">cut (pp.)</span>.</div>
+    <div class="example-p">Don’t <span class="highlight">keep</span> me <span class="ans-reveal">waiting (Ving)</span>.</div>
+    <div class="example-p">They <span class="highlight">call</span> Ms. Chang <span class="ans-reveal">a walking dictionary (n)</span>.</div>
+    <div class="example-p">We <span class="highlight">elected</span> John <span class="ans-reveal">our class leader (n)</span>.</div>
+    <div class="example-p">Give me a hug! (課本例句) ／ (自己造句)</div>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="sub-title" style="color:#0f4c81; font-size:0.95rem;">第四大：<span class="ans-reveal">S + Vt + IO + DO</span> (授與動詞：主詞 + 動詞 + 間接受詞人 + 直接受詞物)</div>
+    <div class="body-p" style="color:#0284c7; font-size:0.82rem;">(常考動詞：give, bring, send, buy, show, ask, tell)</div>
+    <div class="example-p">I will <span class="highlight">buy</span> you dinner.</div>
+    <div class="example-p">You should <span class="highlight">write</span> your mom a letter of thanks.</div>
+    <div class="body-p" style="color:#64748b; font-size:0.8rem; margin-left:12px;">(課本例句) ／ (自己造句)</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>基礎二 ｜ 英文五大句型 (句型 1–4)</span>
+    <span>P.10 (DOCX P.12)</span>
+  </div>
+</div>
+
+<div class="page" id="p-doc13">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">基礎二 ｜ 英文五大句型 (講義 P.11)</div>
+    <h1>第五大句型 · 【必會】基礎辨識 Exercise I (20題)</h1>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="sub-title" style="color:#0f4c81; font-size:0.95rem;">第五大：<span class="ans-reveal">S + Vi (連綴動詞) + SC</span> (主詞 + 不完全不及物動詞 + 主詞補語)</div>
+    <div class="info-box">
+      <strong>連綴動詞 (= beV)：</strong>look, taste, smell, sound, seem, appear, become, feel, get, stay, keep, remain, grow, get, turn, fall, go, come
+    </div>
+    <div class="example-p">Yantzi is a singer. ／ My dream comes true. ／ You seem excited. ／ I feel sleepy.</div>
+    <div class="body-p" style="color:#64748b; font-size:0.8rem; margin-left:12px;">(課本例句) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (自己造句)</div>
+  </div>
+
+  <div class="sub-title">【必會】基礎辨識 Exercise I.</div>
+  <div class="info-box tip" style="font-size:0.82rem;">
+    <strong>句型選項代號：</strong><br>
+    <strong>A.</strong> S + Vi (+adv) +(prep.+O) &nbsp;&nbsp; <strong>B.</strong> S + Vi (連綴動詞) + SC &nbsp;&nbsp; <strong>C.</strong> S + Vt + O<br>
+    <strong>D.</strong> S + Vt (授與動詞) + IO (間接受詞人) + DO (直接受詞物) &nbsp;&nbsp; <strong>E.</strong> S + Vt + O + OC<br>
+    <em>補語與受詞的差別：Mary is a singer. (SC 主詞補語) ／ Mary likes the singer. (O 受詞)</em>
+  </div>
+
+  <div class="choices-grid" style="grid-template-columns:1fr 1fr; gap:3px 12px;">
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">1</div><div class="qa-body">( <span class="ans-reveal">C</span> ) Americans like hamburgers.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">2</div><div class="qa-body">( <span class="ans-reveal">B</span> ) Helen is a student.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">3</div><div class="qa-body">( <span class="ans-reveal">C</span> ) Mary doesn’t share her thoughts with others.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">4</div><div class="qa-body">( <span class="ans-reveal">C</span> ) I don’t like what he did.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">5</div><div class="qa-body">( <span class="ans-reveal">B</span> ) Smoking is harmful to one’s health.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">6</div><div class="qa-body">( <span class="ans-reveal">D</span> ) Mother bought me a bicycle yesterday.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">7</div><div class="qa-body">( <span class="ans-reveal">B</span> ) She looked sad.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">8</div><div class="qa-body">( <span class="ans-reveal">A</span> ) She looked at her ex-boyfriend sadly.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">9</div><div class="qa-body">( <span class="ans-reveal">A</span> ) Birds can fly high.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">10</div><div class="qa-body">( <span class="ans-reveal">E</span> ) She made me happy.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">11</div><div class="qa-body">( <span class="ans-reveal">D</span> ) He told me a story.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">12</div><div class="qa-body">( <span class="ans-reveal">E</span> ) We elected him chairman(主席).</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">13</div><div class="qa-body">( <span class="ans-reveal">B</span> ) The girl seems happy.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">14</div><div class="qa-body">( <span class="ans-reveal">A</span> ) Please speak slowly.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">15</div><div class="qa-body">( <span class="ans-reveal">C</span> ) Please speak English slowly.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">16</div><div class="qa-body">( <span class="ans-reveal">E</span> ) He had his house painted.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">17</div><div class="qa-body">( <span class="ans-reveal">C</span> ) John watched a baseball game on TV this morning.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">18</div><div class="qa-body">( <span class="ans-reveal">A</span> ) My grandparents have lived in the country since many years ago.</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">19</div><div class="qa-body">( <span class="ans-reveal">E</span> ) The woman found her money stolen (when she came home).</div></div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)"><div class="qa-num">20</div><div class="qa-body">( <span class="ans-reveal">B</span> ) Driving too fast can sometimes be very dangerous.</div></div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>基礎二 ｜ 五大句型 Exercise I (20題)</span>
+    <span>P.11 (DOCX P.13)</span>
+  </div>
+</div>
+</div><!-- /page-container -->
+
+<script>
+let showingAll = false;
+let penActive = false;
+let penColor = 'rgba(250,204,21,0.45)';
+let penSize = 4;
+
+function toggleToc(e) {
+  e.stopPropagation();
+  document.getElementById('tocMenu').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+});
+
+function jumpTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+}
+
+function toggleAllAnswers() {
+  showingAll = !showingAll;
+  document.body.classList.toggle('show-ans', showingAll);
+  document.getElementById('ansIcon').textContent = showingAll ? '🙈' : '👁️';
+  if (!showingAll) {
+    document.querySelectorAll('.interactive-item, .qa-block').forEach(el => el.classList.remove('show-one'));
+  }
+}
+
+function toggleItemAnswer(el) {
+  if (penActive) return;
+  el.classList.toggle('show-one');
+}
+
+function togglePenMode() {
+  penActive = !penActive;
+  document.body.classList.toggle('pen-mode', penActive);
+  document.getElementById('penBtn').style.background = penActive ? '#bfdbfe' : '';
+  document.getElementById('penOptions').classList.toggle('open', penActive);
+}
+
+function setPenColor(c, dotEl) {
+  penColor = c;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  dotEl.classList.add('active');
+}
+
+function setPenSize(s, btn) {
+  penSize = s;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function clearAllDrawings() {
+  document.querySelectorAll('.drawing-canvas').forEach(c => {
+    c.getContext('2d').clearRect(0, 0, c.width, c.height);
+  });
+}
+
+function initCanvases() {
+  document.querySelectorAll('.drawing-canvas').forEach(canvas => {
+    const page = canvas.parentElement;
+    function resize() {
+      const rect = page.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let drawing = false, lastX, lastY;
+
+    canvas.addEventListener('mousedown', e => {
+      if (!penActive) return;
+      drawing = true;
+      const r = canvas.getBoundingClientRect();
+      lastX = e.clientX - r.left;
+      lastY = e.clientY - r.top;
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!drawing || !penActive) return;
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      lastX = x; lastY = y;
+    });
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseleave', () => drawing = false);
+
+    canvas.addEventListener('touchstart', e => {
+      if (!penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      lastX = t.clientX - r.left; lastY = t.clientY - r.top;
+      drawing = true;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', e => {
+      if (!drawing || !penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      const x = t.clientX - r.left, y = t.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor; ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      lastX = x; lastY = y;
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => drawing = false);
+  });
+}
+window.addEventListener('load', initCanvases);
+</script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025 英文文法講義 V7 ｜ 動詞系統一：英文時態 (P.14–P.18) 教師大屏版</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14pt; }
+body {
+  font-family: "Times New Roman", "標楷體", "DFKai-SB", "BiauKai", serif;
+  background: #eef4fb;
+  color: #1a1a2e;
+  padding-top: 60px;
+  line-height: 1.65;
+}
+.classroom-toolbar {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.95); border-radius: 40px;
+  padding: 6px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+}
+.tool-btn {
+  background: none; border: none; font-size: 1.35rem; cursor: pointer;
+  border-radius: 50%; width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .1s;
+}
+.tool-btn:hover { background: #dbeafe; transform: scale(1.08); }
+.toolbar-divider { width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px; }
+.pen-options { display: none; align-items: center; gap: 5px; }
+.pen-options.open { display: flex; }
+.color-dot {
+  width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: border-color .15s, transform .1s;
+}
+.color-dot:hover { transform: scale(1.15); }
+.color-dot.active { border-color: #1e40af; transform: scale(1.15); }
+.size-btn {
+  background: #f1f5f9; border: 1px solid #cbd5e1;
+  border-radius: 6px; padding: 2px 8px; font-size: 0.72rem;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.size-btn.active, .size-btn:hover { background: #bfdbfe; font-weight: bold; }
+.sub-divider { width: 1px; height: 16px; background: #cbd5e1; margin: 0 3px; }
+.toc-wrapper { position: relative; }
+.toc-menu {
+  display: none; position: absolute; top: 46px; left: 0;
+  background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  min-width: 300px; max-height: 80vh; overflow-y: auto; padding: 8px 0; z-index: 2000;
+}
+.toc-menu.open { display: block; }
+.toc-menu-title {
+  padding: 6px 16px 4px; font-size: 0.75rem; color: #64748b; font-weight: bold;
+  letter-spacing: .05em; border-bottom: 1px solid #f1f5f9;
+}
+.toc-menu-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 16px; cursor: pointer; transition: background .1s; font-size: 0.84rem;
+}
+.toc-menu-item:hover { background: #eff6ff; }
+.toc-page-badge {
+  font-size: 0.7rem; background: #dbeafe; color: #1e40af; border-radius: 8px; padding: 2px 8px; font-weight: bold;
+}
+.page-container {
+  display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 15px 16px 80px;
+}
+.page {
+  background: white; width: 210mm; min-height: 297mm; padding: 13mm 16mm;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12); border-radius: 4px;
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+}
+.chapter-banner {
+  background: linear-gradient(135deg, #0f4c81, #0284c7); color: white;
+  border-radius: 8px; padding: 10px 18px 8px; margin-bottom: 12px;
+}
+.chapter-banner .ch-tag { font-size: 0.72rem; opacity: .85; letter-spacing: .08em; margin-bottom: 2px; }
+.chapter-banner h1 { font-size: 1.12rem; font-weight: bold; letter-spacing: .04em; }
+.chapter-banner .ch-sub { font-size: 0.74rem; opacity: .9; margin-top: 3px; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.toc-item {
+  display: flex; align-items: center; gap: 8px; background: #f0f7fc;
+  border-radius: 8px; padding: 8px 12px; font-size: 0.82rem; cursor: pointer;
+  transition: background .15s, transform .1s; border-left: 3px solid #0284c7;
+}
+.toc-item:hover { background: #dbeafe; transform: translateY(-1px); }
+.toc-item .pg { font-size: 0.72rem; color: #0284c7; margin-left: auto; font-weight: bold; }
+.task-box {
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+  padding: 8px 12px; margin-bottom: 10px; font-size: 0.84rem;
+}
+.task-item { margin-bottom: 4px; line-height: 1.5; }
+.task-item:last-child { margin-bottom: 0; }
+.badge-task {
+  display: inline-block; padding: 1px 6px; border-radius: 4px;
+  font-size: 0.72rem; font-weight: bold; color: white; margin-right: 4px;
+}
+.badge-blue { background: #1f4e79; }
+.badge-red { background: #9c0006; }
+.badge-green { background: #548235; }
+.info-box {
+  background: #f0f7fc; border-left: 4px solid #0284c7; border-radius: 0 8px 8px 0;
+  padding: 7px 12px; margin: 6px 0; font-size: 0.86rem;
+}
+.info-box.tip { border-color: #059669; background: #ecfdf5; }
+.info-box.warn { border-color: #d97706; background: #fffbeb; }
+.info-box.danger { border-color: #dc2626; background: #fef2f2; }
+.info-box .label { font-weight: bold; font-size: 0.78rem; letter-spacing: .04em; color: #0f4c81; margin-bottom: 2px; }
+.info-box.tip .label { color: #065f46; }
+.info-box.warn .label { color: #92400e; }
+.info-box.danger .label { color: #b91c1c; }
+.pos-title-bar {
+  display: flex; align-items: center; gap: 8px; margin: 10px 0 6px;
+  font-weight: bold; font-size: 0.95rem; border-bottom: 2px solid #0284c7;
+  padding-bottom: 3px; color: #0f4c81;
+}
+.pos-badge {
+  background: #0f4c81; color: white; border-radius: 20px;
+  padding: 2px 10px; font-size: 0.78rem; font-weight: bold; white-space: nowrap;
+}
+.custom-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 8px 0; }
+.custom-table th { background: #0f4c81; color: white; padding: 5px 8px; text-align: center; font-weight: bold; }
+.custom-table td { border: 1px solid #cbd5e1; padding: 5px 8px; text-align: center; vertical-align: middle; }
+.custom-table tr:nth-child(even) td { background: #f8fafc; }
+.custom-table td.col-head { background: #eff6ff; font-weight: bold; color: #0f4c81; }
+.pron-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin: 8px 0; }
+.pron-table th { background: #0f4c81; color: white; padding: 4px 5px; text-align: center; font-size: 0.72rem; }
+.pron-table td { border: 1px solid #cbd5e1; padding: 5px 4px; text-align: center; cursor: pointer; transition: background .15s; }
+.pron-table td:hover { background: #eff6ff; }
+.pron-table tr:nth-child(odd) td { background: #f8fafc; }
+.pron-table .ph { background: #eff6ff !important; font-weight: bold; cursor: default; font-size: 0.72rem; color: #0f4c81; }
+.ans-reveal {
+  color: transparent; font-weight: bold; transition: color .25s;
+  border-bottom: 2px dashed #94a3b8; min-width: 24px; display: inline-block;
+  text-align: center; padding: 0 4px;
+}
+.interactive-item {
+  cursor: pointer; border-radius: 6px; padding: 4px 8px; margin: 2px 0;
+  transition: background .15s, border-left-color .15s; border-left: 3px solid transparent; font-size: 0.86rem;
+}
+.interactive-item:hover { background: #f0f7fc; border-left-color: #0284c7; }
+.interactive-item.show-one { border-left-color: #dc2626; background: #fef2f2; }
+.qa-block {
+  display: flex; align-items: flex-start; gap: 8px; cursor: pointer;
+  padding: 4px 8px; border-radius: 6px; margin: 3px 0; transition: background .15s; font-size: 0.86rem;
+}
+.qa-block:hover { background: #f0f7fc; }
+.qa-block.show-one { background: #fef2f2; }
+.qa-num {
+  min-width: 28px; background: #e2e8f0; border-radius: 4px; text-align: center;
+  padding: 1px 4px; font-size: 0.8rem; font-weight: bold; flex-shrink: 0; margin-top: 2px; color: #1e293b;
+}
+.qa-block.show-one .qa-num { background: #fecaca; color: #dc2626; }
+.qa-body { flex: 1; }
+.choices-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px; margin-top: 3px; font-size: 0.82rem;
+}
+.correct-choice { display: inline; padding: 0 2px; transition: all .2s; }
+.show-one .correct-choice, .show-ans .correct-choice {
+  color: #dc2626 !important; font-weight: bold !important; border: 2px solid #dc2626 !important;
+  border-radius: 14px !important; background: #fef2f2 !important; padding: 0 6px !important;
+}
+.show-one .ans-reveal, .show-ans .ans-reveal {
+  color: #dc2626 !important; border-bottom-color: #dc2626;
+}
+.body-p { font-size: 0.86rem; margin: 4px 0; line-height: 1.6; }
+.sub-title { font-weight: bold; font-size: 0.88rem; color: #0f4c81; margin: 8px 0 4px; }
+.example-p { font-size: 0.84rem; color: #334155; margin: 2px 0 2px 12px; }
+.highlight { background: #fef9c3; padding: 0 3px; border-radius: 3px; font-weight: bold; }
+.red-txt { color: #dc2626; font-weight: bold; }
+.blue-txt { color: #1d4ed8; font-weight: bold; }
+.reading-box {
+  background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px;
+  padding: 9px 14px; font-size: 0.81rem; line-height: 1.72; margin: 6px 0; color: #334155;
+}
+.blank-box {
+  display: inline-block; min-width: 28px; background: #dbeafe; border-radius: 4px;
+  padding: 0 4px; text-align: center; font-weight: bold; color: #1e40af; font-size: 0.8rem;
+}
+.page-footer {
+  margin-top: auto; padding-top: 8px; border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: #94a3b8;
+}
+.footer-label { font-weight: bold; color: #0f4c81; }
+.drawing-canvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none;
+}
+body.pen-mode .drawing-canvas { pointer-events: auto; cursor: crosshair; }
+body.show-ans .ans-reveal { color: #dc2626 !important; border-bottom-color: #dc2626; }
+body.show-ans .correct-choice {
+  color: #dc2626 !important; font-weight: bold !important; border: 2px solid #dc2626 !important;
+  border-radius: 14px !important; background: #fef2f2 !important; padding: 0 6px !important;
+}
+@media print {
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+  html, body { width: 100% !important; background: transparent !important; padding: 0 !important; }
+  .classroom-toolbar, .no-print, .drawing-canvas, .toc-menu { display: none !important; }
+  body { padding-top: 0 !important; }
+  .page-container { padding: 0 !important; gap: 0 !important; }
+  .page {
+    box-shadow: none !important; margin: 0 !important; width: 100% !important;
+    height: 275mm !important; max-height: 275mm !important; min-height: 0 !important;
+    padding: 8mm 12mm !important; page-break-after: always !important; break-after: page !important;
+    overflow: hidden !important;
+  }
+  .page:last-child { page-break-after: avoid !important; break-after: avoid !important; }
+  .correct-choice { color: inherit !important; font-weight: normal !important; border: none !important; background: transparent !important; padding: 0 !important; }
+  .ans-reveal { color: transparent !important; border-bottom-color: #94a3b8 !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="classroom-toolbar no-print">
+  <div class="toc-wrapper">
+    <button class="tool-btn" onclick="toggleToc(event)" title="章節目錄導覽">📑</button>
+    <div class="toc-menu" id="tocMenu">
+      <div class="toc-menu-title">📖 動詞時態單元導覽</div>
+      <div class="toc-menu-item" onclick="jumpTo('p-tense14')"><span>📌 P.14 時態架構 · 現在簡單/進行/完成 · 過去簡單</span><span class="toc-page-badge">P.14</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-tense15')"><span>📌 P.15 過去進行 · 過去完成 · 未來簡單</span><span class="toc-page-badge">P.15</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-tense16')"><span>📌 P.16 未來式例句 · 時間介詞 · 現完 vs 現完進</span><span class="toc-page-badge">P.16</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-tense17')"><span>📌 P.17 統測時態練習 Q6-15 · 基測/會考題組</span><span class="toc-page-badge">P.17</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p-tense18')"><span>📌 P.18 會考閱測續 · 語法俱樂部對話實戰</span><span class="toc-page-badge">P.18</span></div>
+    </div>
+  </div>
+  <button class="tool-btn" onclick="toggleAllAnswers()" title="一鍵全開/全隱答案"><span id="ansIcon">👁️</span></button>
+  <button class="tool-btn" id="penBtn" onclick="togglePenMode()" title="螢光筆/板書筆">✏️</button>
+  <div class="pen-options" id="penOptions">
+    <div style="display:flex;gap:4px">
+      <span class="color-dot active" style="background:#facc15" onclick="setPenColor('rgba(250,204,21,0.45)',this)" title="螢光黃"></span>
+      <span class="color-dot" style="background:#ef4444" onclick="setPenColor('rgba(239,68,68,0.8)',this)" title="紅筆"></span>
+      <span class="color-dot" style="background:#3b82f6" onclick="setPenColor('rgba(59,130,246,0.8)',this)" title="藍筆"></span>
+      <span class="color-dot" style="background:#10b981" onclick="setPenColor('rgba(16,185,129,0.8)',this)" title="綠筆"></span>
+    </div>
+    <div class="sub-divider"></div>
+    <div style="display:flex;gap:3px">
+      <button class="size-btn active" onclick="setPenSize(4,this)">細</button>
+      <button class="size-btn" onclick="setPenSize(10,this)">中</button>
+      <button class="size-btn" onclick="setPenSize(20,this)">粗</button>
+    </div>
+  </div>
+  <button class="tool-btn" onclick="clearAllDrawings()" title="清除所有筆跡">🧹</button>
+  <div class="toolbar-divider"></div>
+  <button class="tool-btn" onclick="window.print()" title="列印為學生白紙考卷">🖨️</button>
+</div>
+<div class="page-container">
+
+<div class="page" id="p-tense14">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">動詞系統一 ｜ 英文時態 (講義 P.14)</div>
+    <h1>動詞系統一｜英文時態</h1>
+    <div class="ch-sub">時態＝時間（現在／過去／未來）＋動作面貌（簡單／進行／完成）</div>
+  </div>
+
+  <div class="task-box">
+    <div class="task-item"><span class="badge-task badge-blue">【本章任務】</span>能依時間線索與語意選擇正確時態，並完成動詞變化。</div>
+    <div class="task-item"><span class="badge-task badge-red">【核心概念】</span>時態＝時間（現在／過去／未來）＋動作面貌（簡單／進行／完成）。</div>
+    <div class="task-item"><span class="badge-task badge-green">【判斷流程】</span>找時間詞 → 判斷狀態、進行或完成 → 選時態 → 檢查主詞與動詞一致。</div>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge">I. 時間</span> I. 時 時間</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">English 的時間分三種：<span class="ans-reveal">現在</span>、<span class="ans-reveal">過去</span>、<span class="ans-reveal">未來</span>。</div>
+    <div class="body-p">而依照不同的時間，動詞的型態會做不同的改變。</div>
+    <div class="example-p">1. Hello Kitty <span class="ans-reveal">has</span> no mouth. (have)</div>
+    <div class="example-p">2. We <span class="ans-reveal">will have / are going to have</span> English classes tomorrow. (have)</div>
+    <div class="example-p">3. John <span class="ans-reveal">had</span> no money yesterday. (have)</div>
+    <div class="body-p" style="color:#64748b; font-size:0.8rem; margin-top:2px;">英文時態動畫：https://www.elihinkel.org/tips/tenses.htm</div>
+  </div>
+
+  <div class="pos-title-bar" style="margin-top:8px;"><span class="pos-badge" style="background:#059669;">II. 狀態</span> II. 態 狀態</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">
+      簡單 (simple) <span class="ans-reveal">單一事實/習慣</span> &nbsp;&nbsp;&nbsp;&nbsp;
+      進行 (progress) <span class="ans-reveal">正在進行/未結束</span> &nbsp;&nbsp;&nbsp;&nbsp;
+      完成 (perfect) <span class="ans-reveal">現在擁有過去/已完成</span>
+    </div>
+  </div>
+
+  <div class="sub-title">1. 現在簡單式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <span class="ans-reveal">V / Vs / beV (am/is/are)</span> &nbsp;&nbsp;&nbsp;&nbsp; 概念：以 現在為中心 <strong>無變化</strong></div>
+    <div class="body-p">Timing (使用時機)：<span class="ans-reveal">普遍事實、真理、常態、固定規律習慣</span></div>
+    <div class="example-p">I get up at 7 o’clock every day. &nbsp;&nbsp;&nbsp;&nbsp; The sun rise<span class="highlight">s</span> in the east.</div>
+    <div class="example-p">cf: I live in Kaohsiung. / She has a daughter. (常態/長久事實) vs. I’m living in Kaohsiung. / She is having a baby. (暫時居住/正在生小孩)</div>
+  </div>
+
+  <div class="sub-title">2. 現在進行式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <span class="ans-reveal">am / is / are + Ving</span> &nbsp;&nbsp;&nbsp;&nbsp; 概念：在 現在 來看 <strong>已開始未結束 會變動</strong></div>
+    <div class="body-p">Timing：<span class="ans-reveal">當下正進行；短期變動狀態；即將發生的未來</span></div>
+    <div class="example-p">John <span class="highlight">is singing</span> <strong>NOW</strong>. ／ I <span class="highlight">am living</span> with some friends until I find a house.</div>
+    <div class="example-p">We <span class="highlight">are going to</span> a basketball game this afternoon.</div>
+  </div>
+
+  <div class="sub-title">3. 現在完成式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <span class="ans-reveal">have / has + p.p.</span> &nbsp;&nbsp;&nbsp;&nbsp; 概念：<strong>現在擁有過去，過去影響到現在</strong></div>
+    <div class="body-p">Timing：<span class="ans-reveal">從過去持續至今；過去累積的經驗；剛剛完成</span></div>
+    <div class="example-p">You have studied English for 3 years. ／ I have lost my keys, so I can’t get in now.</div>
+    <div class="example-p">Have you ever been to a ball game? ／ He has gone to Japan. ／ I have been to Japan twice.</div>
+  </div>
+
+  <div class="sub-title">4. 過去簡單式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <span class="ans-reveal">V-ed / was / were</span> &nbsp;&nbsp;&nbsp;&nbsp; 概念：<strong>過去單一事件，與現在無關</strong></div>
+    <div class="body-p">Timing：<span class="ans-reveal">過去特定時間發生的動作或事實</span></div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>動詞系統一 ｜ 英文時態</span>
+    <span>P.14 (DOCX P.16)</span>
+  </div>
+</div>
+
+<div class="page" id="p-tense15">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">動詞系統一 ｜ 英文時態 (講義 P.15)</div>
+    <h1>過去時態系列 · 未來簡單式</h1>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="example-p">John walk<span class="highlight">ed</span> to the park <strong>yesterday</strong>. &nbsp;&nbsp; John <span class="highlight">used to</span> smoke. &nbsp;&nbsp; We <span class="highlight">took</span> a trip to Japan <strong>last year</strong>.</div>
+    <div class="example-p">cf: I lost my wallet. (過去掉的，現在找到沒未知) vs. I have lost my wallet. (掉了且現在依然沒錢包)</div>
+  </div>
+
+  <div class="sub-title">【小試身手】過去簡單式填空</div>
+  <div class="reading-box interactive-item" onclick="toggleItemAnswer(this)">
+    Last week, my parents <span class="ans-reveal">took</span> (take) me to Taipei. We <span class="ans-reveal">visited</span> (visit) many beautiful places. We also <span class="ans-reveal">bought</span> (buy) a lot of things. We all <span class="ans-reveal">had</span> (have) a good time.
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge" style="background:#0f4c81;">5. 過去進行式</span> 5. 過去進行式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <span class="ans-reveal">was / were + Ving</span> &nbsp;&nbsp;&nbsp;&nbsp; Timing：<span class="ans-reveal">過去特定時間點正在進行</span></div>
+    <div class="example-p">We <span class="highlight">were watching</span> TV at eight o’clock last night.</div>
+    <div class="example-p">When the telephone rang, John <span class="highlight">was taking</span> a shower.</div>
+  </div>
+
+  <div class="sub-title">【必會】基礎辨識 小試身手</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">1</div>
+    <div class="qa-body">I was not home when my friend called me yesterday. I <span class="ans-reveal">was playing</span> (play) basketball with my brothers in the park at that time.</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">2</div>
+    <div class="qa-body">I saw you in the library yesterday. You <span class="ans-reveal">were reading</span> (read) newspapers.</div>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="info-box warn">
+      <strong>過去簡單式與過去進行式的差別：</strong><br>
+      When he arrived (到達), ________ ▲ ________ .<br>
+      • 過去簡單式：When he arrived, <span class="highlight">▲ we had dinner.</span> → <span class="ans-reveal">他到達之後，我們才吃晚餐。</span><br>
+      • 過去進行式：When he arrived, <span class="highlight">▲ we were having dinner.</span> → <span class="ans-reveal">他到達的那一刻，我們正在吃晚餐。</span>
+    </div>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge" style="background:#7c3aed;">6. 過去完成式</span> 6. 過去完成式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <strong>had + p.p.</strong> &nbsp;&nbsp;&nbsp;&nbsp; Timing：<span class="ans-reveal">過去某個時間點或動作之前已經發生的事（過去的過去）</span></div>
+    <div class="example-p">He <span class="highlight">had lived</span> in Kaohsiung for 3 years before 1998.</div>
+    <div class="example-p">The train <span class="highlight">had left</span> before we got to the station.</div>
+  </div>
+
+  <div class="sub-title">【必會】基礎辨識 小試身手</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">1</div>
+    <div class="qa-body">
+      When I arrived, Tom had gone / went home. (意思有何不同)<br>
+      <span class="ans-reveal">→ had gone: 我到的時候 Tom 已經先離開了（沒碰面）；went: 我到了之後 Tom 才離開。</span>
+    </div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">2</div>
+    <div class="qa-body">Before he was eight years old, he <span class="ans-reveal">had</span> never <span class="ans-reveal">seen</span> (see) his parents.</div>
+  </div>
+
+  <div class="pos-title-bar"><span class="pos-badge" style="background:#b45309;">7. 未來簡單式</span> 7. 未來簡單式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="body-p">句型：S + <span class="ans-reveal">will + Vr ／ is/am/are going to + Vr</span> (可參見〈語氣系統〉敘述語態)</div>
+    <div class="body-p">Timing：<span class="ans-reveal">未來預測、計畫或即將發生的事</span></div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>過去進行 · 過去完成 · 未來簡單</span>
+    <span>P.15 (DOCX P.17)</span>
+  </div>
+</div>
+
+<div class="page" id="p-tense16">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">動詞系統一 ｜ 英文時態 (講義 P.16)</div>
+    <h1>時間副詞 · 現在完成 vs 現在完成進行 · 時態練習 1–5</h1>
+  </div>
+
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="example-p">We <span class="highlight">will</span> be happier <strong>next year</strong>.</div>
+    <div class="example-p">I<span class="highlight">’m starting</span> a new job this week.</div>
+    <div class="example-p">Look at those heavy clouds. It <span class="highlight">is going to</span> rain <strong>in a few minutes</strong>.</div>
+  </div>
+
+  <div class="info-box">
+    <div class="label">(介詞 + 時間 = 時間副詞)</div>
+    <div class="time-scale-bar">
+      <div class="time-scale-step"><span class="time-scale-word">at</span><br><span style="font-size:0.75rem;">(點/最小時間)</span></div>
+      <span style="color:#94a3b8;">▶</span>
+      <div class="time-scale-step"><span class="time-scale-word">on</span><br><span style="font-size:0.75rem;">(特定某一天/中)</span></div>
+      <span style="color:#94a3b8;">▶</span>
+      <div class="time-scale-step"><span class="time-scale-word">in</span><br><span style="font-size:0.75rem;">(年/月/長段時間/大)</span></div>
+    </div>
+    <div class="body-p" style="margin-top:4px;"><strong>Exception (例外)：有些時間副詞前不用介詞。</strong></div>
+    <div class="example-p"><span class="red-txt">last</span> (last week) &nbsp;&nbsp;&nbsp;&nbsp; <span class="red-txt">this</span> (this morning) &nbsp;&nbsp;&nbsp;&nbsp; <span class="red-txt">next</span> (next year)</div>
+  </div>
+
+  <div class="sub-title">現在完成式 V.S. 現在完成進行式</div>
+  <div class="interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="info-box tip">
+      • <strong>現在完成式：</strong>強調從過去一個時間開始，持續或影響到現在的動作或狀態。(不確定是否要繼續做) 或是表示有過的經驗 (中文為「曾經」或「已經」)。<br>
+      • <strong>現在完成進行式：</strong>也是從過去一個時間開始，一直持續到現在的動作或狀態，<strong>未來還會繼續一直做下去</strong>。
+    </div>
+    <div class="example-p">I <span class="highlight">have loved</span> you for three years. ／ I <span class="highlight">have read</span> your book. (您的大作我拜讀過了。已看完)</div>
+    <div class="example-p">I <span class="highlight">have been loving</span> you for three years. ／ I <span class="highlight">have been reading</span> your book. (您的大作我最近一直在看。還在看)</div>
+    <div class="example-p">I <span class="highlight">had loved</span> you for three years. (過去完成：過去曾愛三年，現在早已不愛了)</div>
+  </div>
+
+  <div class="sub-title">實戰句型填空與合併</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">1</div>
+    <div class="qa-body">你已經打了一天的電動了。立刻把電腦關掉！<br>You <span class="ans-reveal">have been playing</span> the computer game the whole day. Turn it off right now!</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">2</div>
+    <div class="qa-body">Jim <span class="ans-reveal">has visited / has been to</span> Japan many times.</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">3</div>
+    <div class="qa-body">Jim <span class="ans-reveal">has gone to</span> Japan. He won't be back until next Monday. (已經去日本，現在不在這)</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">4</div>
+    <div class="qa-body">The fans waited for Lady Gaga for a long time. They are still waiting by now. (合併)<br>→ <span class="ans-reveal">The fans have been waiting for Lady Gaga for a long time.</span></div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">5</div>
+    <div class="qa-body">I am worried because my student <span class="ans-reveal">has not</span> called me <span class="ans-reveal">yet</span>. (尚未打電話給我)</div>
+  </div>
+
+  <div class="sub-title" style="color:#dc2626; margin-top:8px;">【必會】基礎辨識 時態練習 (1)–(5)</div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">(1)</div>
+    <div class="qa-body">I _____ John in the park last night. (A) see (B) have seen (C) <span class="correct-choice">saw</span></div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">(2)</div>
+    <div class="qa-body">There are always lines in a bank. I _____ in line for half an hour yesterday. (A) <span class="correct-choice">stood</span> (B) am standing (C) have stood</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">(3)</div>
+    <div class="qa-body">Mother _____ when I got home. (A) <span class="correct-choice">was cooking</span> (B) is cooking (C) has cooked</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">(4)</div>
+    <div class="qa-body">I've visited five countries _____. (A) <span class="correct-choice">so far</span> (B) until here (C) yet</div>
+  </div>
+  <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+    <div class="qa-num">(5)</div>
+    <div class="qa-body">When I went to visit him, he _____ for Japan. (A) has left (B) <span class="correct-choice">had left</span> (C) is leaving</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>時間介詞 · 完成進行式 · 時態練習 1–5</span>
+    <span>P.16 (DOCX P.18)</span>
+  </div>
+</div>
+
+<div class="page" id="p-tense17">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">動詞系統一 ｜ 英文時態 (講義 P.17)</div>
+    <h1>時態練習 6–15 · 🎯 基測 / 會考閱讀測驗題組</h1>
+  </div>
+
+  <div class="choices-grid" style="grid-template-columns:1fr 1fr; gap:3px 12px; margin-bottom:8px;">
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(6)</div>
+      <div class="qa-body">The game had already begun when we _____. (A) arrive (B) <span class="correct-choice">arrived</span> (C) were arriving</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(7)</div>
+      <div class="qa-body">Scientists say that more than 80 percent of its glaciers <span class="ans-reveal">have melted</span> (melt) since 1912. (98 統)</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(8)</div>
+      <div class="qa-body">Since then, Australia <span class="ans-reveal">has been isolated</span> from the rest of the world. (92 學測)</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(9)</div>
+      <div class="qa-body">Have you found a summer job yet? Mr. Firth <span class="correct-choice">is looking</span> for someone to take care of his kids during vacation. (111 會) (A) is looking (B) looks (C) was looking (D) has looked</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(10)</div>
+      <div class="qa-body">There <span class="correct-choice">used to be</span> a church on the top of the hill, but it no longer exists(存在). (A) use to be (B) used to being (C) used to be (D) had</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(11)</div>
+      <div class="qa-body">I <span class="correct-choice">had lived</span> in Taipei for 2 years before I moved here. (A) have lived (B) had lived (C) lives</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(12)</div>
+      <div class="qa-body">By the time I was ten years old, several of my stories <span class="correct-choice">had already appeared</span> in magazines. (A) have already appeared (B) had already appeared (C) appear (D) will appear</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(13)</div>
+      <div class="qa-body">Doraemon has hated mice since his ears <span class="correct-choice">were bitten</span> by a mouse. (112 會) (A) bit (B) bite (C) were bitten (D) have bitten</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(14)</div>
+      <div class="qa-body">I haven't seen John since he <span class="correct-choice">left</span> here. (A) leaving (B) left (C) has left (D) leaves</div>
+    </div>
+    <div class="qa-block interactive-item" onclick="toggleItemAnswer(this)">
+      <div class="qa-num">(15)</div>
+      <div class="qa-body">I <span class="correct-choice">have been trying</span> to telephone a friend in New York for the last two hours but the line is still engaged(忙線中). (A) tried (B) have been trying (C) am trying (D) had been trying</div>
+    </div>
+  </div>
+
+  <div class="sub-title">【國中基測 9101 閱讀克漏字】</div>
+  <div class="reading-box interactive-item" onclick="toggleItemAnswer(this)">
+    Ted sat next to me when we were in elementary school. He had serious problems in communicating with people. One always had to guess what he was saying. Besides, most of my classmates did not like to be with him because his hands and shirts were always dirty. I <span class="ans-reveal">tried</span> (tried, am trying, have tried, will try) to let him know the importance of being clean by telling him several times a day to wash his hands. But he just could not understand.<br><br>
+    One day, our teacher Miss Hsieh walked up to Ted. Without saying anything, she took Ted to the washroom. Slowly, Miss Hsieh washed his hands and told him that he should keep himself clean. She <span class="ans-reveal">did</span> (did, was doing, has done, was going to do) that every day for one month. Finally, Ted understood.<br><br>
+    Miss Hsieh’s love has given me a good example to follow when I <span class="ans-reveal">am doing</span> (did, am doing, have done, am going to do) my job. I always remember to teach my students by showing them the right ways to do things. And most important of all, I remember to give them more time to learn and to grow up.
+  </div>
+
+  <div class="sub-title">【105 會考 閱讀測驗 (前篇)】</div>
+  <div class="reading-box interactive-item" onclick="toggleItemAnswer(this)">
+    It was 11 p.m. and Molly walked out of her bakery. She turned and looked at her store one last time. She wanted to remember what it <span class="ans-reveal">looked</span> <strong>[35]</strong> (A) had looked (B) looked (C) would look (D) has looked like at the moment. A few hours later, people would come and clean out everything in the store. A young man had bought it. He <span class="ans-reveal">was going to change</span> <strong>[36]</strong> (A) had changed (B) changed (C) was going to change (D) has changed it into a flower shop.
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>時態綜合練習 Q6–15 · 歷屆試題題組</span>
+    <span>P.17 (DOCX P.19)</span>
+  </div>
+</div>
+
+<div class="page" id="p-tense18">
+  <canvas class="drawing-canvas"></canvas>
+  <div class="chapter-banner">
+    <div class="ch-tag">動詞系統一 ｜ 英文時態 (講義 P.18)</div>
+    <h1>會考題組 (續) · 旋元佑語法俱樂部對話實戰</h1>
+  </div>
+
+  <div class="sub-title">【105 會考 閱讀測驗 (續篇)】</div>
+  <div class="reading-box interactive-item" onclick="toggleItemAnswer(this)">
+    Before it was a bakery, this place <span class="ans-reveal">used to be</span> <strong>[37]</strong> (A) used to be (B) would be (C) has been (D) is a small coffee shop. Molly worked in the shop as a waitress. But taking orders was never Molly’s dream; baking was. When she knew her boss planned to sell the shop, she borrowed money and bought it.<br><br>
+    Her bakery had been open for thirty years. Thirty very wonderful years. However, it would all come to an end tonight. Molly <span class="ans-reveal">had wanted</span> <strong>[38]</strong> (A) had wanted (B) has wanted (C) would want (D) will want the bakery to be a family business. But her daughter was never interested in baking. Molly did not want her business in a stranger’s hands, so after some serious thinking, she decided to close it.<br><br>
+    “Goodbye, my dear old friend,” Molly looked at the store, whispering.
+  </div>
+
+  <div class="sub-title" style="color:#0f4c81; margin-top:10px;">【旋元佑 - 英語魔法師之語法俱樂部】時態對話實戰</div>
+  <div class="reading-box interactive-item" onclick="toggleItemAnswer(this)" style="font-size:0.85rem; line-height:1.85;">
+    <strong>John:</strong> Do you want to go and see <em>Toy Story</em> with me tonight?<br>
+    <strong>Mary:</strong> No! I <span class="ans-reveal">have seen</span> (see) it.<br>
+    <strong>John:</strong> Oh, really? Where did you see it?<br>
+    <strong>Mary:</strong> I <span class="ans-reveal">went</span> (go) to see it last Monday.<br>
+    <strong>John:</strong> To tell you the truth, I have seen it too. In fact, I <span class="ans-reveal">had seen</span> (see) it before you did.<br>
+    <strong>Mary:</strong> In that case, why did you ask me to go in the first place?<br>
+    <strong>John:</strong> Well, I just <span class="ans-reveal">wanted</span> (want) to go out with you tonight. Since you have seen the movie, will you go to the baseball game with me instead?<br>
+    <strong>Mary:</strong> I <span class="ans-reveal">guess</span> (guess) I will.<br>
+    <strong>John:</strong> Great! I <span class="ans-reveal">will see</span> (see) you at 5:30 then.<br>
+    <strong>Mary:</strong> Why 5:30? Why not seven o’clock?
+  </div>
+
+  <div class="info-box tip" style="margin-top:12px;">
+    <div class="label">🎉「動詞系統一｜英文時態」(講義 P.14 ~ P.18) 建置完成！</div>
+    <strong>核心總結：</strong>時態絕非死背公式，而是「時間點」與「動作樣態」的交集。<br>
+    • 過去某時間前已完成 → <strong>過去完成式 had + p.p.</strong><br>
+    • 從過去持續至今且未停 → <strong>現在完成進行式 have/has been + Ving</strong><br>
+    • 單純敘述過去事實 → <strong>過去簡單式 V-ed</strong>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-label">2025 英文文法講義 V7</span>
+    <span>動詞系統一 ｜ 英文時態 單元完成 🎉</span>
+    <span>P.18 (DOCX P.20)</span>
+  </div>
+</div>
+</div><!-- /page-container -->
+
+<script>
+let showingAll = false;
+let penActive = false;
+let penColor = 'rgba(250,204,21,0.45)';
+let penSize = 4;
+
+function toggleToc(e) {
+  e.stopPropagation();
+  document.getElementById('tocMenu').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+});
+
+function jumpTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+}
+
+function toggleAllAnswers() {
+  showingAll = !showingAll;
+  document.body.classList.toggle('show-ans', showingAll);
+  document.getElementById('ansIcon').textContent = showingAll ? '🙈' : '👁️';
+  if (!showingAll) {
+    document.querySelectorAll('.interactive-item, .qa-block').forEach(el => el.classList.remove('show-one'));
+  }
+}
+
+function toggleItemAnswer(el) {
+  if (penActive) return;
+  el.classList.toggle('show-one');
+}
+
+function togglePenMode() {
+  penActive = !penActive;
+  document.body.classList.toggle('pen-mode', penActive);
+  document.getElementById('penBtn').style.background = penActive ? '#bfdbfe' : '';
+  document.getElementById('penOptions').classList.toggle('open', penActive);
+}
+
+function setPenColor(c, dotEl) {
+  penColor = c;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  dotEl.classList.add('active');
+}
+
+function setPenSize(s, btn) {
+  penSize = s;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function clearAllDrawings() {
+  document.querySelectorAll('.drawing-canvas').forEach(c => {
+    c.getContext('2d').clearRect(0, 0, c.width, c.height);
+  });
+}
+
+function initCanvases() {
+  document.querySelectorAll('.drawing-canvas').forEach(canvas => {
+    const page = canvas.parentElement;
+    function resize() {
+      const rect = page.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let drawing = false, lastX, lastY;
+
+    canvas.addEventListener('mousedown', e => {
+      if (!penActive) return;
+      drawing = true;
+      const r = canvas.getBoundingClientRect();
+      lastX = e.clientX - r.left;
+      lastY = e.clientY - r.top;
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!drawing || !penActive) return;
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      lastX = x; lastY = y;
+    });
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseleave', () => drawing = false);
+
+    canvas.addEventListener('touchstart', e => {
+      if (!penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      lastX = t.clientX - r.left; lastY = t.clientY - r.top;
+      drawing = true;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', e => {
+      if (!drawing || !penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      const x = t.clientX - r.left, y = t.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor; ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      lastX = x; lastY = y;
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => drawing = false);
+  });
+}
+window.addEventListener('load', initCanvases);
+</script>
+</body>
+</html>

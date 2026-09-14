@@ -33,7 +33,7 @@ AI米克斯_大屏講義解答html製作/
 | 層級 | 平台 | 位置 | 讀取時機 |
 |------|------|------|---------|
 | L1 | 本地（GDrive） | `AGENTS.md`＋`handoff.md` | 每個 session |
-| L2 | GitHub | `t508-ksvs/aimix-screen-handout-html`（私有） | 指定時 |
+| L2 | GitHub | `t508-ksvs/aimix-screen-handout-html`（公開，Pages: `https://t508-ksvs.github.io/aimix-screen-handout-html/`） | 指定時 |
 | L3 | Obsidian | `Projects/AI米克斯_大屏講義解答html製作/專案工作流程.md` | 有需要時 |
 
 ## 工作約定

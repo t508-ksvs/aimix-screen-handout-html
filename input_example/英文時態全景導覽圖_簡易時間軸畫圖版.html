@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文時態全景時間軸導覽圖</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ece8e1;
+    font-family: 'Noto Sans TC', 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    color: #1a1a2e;
+  }
+
+  .canvas {
+    width: 1160px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(26,26,46,0.08);
+    overflow: hidden;
+  }
+
+  /* ── 頂部 Header ── */
+  .header {
+    padding: 38px 48px 30px;
+    background: #ffffff;
+    border-bottom: 2.5px solid #1a1a2e;
+    position: relative;
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #88889a;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #e8650a;
+    border-radius: 50%;
+  }
+  .header-main {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #1a1a2e;
+    line-height: 1.25;
+  }
+  .header-title span { color: #e8650a; }
+  .header-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .header-badge {
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .header-badge.highlight {
+    background: #e8650a;
+  }
+  .header-formula-card {
+    background: #f7f6f2;
+    border: 1.5px solid #e2ded5;
+    border-radius: 6px;
+    padding: 12px 18px;
+    text-align: right;
+  }
+  .header-formula-title {
+    font-size: 11px;
+    color: #7b7b8e;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+  .header-formula-math {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .header-formula-math strong { color: #e8650a; }
+
+  /* ── 內容主體 ── */
+  .content {
+    padding: 36px 48px 44px;
+  }
+
+  /* ── 區塊標題 ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: #1a1a2e;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #1a1a2e;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: #6b6b7e;
+    margin-left: auto;
+  }
+
+  /* ── 區塊一：簡易時間軸繪圖符號系統 ── */
+  .symbol-deck {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .symbol-card {
+    background: #fbfbfa;
+    border: 1.5px solid #e6e3dd;
+    border-radius: 6px;
+    padding: 16px;
+    transition: all 0.2s ease;
+  }
+  .symbol-card:hover {
+    border-color: #1a1a2e;
+    background: #ffffff;
+  }
+  .symbol-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .symbol-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a1a2e;
+  }
+  .symbol-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: #9999aa;
+  }
+  .symbol-canvas {
+    background: #ffffff;
+    border: 1px dashed #d5d1c8;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+  }
+  .symbol-rule {
+    font-size: 12px;
+    line-height: 1.55;
+    color: #4a4a5a;
+  }
+  .symbol-rule strong {
+    color: #e8650a;
+  }
+
+  /* ── 區塊二：三大時間家族 × 簡易時間軸 12 時態矩陣 ── */
+  .tense-matrix {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 34px;
+  }
+  .matrix-column {
+    background: #fbfbf9;
+    border: 1.5px solid #ded9ce;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .col-header {
+    background: #2a2a3e;
+    color: #ffffff;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .col-header.present {
+    background: #1a1a2e;
+    border-bottom: 3px solid #e8650a;
+  }
+  .col-header.past {
+    background: #252839;
+    border-bottom: 3px solid #3b82f6;
+  }
+  .col-header.future {
+    background: #282d3c;
+    border-bottom: 3px solid #10b981;
+  }
+  .col-title {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  .col-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    opacity: 0.8;
+  }
+
+  .col-cards {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+  }
+  .mini-tense-card {
+    background: #ffffff;
+    border: 1px solid #e4dfd5;
+    border-radius: 6px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .mini-tense-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .mini-tense-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #1a1a2e;
+  }
+  .mini-tense-formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #e8650a;
+    background: #fdf5ef;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .mini-svg-box {
+    margin: 8px 0;
+  }
+  .mini-concept {
+    font-size: 12px;
+    color: #4a4a58;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .mini-concept span {
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .mini-example {
+    font-size: 11.5px;
+    color: #2a2a3e;
+    background: #f6f5f0;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.45;
+  }
+  .mini-example em {
+    font-style: normal;
+    font-weight: 700;
+    color: #b45309;
+  }
+
+  /* ── 區塊三：3C 功能認知語法深度對比（講義精華） ── */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .focus-card {
+    background: #ffffff;
+    border: 1.5px solid #ded9ce;
+    border-radius: 6px;
+    padding: 18px 20px;
+    position: relative;
+  }
+  .focus-card.bus-highlight {
+    border-color: #e8650a;
+    background: #fffdfb;
+  }
+  .focus-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #1a1a2e;
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+  }
+  .focus-badge.orange { background: #e8650a; }
+  .focus-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+  }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .compare-box {
+    background: #f7f6f2;
+    border-radius: 5px;
+    padding: 10px 12px;
+    border-left: 3px solid #1a1a2e;
+  }
+  .compare-box.active {
+    border-left-color: #e8650a;
+    background: #fef8f4;
+  }
+  .compare-box-title {
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: #1a1a2e;
+  }
+  .compare-box-sent {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 4px;
+  }
+  .compare-box-desc {
+    font-size: 11.5px;
+    color: #555566;
+    line-height: 1.5;
+  }
+
+  /* ── 區塊四：大考迷思破解與解題心法 ── */
+  .exam-box {
+    background: #fdfdfc;
+    border: 1.5px solid #ded9ce;
+    border-radius: 6px;
+    padding: 20px 24px;
+  }
+  .exam-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+  .exam-myth-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #dc2626;
+    margin-bottom: 6px;
+  }
+  .exam-myth-content {
+    font-size: 12.5px;
+    color: #4a4a58;
+    line-height: 1.6;
+  }
+  .exam-myth-content strong { color: #1a1a2e; }
+  .exam-steps {
+    background: #ffffff;
+    border: 1px solid #e0dbd0;
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .exam-step-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .step-list {
+    list-style: none;
+  }
+  .step-list li {
+    font-size: 12px;
+    color: #4a4a58;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .step-num {
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 48px;
+    border-top: 1.5px solid #ded9ce;
+    background: #faf9f6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #88889a;
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas">
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="header-eyebrow">Visual Timeline & 3C Functional Grammar · 英語時態全景圖解</div>
+    <div class="header-main">
+      <div>
+        <div class="header-title">英文時態時間軸<span>全景教學導覽圖</span></div>
+        <div class="header-badges">
+          <span class="header-badge highlight">簡易手繪時間軸畫法</span>
+          <span class="header-badge">李櫻教授 3C 功能語法</span>
+          <span class="header-badge">高中職英文講義核心精選</span>
+        </div>
+      </div>
+      <div class="header-formula-card">
+        <div class="header-formula-title">TENSE ESSENCE FORMULA</div>
+        <div class="header-formula-math">時態 ＝ <strong>3大時間</strong> (時) ＋ <strong>4種動態</strong> (態) ＝ <strong>12大時態</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content">
+
+    <!-- ── 區塊一：簡易時間軸繪圖符號系統 ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 1</span>
+      <span class="section-title">手繪時間軸符號系統（Visual Timeline Notation）</span>
+      <span class="section-desc">只需 4 種簡易線條，秒懂所有時態幾何本質</span>
+    </div>
+
+    <div class="symbol-deck">
+      <!-- 符號 1 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">簡單式</div>
+          <div class="symbol-en">SIMPLE</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="34" viewBox="0 0 220 34">
+            <line x1="15" y1="17" x2="205" y2="17" stroke="#ccc" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- 實心單點或雙向虛線 -->
+            <line x1="40" y1="17" x2="180" y2="17" stroke="#1a1a2e" stroke-width="2" stroke-dasharray="4,2"/>
+            <circle cx="110" cy="17" r="4.5" fill="#e8650a"/>
+            <text x="110" y="30" font-size="9" font-family="'JetBrains Mono'" text-anchor="middle" fill="#666">焦點/常態</text>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【單點 / 跨時常態】</strong> 表示客觀事實、常態習慣或已結束的單一孤立事件，不強調過程長短。
+        </div>
+      </div>
+
+      <!-- 符號 2 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">進行式</div>
+          <div class="symbol-en">CONTINUOUS</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="34" viewBox="0 0 220 34">
+            <line x1="15" y1="17" x2="205" y2="17" stroke="#ccc" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- 加粗實心波浪或厚線條 -->
+            <rect x="75" y="12" width="70" height="10" rx="5" fill="#e8650a" opacity="0.85"/>
+            <line x1="110" y1="5" x2="110" y2="29" stroke="#1a1a2e" stroke-width="1.5"/>
+            <text x="110" y="31" font-size="9" font-family="'JetBrains Mono'" text-anchor="middle" fill="#1a1a2e">正在進行</text>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【加粗區段 / 正在進行】</strong> 涵蓋基準點前後的一小段過程，強調「當下進行中、未結束、具暫時性」。
+        </div>
+      </div>
+
+      <!-- 符號 3 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">完成式</div>
+          <div class="symbol-en">PERFECT</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="34" viewBox="0 0 220 34">
+            <defs>
+              <marker id="arr1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M0,0.5 L5,3 L0,5.5 Z" fill="#e8650a"/>
+              </marker>
+            </defs>
+            <line x1="15" y1="17" x2="205" y2="17" stroke="#ccc" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <circle cx="50" cy="17" r="3.5" fill="#fff" stroke="#1a1a2e" stroke-width="1.5"/>
+            <line x1="55" y1="17" x2="135" y2="17" stroke="#e8650a" stroke-width="2.5" marker-end="url(#arr1)"/>
+            <circle cx="140" cy="17" r="4.5" fill="#1a1a2e"/>
+            <text x="140" y="30" font-size="9" font-family="'JetBrains Mono'" text-anchor="middle" fill="#1a1a2e">基準點</text>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【起點箭頭 → 基準點】</strong> 站在基準點「回頭看」，動作已完成或累積經驗，對當下造成直接影響。
+        </div>
+      </div>
+
+      <!-- 符號 4 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">完成進行式</div>
+          <div class="symbol-en">PERF. CONT.</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="34" viewBox="0 0 220 34">
+            <defs>
+              <marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M0,0.5 L5,3 L0,5.5 Z" fill="#e8650a"/>
+              </marker>
+            </defs>
+            <line x1="15" y1="17" x2="205" y2="17" stroke="#ccc" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <circle cx="45" cy="17" r="3.5" fill="#fff" stroke="#1a1a2e" stroke-width="1.5"/>
+            <line x1="50" y1="15" x2="135" y2="15" stroke="#e8650a" stroke-width="2"/>
+            <line x1="50" y1="19" x2="135" y2="19" stroke="#e8650a" stroke-width="2"/>
+            <circle cx="140" cy="17" r="4" fill="#1a1a2e"/>
+            <line x1="145" y1="17" x2="185" y2="17" stroke="#e8650a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【雙軌推進 ═► 未完待續】</strong> 從前起點一路持續累積到基準點，且動作毫無中斷，「還在繼續進行」。
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── 區塊二：三大時間家族 × 12 時態全景矩陣 ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 2</span>
+      <span class="section-title">三大時間家族 × 簡易時間軸對照矩陣</span>
+      <span class="section-desc">橫向對比時間位移（過去／現在／未來），縱向掌握動態變化</span>
+    </div>
+
+    <div class="tense-matrix">
+
+      <!-- COLUMN 1: PAST 過去 -->
+      <div class="matrix-column">
+        <div class="col-header past">
+          <div class="col-title">過去家族</div>
+          <div class="col-subtitle">PAST TENSES</div>
+        </div>
+        <div class="col-cards">
+
+          <!-- 過去簡單 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">過去簡單式</div>
+              <div class="mini-tense-formula">V-ed / did</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="200" y1="5" x2="200" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <text x="200" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#999">NOW</text>
+                <!-- 過去單點 -->
+                <circle cx="90" cy="13" r="5" fill="#3b82f6"/>
+                <text x="90" y="8" font-size="9" font-family="'Noto Sans TC'" text-anchor="middle" fill="#3b82f6" font-weight="700">過去事件</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>過去孤立事件，已結束且與現在脫鉤。</div>
+            <div class="mini-example">I <em>lost</em> my wallet yesterday.（丟了，現在找沒找到不管）</div>
+          </div>
+
+          <!-- 過去進行 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">過去進行式</div>
+              <div class="mini-tense-formula">was/were + Ving</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="200" y1="5" x2="200" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <!-- 過去區段 -->
+                <rect x="65" y="9" width="55" height="8" rx="4" fill="#3b82f6" opacity="0.8"/>
+                <circle cx="92" cy="13" r="2.5" fill="#fff"/>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>過去某精確時刻的「背景持續動作」。</div>
+            <div class="mini-example">I <em>was taking</em> a shower when the phone rang.</div>
+          </div>
+
+          <!-- 過去完成 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">過去完成式</div>
+              <div class="mini-tense-formula">had + p.p.</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="200" y1="5" x2="200" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <!-- 過去的過去 -->
+                <circle cx="50" cy="13" r="3" fill="#fff" stroke="#3b82f6" stroke-width="1.5"/>
+                <line x1="55" y1="13" x2="115" y2="13" stroke="#3b82f6" stroke-width="2"/>
+                <polygon points="120,13 114,10 114,16" fill="#3b82f6"/>
+                <circle cx="125" cy="13" r="4" fill="#1a1a2e"/>
+                <text x="125" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#333">過錨點</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>時間階梯！在「過去某錨點」之前已完成。</div>
+            <div class="mini-example">The train <em>had left</em> before we arrived.</div>
+          </div>
+
+          <!-- 過去完成進行 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">過去完成進行式</div>
+              <div class="mini-tense-formula">had been + Ving</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="200" y1="5" x2="200" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <!-- 過去雙軌推進到錨點 -->
+                <line x1="50" y1="11" x2="118" y2="11" stroke="#3b82f6" stroke-width="1.5"/>
+                <line x1="50" y1="15" x2="118" y2="15" stroke="#3b82f6" stroke-width="1.5"/>
+                <circle cx="122" cy="13" r="4" fill="#1a1a2e"/>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>在過去基準點之前，一刻不停地持續進行。</div>
+            <div class="mini-example">He <em>had been studying</em> for 10 yrs before moving.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN 2: PRESENT 現在 (焦點推薦) -->
+      <div class="matrix-column" style="border-color: #e8650a; box-shadow: 0 4px 16px rgba(232,101,10,0.08);">
+        <div class="col-header present">
+          <div class="col-title">現在家族 (大考核心)</div>
+          <div class="col-subtitle">PRESENT TENSES</div>
+        </div>
+        <div class="col-cards">
+
+          <!-- 現在簡單 -->
+          <div class="mini-tense-card" style="background:#fffcf9;">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">現在簡單式</div>
+              <div class="mini-tense-formula">V / V-s</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <!-- 貫穿橫跨的虛線雙箭頭 -->
+                <line x1="60" y1="13" x2="240" y2="13" stroke="#e8650a" stroke-width="2" stroke-dasharray="4,2"/>
+                <circle cx="150" cy="13" r="5" fill="#e8650a"/>
+                <text x="150" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#e8650a" font-weight="700">NOW</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>常態真理、職業本質。即使當下沒在做也是！</div>
+            <div class="mini-example">He <em>drives</em> a bus.（他是公車司機，睡覺時也成立）</div>
+          </div>
+
+          <!-- 現在進行 -->
+          <div class="mini-tense-card" style="background:#fffcf9;">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">現在進行式</div>
+              <div class="mini-tense-formula">am/is/are + Ving</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <!-- NOW粗區段 -->
+                <rect x="120" y="8" width="60" height="10" rx="5" fill="#e8650a"/>
+                <circle cx="150" cy="13" r="3" fill="#fff"/>
+                <text x="150" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#1a1a2e" font-weight="700">NOW</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>說話此刻正在發生的動態，或暫時性狀態。</div>
+            <div class="mini-example">He <em>is driving</em> a bus.（握著方向盤駕駛中）</div>
+          </div>
+
+          <!-- 現在完成 -->
+          <div class="mini-tense-card" style="background:#fffcf9;">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">現在完成式</div>
+              <div class="mini-tense-formula">have/has + p.p.</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <!-- 過去拉到 NOW -->
+                <circle cx="70" cy="13" r="3.5" fill="#fff" stroke="#1a1a2e" stroke-width="1.5"/>
+                <line x1="75" y1="13" x2="142" y2="13" stroke="#e8650a" stroke-width="2.5"/>
+                <polygon points="148,13 140,9 140,17" fill="#e8650a"/>
+                <circle cx="150" cy="13" r="5" fill="#1a1a2e"/>
+                <text x="150" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#1a1a2e" font-weight="700">NOW</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>「現在擁有過去」，過去經驗/結果直接牽連現在。</div>
+            <div class="mini-example">I <em>have lost</em> my keys.（進不去家門，影響當下！）</div>
+          </div>
+
+          <!-- 現在完成進行 -->
+          <div class="mini-tense-card" style="background:#fffcf9;">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">現在完成進行式</div>
+              <div class="mini-tense-formula">have/has been + Ving</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="70" y1="11" x2="146" y2="11" stroke="#e8650a" stroke-width="2"/>
+                <line x1="70" y1="15" x2="146" y2="15" stroke="#e8650a" stroke-width="2"/>
+                <circle cx="150" cy="13" r="4.5" fill="#1a1a2e"/>
+                <line x1="155" y1="13" x2="195" y2="13" stroke="#e8650a" stroke-width="1.5" stroke-dasharray="3,2"/>
+                <polygon points="200,13 194,10 194,16" fill="#e8650a"/>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>從過去持續至今，一刻未歇，而且「當下還在做」。</div>
+            <div class="mini-example">It <em>has been raining</em> all day.（雨整天且現在還在下）</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN 3: FUTURE 未來 -->
+      <div class="matrix-column">
+        <div class="col-header future">
+          <div class="col-title">未來家族</div>
+          <div class="col-subtitle">FUTURE TENSES</div>
+        </div>
+        <div class="col-cards">
+
+          <!-- 未來簡單 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">未來簡單式</div>
+              <div class="mini-tense-formula">will + V / be going to</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="100" y1="5" x2="100" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <text x="100" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#999">NOW</text>
+                <!-- 未來單點 -->
+                <circle cx="210" cy="13" r="5" fill="#10b981"/>
+                <text x="210" y="8" font-size="9" font-family="'Noto Sans TC'" text-anchor="middle" fill="#10b981" font-weight="700">未來點</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>說話當下的打算、承諾或客觀徵兆預測。</div>
+            <div class="mini-example">Look at those dark clouds! It <em>is going to</em> rain.</div>
+          </div>
+
+          <!-- 未來進行 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">未來進行式</div>
+              <div class="mini-tense-formula">will be + Ving</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="100" y1="5" x2="100" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <!-- 未來區段 -->
+                <rect x="180" y="9" width="60" height="8" rx="4" fill="#10b981" opacity="0.85"/>
+                <circle cx="210" cy="13" r="2.5" fill="#fff"/>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>預想未來某個時間點「當下正在發生的畫面」。</div>
+            <div class="mini-example">This time tomorrow, I <em>will be having</em> an exam.</div>
+          </div>
+
+          <!-- 未來完成 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">未來完成式</div>
+              <div class="mini-tense-formula">will have + p.p.</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="100" y1="5" x2="100" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <!-- NOW拉到未來錨點 -->
+                <line x1="105" y1="13" x2="212" y2="13" stroke="#10b981" stroke-width="2"/>
+                <polygon points="218,13 212,10 212,16" fill="#10b981"/>
+                <circle cx="220" cy="13" r="4.5" fill="#1a1a2e"/>
+                <text x="220" y="24" font-size="8" font-family="'JetBrains Mono'" text-anchor="middle" fill="#333">未錨點</text>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>站在未來終點線「往回看已累積的成果」。</div>
+            <div class="mini-example">By next Monday, I <em>will have taken</em> 6 exams.</div>
+          </div>
+
+          <!-- 未來完成進行 -->
+          <div class="mini-tense-card">
+            <div class="mini-tense-head">
+              <div class="mini-tense-name">未來完成進行式</div>
+              <div class="mini-tense-formula">will have been + Ving</div>
+            </div>
+            <div class="mini-svg-box">
+              <svg width="100%" height="26" viewBox="0 0 300 26">
+                <line x1="20" y1="13" x2="280" y2="13" stroke="#d5d0c5" stroke-width="1.5"/>
+                <line x1="100" y1="5" x2="100" y2="21" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                <line x1="105" y1="11" x2="215" y2="11" stroke="#10b981" stroke-width="1.5"/>
+                <line x1="105" y1="15" x2="215" y2="15" stroke="#10b981" stroke-width="1.5"/>
+                <circle cx="220" cy="13" r="4" fill="#1a1a2e"/>
+              </svg>
+            </div>
+            <div class="mini-concept"><span>心理視角：</span>動作持續推進至未來某刻，強調持續年限或時長。</div>
+            <div class="mini-example">By then, I <em>will have been teaching</em> for 35 yrs.</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ── 區塊三：3C 功能認知語法深度對比（講義精華焦點） ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 3</span>
+      <span class="section-title">講義核心概念認知深度圖解（Cognitive Deep-Dives）</span>
+      <span class="section-desc">李櫻教授 3C 語法：語境（Context）與溝通意圖（Communication）決定時態</span>
+    </div>
+
+    <div class="focus-grid">
+
+      <!-- 核心 1: 公車司機晝夜對照 -->
+      <div class="focus-card bus-highlight">
+        <span class="focus-badge orange">講義經典題圖解 · 認知語意反差</span>
+        <div class="focus-card-title">① 公車司機的晝與夜：本質習慣 vs. 此刻進行</div>
+        <div class="compare-row">
+          <div class="compare-box">
+            <div class="compare-box-title">【現在簡單式】習慣常態</div>
+            <div class="compare-box-sent">He drives a bus.</div>
+            <div class="compare-box-desc">
+              <strong>情境解密：</strong>即便司機<strong>半夜躺在床上睡覺（Zzz...）</strong>，依然用 drives！因為這是他的職業與常態身份，不代表當下手握方向盤。
+            </div>
+          </div>
+          <div class="compare-box active">
+            <div class="compare-box-title">【現在進行式】當下動態</div>
+            <div class="compare-box-sent">He is driving a bus.</div>
+            <div class="compare-box-desc">
+              <strong>情境解密：</strong>說話當下他正<strong>坐在駕駛座上開車</strong>！進行式強調「視線所及、正在變動的瞬間畫面」。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心 2: 遺失鑰匙對決 -->
+      <div class="focus-card">
+        <span class="focus-badge">溝通意圖對照 · 跨時連繫</span>
+        <div class="focus-card-title">② 鑰匙失竊記：單純過去事件 vs. 當下深遠影響</div>
+        <div class="compare-row">
+          <div class="compare-box">
+            <div class="compare-box-title">【過去簡單式】歷史事件</div>
+            <div class="compare-box-sent">I lost my keys yesterday.</div>
+            <div class="compare-box-desc">
+              <strong>情境解密：</strong>純粹陳述昨天發生的「歷史事實」。至於<strong>現在找到了沒？</strong>此句完全不在乎，也不作保證。
+            </div>
+          </div>
+          <div class="compare-box active">
+            <div class="compare-box-title">【現在完成式】連結現在</div>
+            <div class="compare-box-sent">I have lost my keys!</div>
+            <div class="compare-box-desc">
+              <strong>情境解密：</strong>重點在<strong>「現在的後果」</strong>！＝「我現在進不去家門了，你能幫我開門嗎？」，過去直接撞擊現在。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心 3: 洗澡與電話交錯 -->
+      <div class="focus-card">
+        <span class="focus-badge">動態鏡頭語言 · 背景與插播</span>
+        <div class="focus-card-title">③ 電話響與洗澡：進行中的背景 vs. 瞬間插播</div>
+        <div class="compare-row">
+          <div class="compare-box">
+            <div class="compare-box-title">【過去進行式】長鏡頭背景</div>
+            <div class="compare-box-sent">...was taking a shower</div>
+            <div class="compare-box-desc">
+              <strong>鏡頭語言：</strong>在過去特定時間軸上展開的一段<strong>持續狀態</strong>（洗澡需要 15 分鐘，像攝影機長鏡頭持續拍攝）。
+            </div>
+          </div>
+          <div class="compare-box active">
+            <div class="compare-box-title">【過去簡單式】快門單點插播</div>
+            <div class="compare-box-sent">...when the phone rang.</div>
+            <div class="compare-box-desc">
+              <strong>鏡頭語言：</strong>突然發生的<strong>單點瞬時事件</strong>，像相機閃光燈「啪」地一聲插入背景進行中。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心 4: 時間階梯 -->
+      <div class="focus-card">
+        <span class="focus-badge">相對時間階梯 · 先後序位</span>
+        <div class="focus-card-title">④ 火車站的遺憾：過去完成式「時間階梯」</div>
+        <div class="compare-row">
+          <div class="compare-box">
+            <div class="compare-box-title">【先發生】過去的過去</div>
+            <div class="compare-box-sent">The train had left...</div>
+            <div class="compare-box-desc">
+              <strong>時空階梯 1：</strong>火車在 8:00 就開走了。在過去的兩個動作中，<strong>更早發生的那一個</strong>必須用 had + p.p. 標定！
+            </div>
+          </div>
+          <div class="compare-box active">
+            <div class="compare-box-title">【後發生】過去基準錨點</div>
+            <div class="compare-box-sent">...before we arrived (8:05).</div>
+            <div class="compare-box-desc">
+              <strong>時空階梯 2：</strong>我們 8:05 才氣喘吁吁趕到車站（過去簡單式）。若無此錨點，過去完成式就失去對照意義！
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ── 區塊四：大考迷思破解與解題心法 ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 4</span>
+      <span class="section-title">李櫻教授 3C 語法破除死背迷思 & 會考/統測秒殺法則</span>
+      <span class="section-desc">拒絕填鴨口訣，回歸語意真實情境</span>
+    </div>
+
+    <div class="exam-box">
+      <div class="exam-inner">
+        <div>
+          <div class="exam-myth-title">⚠️ 大考震撼彈：打破「看到 for + 一段時間 只能選完成式」的教條！</div>
+          <div class="exam-myth-content">
+            <strong>【93年基測經典爭議題】</strong> <em>"I looked for her for thirty minutes. Everyone was looking at me..."</em><br>
+            很多傳統教學告訴學生：只要有 <code>for + 一段時間</code> 就必須填現在完成式。但這題正解卻是<strong>過去簡單式 looked</strong>！<br>
+            <strong>3C語法解析：</strong>動作在過去發生、找了30分鐘、而且<strong>早已在過去結束</strong>，跟現在完全沒有連結！時態由<strong>上下文語境（Context）與說話者的溝通視角</strong>決定，絕非機械式套公式。
+          </div>
+        </div>
+        <div class="exam-steps">
+          <div class="exam-step-title">時態大考解題 3 步定心法</div>
+          <ul class="step-list">
+            <li><span class="step-num">1</span> <strong>找錨點：</strong>從上下文句子鎖定基準時間（Now / Past / Future）。</li>
+            <li><span class="step-num">2</span> <strong>定態樣：</strong>是常態事實(•)、當下進行(~)、跨期影響(──►)還是持續中(══►)？</li>
+            <li><span class="step-num">3</span> <strong>配主謂：</strong>選定時態公式，最後確認主詞單複數與三態不規則變化！</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <div>英文時態全景時間軸教學系統 · 講義修訂專用版面</div>
+    <div>張秋芸 彙整編輯 · 3C Functional Grammar × Timeline Visualizer</div>
+  </div>
+
+</div>
+
+</body>
+</html>

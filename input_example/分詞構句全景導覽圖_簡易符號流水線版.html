@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分詞構句全景導覽圖·簡易符號流水線版</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ece8e1;
+    font-family: 'Noto Sans TC', 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    color: #1a1a2e;
+  }
+
+  .canvas {
+    width: 1160px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(26,26,46,0.08);
+    overflow: hidden;
+  }
+
+  /* ── 頂部 Header ── */
+  .header {
+    padding: 38px 48px 30px;
+    background: #ffffff;
+    border-bottom: 2.5px solid #1a1a2e;
+    position: relative;
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #88889a;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #2563eb;
+    border-radius: 50%;
+  }
+  .header-main {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #1a1a2e;
+    line-height: 1.25;
+  }
+  .header-title span { color: #2563eb; }
+  .header-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .header-badge {
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .header-badge.highlight {
+    background: #2563eb;
+  }
+  .header-formula-card {
+    background: #f7f6f2;
+    border: 1.5px solid #e2ded5;
+    border-radius: 6px;
+    padding: 12px 18px;
+    text-align: right;
+  }
+  .header-formula-title {
+    font-size: 11px;
+    color: #7b7b8e;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+  .header-formula-math {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .header-formula-math strong { color: #2563eb; }
+
+  /* ── 內容主體 ── */
+  .content {
+    padding: 36px 48px 44px;
+  }
+
+  /* ── 區塊標題 ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: #1a1a2e;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #1a1a2e;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: #6b6b7e;
+    margin-left: auto;
+  }
+
+  /* ── 區塊一：流水線符號系統 ── */
+  .symbol-deck {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .symbol-card {
+    background: #fbfbfa;
+    border: 1.5px solid #e6e3dd;
+    border-radius: 6px;
+    padding: 16px;
+    transition: all 0.2s ease;
+  }
+  .symbol-card:hover {
+    border-color: #1a1a2e;
+    background: #ffffff;
+  }
+  .symbol-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .symbol-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a1a2e;
+  }
+  .symbol-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #9999aa;
+  }
+  .symbol-canvas {
+    background: #ffffff;
+    border: 1px dashed #d5d1c8;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+  }
+  .symbol-rule {
+    font-size: 12px;
+    line-height: 1.55;
+    color: #4a4a5a;
+  }
+  .symbol-rule strong {
+    color: #2563eb;
+  }
+
+  /* ── 區塊二：四大語意情境全景矩陣 ── */
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 34px;
+  }
+  .matrix-card {
+    background: #fbfbf9;
+    border: 1.5px solid #ded9ce;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .mcard-header {
+    background: #1a1a2e;
+    color: #ffffff;
+    padding: 12px 14px;
+    border-bottom: 3px solid #2563eb;
+  }
+  .mcard-title {
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .mcard-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    opacity: 0.8;
+  }
+  .mcard-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+  }
+  .flow-box {
+    background: #ffffff;
+    border: 1px solid #e2ded5;
+    border-radius: 5px;
+    padding: 10px 12px;
+  }
+  .flow-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #77778a;
+    margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .flow-raw {
+    font-size: 12px;
+    color: #666677;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    text-decoration: line-through;
+    text-decoration-color: #ef4444;
+  }
+  .flow-participle {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    font-family: 'JetBrains Mono', monospace;
+    background: #eff6ff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border-left: 3px solid #2563eb;
+  }
+  .flow-desc {
+    font-size: 11.5px;
+    color: #4a4a58;
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+
+  /* ── 區塊三：3C 認知深度對比 ── */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .focus-card {
+    background: #ffffff;
+    border: 1.5px solid #ded9ce;
+    border-radius: 6px;
+    padding: 18px 20px;
+  }
+  .focus-card.highlight {
+    border-color: #2563eb;
+    background: #f8fafc;
+  }
+  .focus-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #1a1a2e;
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+  }
+  .focus-badge.blue { background: #2563eb; }
+  .focus-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+  }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .compare-box {
+    background: #f7f6f2;
+    border-radius: 5px;
+    padding: 10px 12px;
+    border-left: 3px solid #1a1a2e;
+  }
+  .compare-box.active {
+    border-left-color: #2563eb;
+    background: #eff6ff;
+  }
+  .compare-box-title {
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: #1a1a2e;
+  }
+  .compare-box-sent {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1a1a2e;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 4px;
+  }
+  .compare-box-desc {
+    font-size: 11.5px;
+    color: #555566;
+    line-height: 1.5;
+  }
+
+  /* ── 區塊四：大考避坑指引 ── */
+  .exam-box {
+    background: #fdfdfc;
+    border: 1.5px solid #ded9ce;
+    border-radius: 6px;
+    padding: 20px 24px;
+  }
+  .exam-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+  .exam-myth-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #dc2626;
+    margin-bottom: 6px;
+  }
+  .exam-myth-content {
+    font-size: 12.5px;
+    color: #4a4a58;
+    line-height: 1.6;
+  }
+  .exam-myth-content strong { color: #1a1a2e; }
+  .exam-steps {
+    background: #ffffff;
+    border: 1px solid #e0dbd0;
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .exam-step-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .step-list {
+    list-style: none;
+  }
+  .step-list li {
+    font-size: 12px;
+    color: #4a4a58;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .step-num {
+    background: #1a1a2e;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 48px;
+    border-top: 1.5px solid #ded9ce;
+    background: #faf9f6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #88889a;
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas">
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="header-eyebrow">Language Economy & Clause Reduction · 句子簡化極致美學</div>
+    <div class="header-main">
+      <div>
+        <div class="header-title">分詞構句<span>全景教學導覽圖</span></div>
+        <div class="header-badges">
+          <span class="header-badge highlight">簡易符號流水線畫法</span>
+          <span class="header-badge">李櫻教授 3C 語意經濟論</span>
+          <span class="header-badge">高中職講義第57頁核心精選</span>
+        </div>
+      </div>
+      <div class="header-formula-card">
+        <div class="header-formula-title">PARTICIPLE CLAUSE REDUCTION FORMULA</div>
+        <div class="header-formula-math">分詞構句 ＝ <strong>省主詞</strong> (S1=S2) ＋ <strong>剪連詞</strong> (明確則除) ＋ <strong>變分詞</strong> (主動ing / 被動pp)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content">
+
+    <!-- ── 區塊一：流水線符號系統 ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 1</span>
+      <span class="section-title">分詞瘦身 4 大流水線工序（Visual Assembly Line）</span>
+      <span class="section-desc">用幾何符號透視語言減肥術：如何將龐大副詞子句精煉為俐落分詞</span>
+    </div>
+
+    <div class="symbol-deck">
+      <!-- 符號 1 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">① 主詞天平檢驗</div>
+          <div class="symbol-en">S1 == S2 ?</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="38" viewBox="0 0 220 38">
+            <rect x="25" y="10" width="55" height="20" rx="3" fill="#1a1a2e"/>
+            <text x="52" y="24" font-size="10" font-family="'JetBrains Mono'" fill="#fff" text-anchor="middle" font-weight="700">S1</text>
+            <text x="110" y="24" font-size="14" font-family="'JetBrains Mono'" fill="#2563eb" text-anchor="middle" font-weight="800">==</text>
+            <rect x="140" y="10" width="55" height="20" rx="3" fill="#1a1a2e"/>
+            <text x="167" y="24" font-size="10" font-family="'JetBrains Mono'" fill="#fff" text-anchor="middle" font-weight="700">S2</text>
+            <line x1="25" y1="20" x2="80" y2="20" stroke="#ef4444" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【主詞相同才能刪】</strong> 兩子句同一主事者時，副詞子句主詞直接劃掉刪除；若 <strong>S1 ≠ S2</strong> 則<strong>絕不能刪</strong>！
+        </div>
+      </div>
+
+      <!-- 符號 2 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">② 剪刀斷連</div>
+          <div class="symbol-en">CUT CONJUNCTION</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="38" viewBox="0 0 220 38">
+            <rect x="35" y="10" width="85" height="20" rx="3" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="3,2"/>
+            <text x="77" y="24" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">When/Because</text>
+            <text x="150" y="26" font-size="18">✂️</text>
+            <line x1="30" y1="20" x2="125" y2="20" stroke="#ef4444" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【語意清楚則去】</strong> 連接詞若從上下文即可推知，直接刪除；但若想<strong>特別強調對比</strong>（Though, While）可彈性保留。
+        </div>
+      </div>
+
+      <!-- 符號 3 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">③ 主動動態降級</div>
+          <div class="symbol-en">ACTIVE -> V-ing</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="38" viewBox="0 0 220 38">
+            <circle cx="50" cy="19" r="12" fill="#e2e8f0"/>
+            <text x="50" y="23" font-size="9" font-family="'JetBrains Mono'" fill="#334155" text-anchor="middle" font-weight="700">Verb</text>
+            <polygon points="126,19 120,16 120,22" fill="#2563eb"/>
+            <rect x="132" y="9" width="60" height="20" rx="3" fill="#2563eb"/>
+            <text x="162" y="23" font-size="10" font-family="'JetBrains Mono'" fill="#fff" text-anchor="middle" font-weight="800">V-ing</text>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【主詞親自發起】</strong> 主要子句的主詞親自執行該動作，動詞直接變身現在分詞（V-ing），如同形容詞修飾主詞。
+        </div>
+      </div>
+
+      <!-- 符號 4 -->
+      <div class="symbol-card">
+        <div class="symbol-header">
+          <div class="symbol-name">④ 被動脫殼羽化</div>
+          <div class="symbol-en">PASSIVE -> p.p.</div>
+        </div>
+        <div class="symbol-canvas">
+          <svg width="220" height="38" viewBox="0 0 220 38">
+            <text x="45" y="24" font-size="9.5" font-family="'JetBrains Mono'" fill="#94a3b8" text-decoration="line-through">being</text>
+            <text x="85" y="23" font-size="12" fill="#2563eb" font-weight="800">＋</text>
+            <rect x="105" y="9" width="55" height="20" rx="3" fill="#1e293b"/>
+            <text x="132" y="23" font-size="10" font-family="'JetBrains Mono'" fill="#fff" text-anchor="middle" font-weight="800">p.p.</text>
+            <circle cx="185" cy="19" r="9" fill="#dcfce7" stroke="#16a34a"/>
+            <text x="185" y="23" font-size="10" fill="#16a34a" text-anchor="middle" font-weight="900">✓</text>
+          </svg>
+        </div>
+        <div class="symbol-rule">
+          <strong>【脫去贅肉 being】</strong> 被動語態 be + p.p. 中，無實質意義的 being 直接被脫殼扔掉，只保留核心受事本質 p.p.。
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── 區塊二：四大語意情境全景矩陣 ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 2</span>
+      <span class="section-title">四大語意情境轉換全景矩陣（Master Transformation Matrix）</span>
+      <span class="section-desc">講義精選例句逐一拆解：時間、原因、條件、伴隨狀態</span>
+    </div>
+
+    <div class="matrix-grid">
+
+      <!-- 情境 1: 時間先後 / 伴隨 -->
+      <div class="matrix-card">
+        <div class="mcard-header">
+          <div class="mcard-title">① 時間關係</div>
+          <div class="mcard-subtitle">TIME & SEQUENCE</div>
+        </div>
+        <div class="mcard-body">
+          <div class="flow-box">
+            <div class="flow-label">講義例句 · Hello Kitty</div>
+            <div class="flow-raw">When she was taking a shower, Hello Kitty sang...</div>
+            <div class="flow-participle">Taking a shower, Hello Kitty sang a song.</div>
+            <div class="flow-desc">洗澡與唱歌同時進行。刪去 When 與 she，was taking 降級為 Taking。</div>
+          </div>
+          <div class="flow-box">
+            <div class="flow-label">時間先後（先後差）</div>
+            <div class="flow-raw">After she had done her homework, she went to bed.</div>
+            <div class="flow-participle">Having done her homework, she went to bed.</div>
+            <div class="flow-desc">強調「先寫完作業，才去睡覺」，用 Having p.p. 標定先後階梯。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 情境 2: 原因理由 -->
+      <div class="matrix-card">
+        <div class="mcard-header">
+          <div class="mcard-title">② 原因理由</div>
+          <div class="mcard-subtitle">REASON & CAUSE</div>
+        </div>
+        <div class="mcard-body">
+          <div class="flow-box">
+            <div class="flow-label">講義例句 · 茫然不知所措</div>
+            <div class="flow-raw">As she didn't know what to do, she asked me...</div>
+            <div class="flow-participle">Not knowing what to do, she asked for help.</div>
+            <div class="flow-desc">否定詞 not 永遠放在分詞的最前端，絕不能寫成 knowing not！</div>
+          </div>
+          <div class="flow-box">
+            <div class="flow-label">講義例句 · 口渴喝水</div>
+            <div class="flow-raw">Because she was thirsty, she drank some water.</div>
+            <div class="flow-participle">(Being) thirsty, she drank some water.</div>
+            <div class="flow-desc">狀態 be 動詞變 being，在形容詞 thirsty 前面 being 亦可省略。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 情境 3: 條件與讓步 -->
+      <div class="matrix-card">
+        <div class="mcard-header">
+          <div class="mcard-title">③ 條件與讓步</div>
+          <div class="mcard-subtitle">CONDITION & CONCESSION</div>
+        </div>
+        <div class="mcard-body">
+          <div class="flow-box">
+            <div class="flow-label">講義例句 · 派對邀約</div>
+            <div class="flow-raw">If I am invited, I will go to the party.</div>
+            <div class="flow-participle">If invited, I will go to the party.</div>
+            <div class="flow-desc">保留 If 提示「條件」口吻；am invited 省略 being，保留受邀 p.p.。</div>
+          </div>
+          <div class="flow-box">
+            <div class="flow-label">講義例句 · 獨處不寂寞</div>
+            <div class="flow-raw">Though he lives alone, he does not feel lonely.</div>
+            <div class="flow-participle">Though living alone, he does not feel lonely.</div>
+            <div class="flow-desc">保留 Though 加強轉折語氣；lives 主動轉換為 living。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 情境 4: 伴隨狀態與子句修飾 -->
+      <div class="matrix-card">
+        <div class="mcard-header">
+          <div class="mcard-title">④ 伴隨與修飾</div>
+          <div class="mcard-subtitle">ACCOMPANYING & RELATIVE</div>
+        </div>
+        <div class="mcard-body">
+          <div class="flow-box">
+            <div class="flow-label">講義例句 · 默默離開</div>
+            <div class="flow-raw">Mary left her room, and she said nothing.</div>
+            <div class="flow-participle">Mary left her room, saying nothing.</div>
+            <div class="flow-desc">後位伴隨動態，將 and she said 減肥為一記優雅的 , saying nothing。</div>
+          </div>
+          <div class="flow-box">
+            <div class="flow-label">形容詞子句瘦身（名詞後）</div>
+            <div class="flow-raw">The book [which was written by Shakespeare]...</div>
+            <div class="flow-participle">The book written by Shakespeare is great.</div>
+            <div class="flow-desc">關代 which was 直接剔除，保留被動分詞片語後位修飾 book。</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ── 區塊三：3C 認知深度對比（講義精華） ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 3</span>
+      <span class="section-title">講義核心概念認知深度圖解（Cognitive Deep-Dives）</span>
+      <span class="section-desc">李櫻教授 3C 語法：句法形式呼應語意關聯（Event Integration）</span>
+    </div>
+
+    <div class="focus-grid">
+
+      <!-- 核心 1: 主詞相同 vs 主詞不同 -->
+      <div class="focus-card highlight">
+        <span class="focus-badge blue">講義警示星號 · 致命陷阱</span>
+        <div class="focus-card-title">① 主詞到底能不能刪？主詞一致律 vs. 獨立分詞</div>
+        <div class="compare-row">
+          <div class="compare-box active">
+            <div class="compare-box-title">【S1 ＝ S2】大膽瘦身</div>
+            <div class="compare-box-sent">Taking a shower, Hello Kitty...</div>
+            <div class="compare-box-desc">
+              <strong>原理：</strong>唱歌的是 Kitty，洗澡的也是 Kitty！主詞一模一樣，刪掉完全不影響理解，達成極致精簡。
+            </div>
+          </div>
+          <div class="compare-box">
+            <div class="compare-box-title">【S1 ≠ S2】獨立分詞 (保留主詞)</div>
+            <div class="compare-box-sent">Weather permitting, we will...</div>
+            <div class="compare-box-desc">
+              <strong>原理：</strong>許可的是「天氣 (Weather)」，去爬山的是「我們 (We)」！主詞不同<strong>絕對不能刪</strong>，否則變懸垂分詞。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心 2: 主動 V-ing vs 被動 p.p. -->
+      <div class="focus-card">
+        <span class="focus-badge">語意本質對決 · 主動與被動</span>
+        <div class="focus-card-title">② 生死交關的主被動：發起者 vs. 承受者</div>
+        <div class="compare-row">
+          <div class="compare-box active">
+            <div class="compare-box-title">【現在分詞 V-ing】主動進行</div>
+            <div class="compare-box-sent">a drowning boy / falling leaves</div>
+            <div class="compare-box-desc">
+              <strong>語意解密：</strong>溺水中的男孩（還活著，快救他！）；飄落中的楓葉（正在空中旋轉降落）。
+            </div>
+          </div>
+          <div class="compare-box">
+            <div class="compare-box-title">【過去分詞 p.p.】被動完成</div>
+            <div class="compare-box-sent">a drowned boy / fallen leaves</div>
+            <div class="compare-box-desc">
+              <strong>語意解密：</strong>已溺斃的男孩（講義第12題：已回天乏術）；已掉在地面上的枯葉（已完成狀態）。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心 3: 否定詞的位置 -->
+      <div class="focus-card">
+        <span class="focus-badge">結構標記律 · 否定前置</span>
+        <div class="focus-card-title">③ 否定詞擺哪裡？Not 永遠戴在分詞冠冕上</div>
+        <div class="compare-row">
+          <div class="compare-box">
+            <div class="compare-box-title">【典型病句】中式思維殘留</div>
+            <div class="compare-box-sent">Knowing not what to do... (X)</div>
+            <div class="compare-box-desc">
+              <strong>錯誤病灶：</strong>受到一般否定句助動詞影響，誤將 not 放動詞之後，造成語序斷裂。
+            </div>
+          </div>
+          <div class="compare-box active">
+            <div class="compare-box-title">【標準句型】Not 首位標記</div>
+            <div class="compare-box-sent">Not knowing what to do... (O)</div>
+            <div class="compare-box-desc">
+              <strong>認知規律：</strong>英文的否定範疇必須一開頭就向讀者警示，故 <strong>Not / Never 永遠頂在分詞最前面</strong>！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心 4: 前後時間差 -->
+      <div class="focus-card">
+        <span class="focus-badge">時間階梯 · 先後序位</span>
+        <div class="focus-card-title">④ 時間有落差？Having p.p. 完成分詞的時間階梯</div>
+        <div class="compare-row">
+          <div class="compare-box">
+            <div class="compare-box-title">【同時進行】普通分詞</div>
+            <div class="compare-box-sent">Walking along the street, I saw...</div>
+            <div class="compare-box-desc">
+              <strong>時空關係：</strong>漫步在街上時，眼睛同時看見老朋友。兩件事在<strong>同一時間軸</strong>上同步展開。
+            </div>
+          </div>
+          <div class="compare-box active">
+            <div class="compare-box-title">【先後完成】Having p.p.</div>
+            <div class="compare-box-sent">Having finished work, he went...</div>
+            <div class="compare-box-desc">
+              <strong>時空關係：</strong>先徹底完成了手頭的工作（Step 1），然後才動身回家（Step 2）。時間階梯分明！
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ── 區塊四：大考避坑指引 ── -->
+    <div class="section-label">
+      <span class="section-tag">STEP 4</span>
+      <span class="section-title">李櫻教授 3C 語法破除死背迷思 & 統測/學測秒殺法則</span>
+      <span class="section-desc">破解「懸垂分詞（Dangling Participle）」大考最高頻殺手題</span>
+    </div>
+
+    <div class="exam-box">
+      <div class="exam-inner">
+        <div>
+          <div class="exam-myth-title">⚠️ 大考震撼彈：句子開頭是分詞時，主詞是誰？千萬別讓「城市爬山」！</div>
+          <div class="exam-myth-content">
+            <strong>【大考最常考的懸垂分詞錯誤】</strong> <em>"Seen from the mountain, the city looks fantastic." (O)</em><br>
+            很多學生造句常寫：<code>Seeing from the mountain, the city looks fantastic. (X)</code><br>
+            <strong>3C語法解析：</strong>分詞構句把副詞子句主詞省掉了，這代表<strong>「分詞動作的執行者，必須是主要子句的主詞」</strong>！城市（the city）絕對不會自己睜開眼睛爬山看風景，城市是「被人看（Seen）」！主被動搞反，全句邏輯瞬間崩塌。
+          </div>
+        </div>
+        <div class="exam-steps">
+          <div class="exam-step-title">分詞構句大考解題 3 步定心法</div>
+          <ul class="step-list">
+            <li><span class="step-num">1</span> <strong>圈主詞：</strong>立刻把主要子句的主詞圈出來（它就是分詞的隱形主人！）。</li>
+            <li><span class="step-num">2</span> <strong>測動態：</strong>問自己：這個主詞「自己做動作(Ving)」還是「被動承受(p.p.)」？</li>
+            <li><span class="step-num">3</span> <strong>查先後：</strong>檢查有無否定（Not 放最前）或明顯時間先後（用 Having p.p.）！</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <div>分詞構句全景流水線教學系統 · 講義修訂專用版面</div>
+    <div>張秋芸 彙整編輯 · 3C Functional Grammar × Participle Reducer</div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>50個字掌握15,000個單字 ｜ 核心 11-20 字 教師大屏教學講義</title>
+<style>
+/* ── 全域重設與字型標準 (嚴格遵守 self-made-ebook 規範) ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14pt; scroll-behavior: smooth; }
+body {
+  font-family: "Times New Roman", "標楷體", "DFKai-SB", "BiauKai", serif;
+  background: #f0f4f8;
+  color: #1a1a2e;
+  padding-top: 65px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 課堂懸浮極簡 Emoji 膠囊工具列 (純圖示、無文字) ── */
+.classroom-toolbar {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 2000; display: flex; align-items: center; gap: 6px;
+  background: rgba(255, 255, 255, 0.96); border-radius: 40px;
+  padding: 6px 18px; box-shadow: 0 6px 24px rgba(15, 76, 129, 0.22);
+  backdrop-filter: blur(12px); border: 1.5px solid #bfdbfe;
+}
+.tool-btn {
+  background: none; border: none; font-size: 1.35rem; cursor: pointer;
+  border-radius: 50%; width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s ease;
+}
+.tool-btn:hover { background: #dbeafe; transform: scale(1.1); }
+.toolbar-divider { width: 1px; height: 24px; background: #cbd5e1; margin: 0 4px; }
+.pen-options { display: none; align-items: center; gap: 6px; }
+.pen-options.open { display: flex; }
+.color-dot {
+  width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: all .15s ease;
+}
+.color-dot:hover { transform: scale(1.2); }
+.color-dot.active { border-color: #0f4c81; transform: scale(1.2); box-shadow: 0 0 6px rgba(15, 76, 129, 0.5); }
+.size-btn {
+  background: #f1f5f9; border: 1px solid #cbd5e1;
+  border-radius: 6px; padding: 2px 8px; font-size: 0.75rem;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.size-btn.active, .size-btn:hover { background: #bfdbfe; font-weight: bold; color: #0f4c81; }
+.sub-divider { width: 1px; height: 18px; background: #cbd5e1; margin: 0 3px; }
+
+/* ── 章節目錄選單 ── */
+.toc-wrapper { position: relative; }
+.toc-menu {
+  display: none; position: absolute; top: 48px; left: -10px;
+  background: #ffffff; border-radius: 12px; box-shadow: 0 10px 36px rgba(15, 76, 129, 0.25);
+  min-width: 320px; max-height: 82vh; overflow-y: auto; padding: 8px 0; z-index: 3000;
+  border: 1px solid #bfdbfe;
+}
+.toc-menu.open { display: block; }
+.toc-menu-title {
+  padding: 8px 18px 6px; font-size: 0.78rem; color: #0f4c81; font-weight: bold;
+  letter-spacing: .06em; border-bottom: 1.5px solid #eff6ff; background: #f8fafc;
+}
+.toc-menu-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 18px; cursor: pointer; transition: background .12s; font-size: 0.85rem;
+  border-bottom: 1px solid #f8fafc;
+}
+.toc-menu-item:hover { background: #eff6ff; color: #0284c7; }
+.toc-page-badge {
+  font-size: 0.72rem; background: #dbeafe; color: #0f4c81; border-radius: 10px;
+  padding: 2px 8px; font-weight: bold; font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── A4 講義頁面容器 (210mm x 297mm 標準) ── */
+.page-container {
+  display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 15px 16px 80px;
+}
+.page {
+  background: #ffffff; width: 210mm; min-height: 297mm; padding: 12mm 15mm 12mm;
+  box-shadow: 0 6px 30px rgba(15, 76, 129, 0.12); border-radius: 6px;
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── 繪圖板 Canvas ── */
+.drawing-canvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 50;
+}
+body.pen-mode .drawing-canvas { pointer-events: auto; cursor: crosshair; }
+
+/* ── 回到首頁按鈕 ── */
+.back-home-bar {
+  display: flex; justify-content: flex-end; margin-bottom: 6px;
+}
+.back-home-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #f1f5f9; color: #0f4c81; border: 1px solid #cbd5e1;
+  border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: bold;
+  cursor: pointer; text-decoration: none; transition: all .15s ease;
+}
+.back-home-btn:hover { background: #0f4c81; color: white; transform: translateY(-1px); }
+
+/* ── 封面橫幅與主視覺 ── */
+.cover-hero {
+  background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 50%, #0284c7 100%);
+  color: white; border-radius: 10px; padding: 22px 24px 18px; margin-bottom: 14px;
+  box-shadow: 0 8px 24px rgba(15, 76, 129, 0.25); text-align: center;
+}
+.cover-tag {
+  display: inline-block; background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4); padding: 2px 12px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: bold; letter-spacing: .08em; margin-bottom: 8px;
+}
+.cover-title {
+  font-size: 1.65rem; font-weight: 900; letter-spacing: .04em; margin-bottom: 6px;
+}
+.cover-sub {
+  font-size: 0.88rem; opacity: 0.95; line-height: 1.5;
+}
+.cover-meta {
+  display: flex; justify-content: center; gap: 16px; margin-top: 10px;
+  font-size: 0.76rem; opacity: 0.85; border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: 8px;
+}
+
+/* ── 封面 10 字索引網格 ── */
+.index-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px;
+}
+.index-card {
+  background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px;
+  padding: 10px 14px; transition: all .18s ease;
+  display: flex; align-items: center; justify-content: space-between;
+  color: inherit; position: relative;
+}
+.index-card:hover {
+  border-color: #0284c7; background: #f0f7ff; transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+}
+.index-card-left { display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; }
+.index-card-right { cursor: pointer; flex-shrink: 0; margin-left: 10px; }
+.index-num {
+  background: #0f4c81; color: white; width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+  font-weight: bold; font-family: 'JetBrains Mono', monospace; flex-shrink: 0;
+}
+.index-word {
+  font-family: 'JetBrains Mono', 'Times New Roman', serif;
+  font-size: 1.05rem; font-weight: bold; color: #0f4c81; display: flex; align-items: center; gap: 6px;
+}
+.jump-arrow { font-size: 0.72rem; color: #0284c7; opacity: 0.75; }
+.index-formula {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #ea580c;
+  background: #fff7ed; padding: 2px 6px; border-radius: 4px; font-weight: bold;
+}
+/* ── 封面中文意思答案格 ── */
+.index-zh-box {
+  margin-top: 3px; display: inline-flex; align-items: center; cursor: pointer;
+}
+.index-zh-ans {
+  font-size: 0.8rem; font-weight: bold;
+  color: transparent; border-bottom: 2px dashed #94a3b8;
+  background: #e2e8f0; border-radius: 4px; padding: 1px 8px;
+  min-width: 140px; display: inline-block; transition: all .2s ease;
+  user-select: none;
+}
+.index-zh-box:hover .index-zh-ans {
+  background: #cbd5e1; border-bottom-color: #0f4c81;
+}
+.index-zh-ans.show, body.show-ans .index-zh-ans, body.show-index-zh .index-zh-ans {
+  color: #dc2626 !important;
+  background: #fef2f2 !important;
+  border-bottom-color: #dc2626 !important;
+}
+.index-toggle-all-btn {
+  background: #0f4c81; color: white; border: none; border-radius: 20px;
+  padding: 3px 12px; font-size: 0.76rem; font-weight: bold; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; transition: all .15s ease;
+}
+.index-toggle-all-btn:hover {
+  background: #0284c7; transform: scale(1.05);
+}
+
+/* ── 頁面橫幅 ── */
+.word-banner {
+  background: linear-gradient(135deg, #0f4c81 0%, #0284c7 100%);
+  color: white; border-radius: 8px; padding: 10px 18px 9px; margin-bottom: 9px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.word-banner-left { display: flex; flex-direction: column; }
+.word-tag { font-size: 0.72rem; letter-spacing: .08em; opacity: 0.9; font-weight: bold; }
+.word-title {
+  font-family: 'JetBrains Mono', 'Times New Roman', serif;
+  font-size: 1.45rem; font-weight: bold; letter-spacing: .02em; margin-top: 1px;
+}
+.word-meaning { font-size: 0.86rem; opacity: 0.95; font-weight: normal; margin-left: 8px; }
+.word-badge {
+  background: rgba(255, 255, 255, 0.22); border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 3px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: bold;
+  white-space: nowrap; font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── 核心字拆解公式卡片 ── */
+.breakdown-hero {
+  background: #fffaf5; border: 1.5px solid #fed7aa; border-left: 5px solid #ea580c;
+  border-radius: 8px; padding: 8px 14px; margin-bottom: 9px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.breakdown-formula {
+  font-family: 'JetBrains Mono', monospace; font-size: 1.02rem; font-weight: bold; color: #c2410c;
+}
+.breakdown-desc { font-size: 0.82rem; font-weight: bold; color: #475569; }
+
+/* ── 認知語義全景 SVG 圖形展示箱 ── */
+.visual-stage {
+  background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 8px;
+  padding: 9px 12px 7px; margin-bottom: 9px; box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+}
+.visual-stage-title {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.82rem; font-weight: bold; color: #0f4c81; margin-bottom: 5px;
+  border-bottom: 1px dashed #cbd5e1; padding-bottom: 3px;
+}
+.visual-stage-title .tag {
+  background: #e0f2fe; color: #0369a1; padding: 1px 7px; border-radius: 4px; font-size: 0.7rem;
+}
+.network-svg { width: 100%; height: auto; display: block; }
+
+/* ── 兩大字根家族卡片 ── */
+.family-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 9px;
+}
+.family-card {
+  background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px;
+  padding: 7px 10px; font-size: 0.82rem;
+}
+.family-card.prefix-theme { border-left: 4px solid #2563eb; background: #eff6ff; }
+.family-card.root-theme { border-left: 4px solid #059669; background: #ecfdf5; }
+.family-card-title {
+  font-weight: bold; font-size: 0.84rem; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between;
+}
+.family-card.prefix-theme .family-card-title { color: #1d4ed8; }
+.family-card.root-theme .family-card-title { color: #047857; }
+.family-badge {
+  font-size: 0.7rem; padding: 1px 6px; border-radius: 4px; font-weight: bold;
+}
+.family-card.prefix-theme .family-badge { background: #dbeafe; color: #1e40af; }
+.family-card.root-theme .family-badge { background: #d1fae5; color: #065f46; }
+
+.word-chips {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px;
+}
+.chip {
+  background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px;
+  padding: 2px 6px; font-size: 0.76rem; color: #1e293b; line-height: 1.35;
+}
+.chip strong {
+  font-family: 'JetBrains Mono', 'Times New Roman', serif; color: #0f4c81; font-size: 0.78rem;
+}
+.family-card.prefix-theme .chip strong { color: #1d4ed8; }
+.family-card.root-theme .chip strong { color: #047857; }
+
+/* ── 統測與多益必考延伸 ── */
+.exam-tip-strip {
+  background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b;
+  border-radius: 6px; padding: 6px 10px; margin-bottom: 9px; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.exam-tip-left { display: flex; align-items: center; gap: 8px; }
+.exam-tip-badge {
+  background: #d97706; color: white; padding: 1px 6px; border-radius: 3px;
+  font-size: 0.7rem; font-weight: bold; white-space: nowrap;
+}
+.exam-tip-text { color: #78350f; font-weight: 500; }
+
+/* ── 隨堂互動練習 (點擊逐題秀答案) ── */
+.exercise-panel {
+  background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px;
+  padding: 8px 12px; margin-top: auto;
+}
+.exercise-panel-title {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.84rem; font-weight: bold; color: #0f4c81; margin-bottom: 5px;
+  border-bottom: 1px solid #e2e8f0; padding-bottom: 3px;
+}
+.qa-block {
+  display: flex; align-items: flex-start; gap: 8px; cursor: pointer;
+  padding: 5px 8px; border-radius: 6px; margin: 3px 0; transition: background .15s; font-size: 0.85rem;
+}
+.qa-block:hover { background: #f0f7fc; }
+.qa-block.show-one { background: #fef2f2; }
+.qa-num {
+  min-width: 26px; background: #e2e8f0; border-radius: 4px; text-align: center;
+  padding: 1px 4px; font-size: 0.78rem; font-weight: bold; flex-shrink: 0; margin-top: 2px; color: #1e293b;
+}
+.qa-block.show-one .qa-num { background: #fecaca; color: #dc2626; }
+.qa-body { flex: 1; }
+.qa-stem { line-height: 1.5; color: #1e293b; }
+.choices-row {
+  display: flex; gap: 14px; margin-top: 3px; font-size: 0.82rem; flex-wrap: wrap;
+}
+.choice-item { display: inline-block; padding: 0 2px; transition: all .2s; }
+.ans-reveal {
+  color: transparent; font-weight: bold; transition: color .25s;
+  border-bottom: 2px dashed #94a3b8; min-width: 28px; display: inline-block;
+  text-align: center; padding: 0 4px;
+}
+.show-one .ans-reveal, .show-ans .ans-reveal {
+  color: #dc2626 !important; border-bottom-color: #dc2626;
+}
+.show-one .choice-item.correct, .show-ans .choice-item.correct {
+  color: #dc2626 !important; font-weight: bold !important; border: 2px solid #dc2626 !important;
+  border-radius: 12px !important; background: #fef2f2 !important; padding: 0 6px !important;
+}
+.qa-explain {
+  display: none; font-size: 0.76rem; color: #dc2626; margin-top: 3px; line-height: 1.4;
+  border-top: 1px dashed #fca5a5; padding-top: 2px;
+}
+.show-one .qa-explain, .show-ans .qa-explain { display: block; }
+
+/* ── 頁尾 ── */
+.page-footer {
+  margin-top: 8px; padding-top: 6px; border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.72rem; color: #64748b; font-family: 'JetBrains Mono', monospace;
+}
+.page-footer .pg-num {
+  background: #0f4c81; color: white; border-radius: 10px; padding: 1px 8px; font-weight: bold;
+}
+
+/* ── 列印專用樣式 ── */
+@media print {
+  @page { size: A4 portrait; margin: 10mm 14mm 12mm; }
+  body { background: white; padding-top: 0; }
+  .no-print, .classroom-toolbar, .drawing-canvas, .back-home-bar { display: none !important; }
+  .page-container { gap: 0; padding: 0; }
+  .page {
+    box-shadow: none; border-radius: 0; width: 100%; min-height: 275mm;
+    page-break-after: always; padding: 0; margin-bottom: 0;
+  }
+  .ans-reveal, .index-zh-ans { color: transparent !important; border-bottom: 1.5px solid #000 !important; background: transparent !important; }
+  .qa-explain { display: none !important; }
+  .choice-item.correct { color: inherit !important; font-weight: normal !important; border: none !important; background: none !important; }
+  .qa-block { background: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     課堂懸浮極簡 Emoji 膠囊工具列 (純圖示、無文字)
+     ══════════════════════════════════════════════ -->
+<div class="classroom-toolbar no-print">
+  <!-- 1. 章節目錄選單 -->
+  <div class="toc-wrapper">
+    <button class="tool-btn" id="tocBtn" onclick="toggleToc(event)" title="單字目錄導覽">
+      📑
+    </button>
+    <div class="toc-menu" id="tocMenu">
+      <div class="toc-menu-title">📖 50字掌握15000單字 · 11-20字 · 目錄</div>
+      <div class="toc-menu-item" onclick="jumpTo('p0')"><span>【封面】11-20 字全景索引</span><span class="toc-page-badge">INDEX</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p11')"><span>11. sustainability ((n) 永續性，能維持性)</span><span class="toc-page-badge">P.11</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p12')"><span>12. antigen ((n) 抗原)</span><span class="toc-page-badge">P.12</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p13')"><span>13. conference ((n) (正式)會議，商談)</span><span class="toc-page-badge">P.13</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p14')"><span>14. circumscribe ((v) 在周圍畫線；限制)</span><span class="toc-page-badge">P.14</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p15')"><span>15. autobiography ((n) 自傳)</span><span class="toc-page-badge">P.15</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p16')"><span>16. manufacture ((n/v) 製造，生產)</span><span class="toc-page-badge">P.16</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p17')"><span>17. destruction ((n) 毀壞，破壞)</span><span class="toc-page-badge">P.17</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p18')"><span>18. psychologist ((n) 心理學家)</span><span class="toc-page-badge">P.18</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p19')"><span>19. irreversible ((adj) 不可逆的，不可挽回的)</span><span class="toc-page-badge">P.19</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p20')"><span>20. evacuate ((v) 清空，疏散，撤離)</span><span class="toc-page-badge">P.20</span></div>
+    </div>
+  </div>
+
+  <div class="toolbar-divider"></div>
+
+  <!-- 2. 一鍵全開/全關解答 -->
+  <button class="tool-btn" id="toggleAllAnsBtn" onclick="toggleAllAnswers()" title="一鍵揭曉/隱藏全卷答案">
+    <span id="ansIcon">👁️</span>
+  </button>
+
+  <div class="toolbar-divider"></div>
+
+  <!-- 3. 螢光筆/板書筆工具 -->
+  <button class="tool-btn" id="penBtn" onclick="togglePenMode()" title="螢光筆/板書筆">
+    ✏️
+  </button>
+  <div class="pen-options" id="penOptions">
+    <div class="color-dot active" style="background:#facc15;" onclick="setPenColor('rgba(250,204,21,0.5)', this)" title="螢光黃"></div>
+    <div class="color-dot" style="background:#4ade80;" onclick="setPenColor('rgba(74,222,128,0.5)', this)" title="螢光綠"></div>
+    <div class="color-dot" style="background:#f472b6;" onclick="setPenColor('rgba(244,114,182,0.5)', this)" title="粉紅筆"></div>
+    <div class="color-dot" style="background:#38bdf8;" onclick="setPenColor('rgba(56,189,248,0.55)', this)" title="天藍筆"></div>
+    <div class="color-dot" style="background:#ef4444;" onclick="setPenColor('#ef4444', this)" title="重點紅筆"></div>
+    <div class="sub-divider"></div>
+    <button class="size-btn active" onclick="setPenSize(3, this)">細</button>
+    <button class="size-btn" onclick="setPenSize(6, this)">中</button>
+    <button class="size-btn" onclick="setPenSize(12, this)">粗</button>
+  </div>
+
+  <!-- 4. 清除筆跡 -->
+  <button class="tool-btn" onclick="clearAllDrawings()" title="一鍵清除所有板書筆跡">
+    🧹
+  </button>
+
+  <div class="toolbar-divider"></div>
+
+  <!-- 5. 學生端 A4 純淨列印 -->
+  <button class="tool-btn" onclick="window.print()" title="列印學生端純淨講義 (無答案)">
+    🖨️
+  </button>
+</div>
+
+<div class="page-container">
+<!-- ──────────────────────────────────────────────
+     COVER PAGE: 封面索引頁 (字的索引快速跳轉)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p0">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="cover-hero">
+    <span class="cover-tag">WORD BRANCH SYSTEM · 詞彙倍增密碼</span>
+    <h1 class="cover-title">50 個字掌握 15,000 個單字</h1>
+    <div class="cover-sub">
+      英文字首字根字尾記憶法 ｜ 核心單字第 11-20 字 教學講義 (統測補強版)
+    </div>
+    <div class="cover-meta">
+      <span>授課彙整：張秋芸 老師</span>
+      <span>高雄高工 英文科</span>
+      <span>Adapted from E4F · 多益＆統測高頻字根</span>
+    </div>
+  </div>
+
+  <div style="font-size: 0.86rem; font-weight: bold; color: #0f4c81; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+    <span>📌 核心 11-20 字全景導覽索引（點擊單字進入各頁 ｜ 點擊底線揭曉中文答案）</span>
+    <button class="index-toggle-all-btn no-print" onclick="toggleAllIndexZh()" title="一鍵揭曉/隱藏封面全部中文意思">
+      <span id="indexZhIcon">👁️</span> 顯示/隱藏中文意思
+    </button>
+  </div>
+
+  <!-- 11-20 字網格索引 -->
+  <div class="index-grid">
+    <!-- 11 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p11')" title="點擊前往第 11 頁 (sustainability)">
+        <span class="index-num">11</span>
+        <div>
+          <div class="index-word">sustainability <span class="jump-arrow">➔ P.11</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n) 永續性，能維持性</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p11')" title="點擊前往第 11 頁">
+        <span class="index-formula">sus- ＋ -tain, -ten ＋ -ability</span>
+      </div>
+    </div>
+    <!-- 12 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p12')" title="點擊前往第 12 頁 (antigen)">
+        <span class="index-num">12</span>
+        <div>
+          <div class="index-word">antigen <span class="jump-arrow">➔ P.12</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n) 抗原</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p12')" title="點擊前往第 12 頁">
+        <span class="index-formula">anti- ＋ -gen</span>
+      </div>
+    </div>
+    <!-- 13 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p13')" title="點擊前往第 13 頁 (conference)">
+        <span class="index-num">13</span>
+        <div>
+          <div class="index-word">conference <span class="jump-arrow">➔ P.13</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n) (正式)會議，商談</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p13')" title="點擊前往第 13 頁">
+        <span class="index-formula">con- ＋ -fer ＋ -ence</span>
+      </div>
+    </div>
+    <!-- 14 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p14')" title="點擊前往第 14 頁 (circumscribe)">
+        <span class="index-num">14</span>
+        <div>
+          <div class="index-word">circumscribe <span class="jump-arrow">➔ P.14</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(v) 在周圍畫線；限制</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p14')" title="點擊前往第 14 頁">
+        <span class="index-formula">circum- ＋ -scribe</span>
+      </div>
+    </div>
+    <!-- 15 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p15')" title="點擊前往第 15 頁 (autobiography)">
+        <span class="index-num">15</span>
+        <div>
+          <div class="index-word">autobiography <span class="jump-arrow">➔ P.15</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n) 自傳</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p15')" title="點擊前往第 15 頁">
+        <span class="index-formula">auto- ＋ -bio ＋ -graphy</span>
+      </div>
+    </div>
+    <!-- 16 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p16')" title="點擊前往第 16 頁 (manufacture)">
+        <span class="index-num">16</span>
+        <div>
+          <div class="index-word">manufacture <span class="jump-arrow">➔ P.16</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n/v) 製造，生產</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p16')" title="點擊前往第 16 頁">
+        <span class="index-formula">manu- ＋ -fact-, -fect- ＋ -(t)ure</span>
+      </div>
+    </div>
+    <!-- 17 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p17')" title="點擊前往第 17 頁 (destruction)">
+        <span class="index-num">17</span>
+        <div>
+          <div class="index-word">destruction <span class="jump-arrow">➔ P.17</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n) 毀壞，破壞</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p17')" title="點擊前往第 17 頁">
+        <span class="index-formula">de- ＋ -struct ＋ -ion</span>
+      </div>
+    </div>
+    <!-- 18 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p18')" title="點擊前往第 18 頁 (psychologist)">
+        <span class="index-num">18</span>
+        <div>
+          <div class="index-word">psychologist <span class="jump-arrow">➔ P.18</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(n) 心理學家</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p18')" title="點擊前往第 18 頁">
+        <span class="index-formula">psych(o)- ＋ -(o)logy ＋ -ist</span>
+      </div>
+    </div>
+    <!-- 19 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p19')" title="點擊前往第 19 頁 (irreversible)">
+        <span class="index-num">19</span>
+        <div>
+          <div class="index-word">irreversible <span class="jump-arrow">➔ P.19</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(adj) 不可逆的，不可挽回的</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p19')" title="點擊前往第 19 頁">
+        <span class="index-formula">ir- ＋ re- ＋ -vers ＋ -ible</span>
+      </div>
+    </div>
+    <!-- 20 -->
+    <div class="index-card">
+      <div class="index-card-left" onclick="jumpTo('p20')" title="點擊前往第 20 頁 (evacuate)">
+        <span class="index-num">20</span>
+        <div>
+          <div class="index-word">evacuate <span class="jump-arrow">➔ P.20</span></div>
+          <div class="index-zh-box" onclick="toggleIndexZh(event, this)" title="點擊揭曉/隱藏中文答案">
+            <span class="index-zh-ans">(v) 清空，疏散，撤離</span>
+          </div>
+        </div>
+      </div>
+      <div class="index-card-right" onclick="jumpTo('p20')" title="點擊前往第 20 頁">
+        <span class="index-formula">e-, ex- ＋ -vacu- ＋ -ate</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: #475569; line-height: 1.6; margin-top: auto;">
+    <strong style="color: #0f4c81;">💡 字首字根高效記憶三步心法：</strong><br>
+    <strong>1. 字首 (Prefix)：</strong>決定方向與態度（如 sub- 下、anti- 抗反、con- 共同、de- 拆除、inter- 之間）。<br>
+    <strong>2. 字根 (Root)：</strong>決定核心動作本質（如 tain 握住、gen 產生、fer 帶來、struct 建造、ject 丟擲）。<br>
+    <strong>3. 字尾 (Suffix)：</strong>決定詞性功能（如 -ability 名詞、-ence 名詞、-ist 專家、-ive 形容詞、-ate 動詞/形容詞）。
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心 11-20 字</span>
+    <span>張秋芸老師 自編教材</span>
+    <span class="pg-num">INDEX</span>
+  </div>
+</div>
+<!-- ──────────────────────────────────────────────
+     PAGE 11: 第 11 字 · sustainability
+     ────────────────────────────────────────────── -->
+<div class="page" id="p11">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 11 · 核心單字</span>
+      <h1 class="word-title">sustainability <span class="word-meaning">(n) 永續性，能維持性</span></h1>
+    </div>
+    <div class="word-badge">under + hold + ability</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">sus- [under 下] ＋ -tain, -ten [hold 握有] ＋ -ability [能...性質]</div>
+    <div class="breakdown-desc">語意公式：在地球（下）hold住（環境資源）的能力 ➔ 永續發展性</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【sustainability 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">sus- + -tain + -ability</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">環境與資源之支撐維持力 ➔ 永續發展</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">sus-, sub- = 下/次等</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">sustain (支撐維持)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">maintain (保養維護)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">contain (包含容納)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 sus-, sub-, sup- 家族 (under 下/次等)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>subway</strong> (地鐵)</span> <span class="chip"><strong>submarine</strong> (潛水艇)</span> <span class="chip"><strong>submit</strong> (提交)</span> <span class="chip"><strong>substitute</strong> (替代品)</span> <span class="chip"><strong>support</strong> (支持)</span> <span class="chip"><strong>suppose</strong> (假設)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -tain, -ten 家族 (hold 拿住)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>attain</strong> (達到)</span> <span class="chip"><strong>contain</strong> (包含)</span> <span class="chip"><strong>entertain</strong> (娛樂)</span> <span class="chip"><strong>obtain</strong> (獲得)</span> <span class="chip"><strong>retain</strong> (保留)</span> <span class="chip"><strong>maintain</strong> (維持)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">環境主題</span>
+      <span class="exam-tip-text">統測與多益綠色議題高頻詞：conservation（保育）、emission（碳排）、renewable energy（再生能源）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Many global companies are now focusing on environmental ________ by using green energy.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) sustainability</span> <span class="choice-item">(B) subscription</span> <span class="choice-item">(C) substitute</span> <span class="choice-item">(D) substance</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：sustainability 意為「環境永續性」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">This thermal flask is designed to ________ heat for up to twelve hours.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) sustain</span> <span class="choice-item correct">(B) retain</span> <span class="choice-item">(C) attain</span> <span class="choice-item">(D) entertain</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：retain heat 意為「保溫、留存熱量」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 11 字</span>
+    <span>sustainability</span>
+    <span class="pg-num">P.11</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 12: 第 12 字 · antigen
+     ────────────────────────────────────────────── -->
+<div class="page" id="p12">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 12 · 核心單字</span>
+      <h1 class="word-title">antigen <span class="word-meaning">(n) 抗原</span></h1>
+    </div>
+    <div class="word-badge">against + produce</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">anti- [against 抗/反] ＋ -gen [produce/birth 產生/出生]</div>
+    <div class="breakdown-desc">語意公式：刺激人體免疫系統「產生抗體（anti-）」的物質 ➔ 抗原</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【antigen 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">anti- + -gen</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">刺激抗體生成之因子 ➔ 醫學抗原</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">anti- = against 抗/反</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">antibody (抗體)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">generate (產生造成)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">generation (世代)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 anti- 家族 (against 抗/反向)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>antibacterial</strong> (抗菌的)</span> <span class="chip"><strong>antibiotics</strong> (抗生素)</span> <span class="chip"><strong>antibody</strong> (抗體)</span> <span class="chip"><strong>anticlockwise</strong> (逆時針的)</span> <span class="chip"><strong>antipathy</strong> (反感)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -gen 家族 (birth/produce 出生產生)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>gene</strong> (基因)</span> <span class="chip"><strong>genetic</strong> (遺傳的)</span> <span class="chip"><strong>generate</strong> (產生發電)</span> <span class="chip"><strong>generation</strong> (世代)</span> <span class="chip"><strong>generator</strong> (發電機)</span> <span class="chip"><strong>generous</strong> (慷慨的)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測延伸</span>
+      <span class="exam-tip-text">gen 延伸字根考點：generate（產生）、generation（世代）、genetic（基因遺傳的）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">When a virus enters the body, the immune system detects the ________ and starts producing antibodies.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) antigen</span> <span class="choice-item">(B) antibiotic</span> <span class="choice-item">(C) antibody</span> <span class="choice-item">(D) ancestor</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：antigen 意為「抗原」，能刺激免疫系統製造抗體。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Wind turbines and solar panels can be used to ________ clean electric power.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) general</span> <span class="choice-item correct">(B) generate</span> <span class="choice-item">(C) generous</span> <span class="choice-item">(D) genuine</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：generate electricity 意為「發電、產生電力」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 12 字</span>
+    <span>antigen</span>
+    <span class="pg-num">P.12</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 13: 第 13 字 · conference
+     ────────────────────────────────────────────── -->
+<div class="page" id="p13">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 13 · 核心單字</span>
+      <h1 class="word-title">conference <span class="word-meaning">(n) (正式)會議，商談</span></h1>
+    </div>
+    <div class="word-badge">together + bring</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">con- [together 一起] ＋ -fer [carry/bring 帶來] ＋ -ence [名詞字尾]</div>
+    <div class="breakdown-desc">語意公式：大家一起把意見帶到桌上商談 ➔ 正式會議</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【conference 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">con- + -fer + -ence</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">匯集各方報告 ➔ 大型研討年會</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">con-, com- = together 共同</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">transfer (轉移調職)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">prefer (偏好更喜歡)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">fertile (肥沃多產的)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 co-, com-, con- 家族 (together 共同)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>collect</strong> (收集)</span> <span class="chip"><strong>combine</strong> (結合)</span> <span class="chip"><strong>companion</strong> (同伴)</span> <span class="chip"><strong>construct</strong> (建造)</span> <span class="chip"><strong>contract</strong> (合約)</span> <span class="chip"><strong>collaborate</strong> (合作)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -fer 家族 (bear/carry 帶來承擔)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>prefer</strong> (更喜歡)</span> <span class="chip"><strong>differ</strong> (相異)</span> <span class="chip"><strong>offer</strong> (提供)</span> <span class="chip"><strong>infer</strong> (推論)</span> <span class="chip"><strong>refer</strong> (提及參考)</span> <span class="chip"><strong>suffer</strong> (遭受受苦)</span> <span class="chip"><strong>transfer</strong> (轉移)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測延伸</span>
+      <span class="exam-tip-text">fer 延伸核心組：transfer（轉移）、refer to（參閱/提及）、prefer（偏好更愛）、fertile（肥沃的）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Scholars from over thirty countries will attend the international ________ on artificial intelligence.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) conference</span> <span class="choice-item">(B) inference</span> <span class="choice-item">(C) preference</span> <span class="choice-item">(D) reference</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：international conference 意為「國際學術研討會」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">The soil along the Chianan Plain is remarkably ________, which is great for agriculture.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) fertile</span> <span class="choice-item">(B) hostile</span> <span class="choice-item">(C) fragile</span> <span class="choice-item">(D) futile</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：fertile (fer帶來產物 + -tile) 意為「土地肥沃的」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 13 字</span>
+    <span>conference</span>
+    <span class="pg-num">P.13</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 14: 第 14 字 · circumscribe
+     ────────────────────────────────────────────── -->
+<div class="page" id="p14">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 14 · 核心單字</span>
+      <h1 class="word-title">circumscribe <span class="word-meaning">(v) 在周圍畫線；限制</span></h1>
+    </div>
+    <div class="word-badge">around + write</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">circum- [around 環繞/四周] ＋ -scribe [write 書寫/劃線]</div>
+    <div class="breakdown-desc">語意公式：在周圍「畫一圈邊界（circum- ＋ scribe）」➔ 劃定界線、限制範圍</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【circumscribe 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">circum- + -scribe</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">劃下圓圈邊界 ➔ 限制權力範圍</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">circum- = around 環繞周圍</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">describe (描寫敘述)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">prescribe (開處方)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">subscribe (訂閱訂購)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 circum-, circ-, cycl- 家族 (around 圓周環繞)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>circumspect</strong> (慎重的)</span> <span class="chip"><strong>circumstance</strong> (情勢環境)</span> <span class="chip"><strong>circulate</strong> (流通循環)</span> <span class="chip"><strong>bicycle</strong> (腳踏車)</span> <span class="chip"><strong>recycle</strong> (資源回收)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -scribe, -script 家族 (write 書寫)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>script</strong> (劇本腳本)</span> <span class="chip"><strong>describe</strong> (描繪敘述)</span> <span class="chip"><strong>inscribe</strong> (銘刻)</span> <span class="chip"><strong>prescribe</strong> (開藥方)</span> <span class="chip"><strong>subscribe</strong> (訂閱)</span> <span class="chip"><strong>transcribe</strong> (謄寫抄錄)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測核心</span>
+      <span class="exam-tip-text">R01 spect 連結：circumspect（四周看 ➔ 謹慎的）、inspect（檢查）、respect（尊敬）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">In a democratic country, the power of government officials is strictly ________ by the law.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) prescribed</span> <span class="choice-item correct">(B) circumscribed</span> <span class="choice-item">(C) described</span> <span class="choice-item">(D) subscribed</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：circumscribed 意為被法律「限制在一定範圍內」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Before signing the contract, the lawyer was very ________ and read every single clause.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) circular</span> <span class="choice-item correct">(B) circumspect</span> <span class="choice-item">(C) circumstantial</span> <span class="choice-item">(D) circuitous</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：circumspect (四周看) 意為「謹慎細心的」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 14 字</span>
+    <span>circumscribe</span>
+    <span class="pg-num">P.14</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 15: 第 15 字 · autobiography
+     ────────────────────────────────────────────── -->
+<div class="page" id="p15">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 15 · 核心單字</span>
+      <h1 class="word-title">autobiography <span class="word-meaning">(n) 自傳</span></h1>
+    </div>
+    <div class="word-badge">self + life + write</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">auto- [self 自己] ＋ -bio [life 生命生活] ＋ -graphy [write/study 寫作學科]</div>
+    <div class="breakdown-desc">語意公式：自己（auto-）寫（-graphy）自己的一生（-bio）➔ 個人自傳</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【autobiography 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">auto- + -bio + -graphy</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">自我生平撰寫 ➔ 名人自傳</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">auto- = self 自己</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">biography (傳記)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">autograph (親筆簽名)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">biology (生物學)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 auto- 家族 (self 自己/自發)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>autism</strong> (自閉症)</span> <span class="chip"><strong>automobile</strong> (汽車)</span> <span class="chip"><strong>autograph</strong> (親筆簽名)</span> <span class="chip"><strong>automated</strong> (自動化的)</span> <span class="chip"><strong>automatically</strong> (自動地)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -bio (生命) ＆ -graphy (書寫繪圖)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>biology</strong> (生物學)</span> <span class="chip"><strong>biochemical</strong> (生物化學的)</span> <span class="chip"><strong>biotechnology</strong> (生技)</span> <span class="chip"><strong>biography</strong> (傳記)</span> <span class="chip"><strong>calligraphy</strong> (書法)</span> <span class="chip"><strong>geography</strong> (地理學)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測延伸</span>
+      <span class="exam-tip-text">auto + bio + graphy 三位一體拆解：biography（他人寫的傳記）、autograph（親筆簽名）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">The former president published an inspiring ________ recounting his journey from poverty to leadership.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) bibliography</span> <span class="choice-item correct">(B) autobiography</span> <span class="choice-item">(C) geography</span> <span class="choice-item">(D) calligraphy</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：autobiography 意為自己撰寫的「自傳」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">The young tennis champion spent half an hour signing ________ for his enthusiastic fans.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) autographs</span> <span class="choice-item">(B) automobiles</span> <span class="choice-item">(C) blueprints</span> <span class="choice-item">(D) telegraphs</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：autograph (auto自己 + graph寫) 意為「名人親筆簽名」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 15 字</span>
+    <span>autobiography</span>
+    <span class="pg-num">P.15</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 16: 第 16 字 · manufacture
+     ────────────────────────────────────────────── -->
+<div class="page" id="p16">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 16 · 核心單字</span>
+      <h1 class="word-title">manufacture <span class="word-meaning">(n/v) 製造，生產</span></h1>
+    </div>
+    <div class="word-badge">hand + make</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">manu- [hand 手] ＋ -fact-, -fect- [make/do 製作] ＋ -(t)ure [名詞字尾]</div>
+    <div class="breakdown-desc">語意公式：從古代「純手工（manu-）打造（-fact-）」➔ 現代表工廠規模化生產</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【manufacture 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">manu- + -fact + -ure</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">工廠量產打造 ➔ 製造業生產</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">manu- = hand 手工</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">factory (工廠)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">facility (設施能力)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">artificial (人工人造)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 manu-, man- 家族 (hand 手工/掌握)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>manage</strong> (管理)</span> <span class="chip"><strong>manual</strong> (操作手冊)</span> <span class="chip"><strong>manipulate</strong> (操控)</span> <span class="chip"><strong>maintain</strong> (保養維持)</span> <span class="chip"><strong>manner</strong> (禮貌舉止)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 fac-, fect-, fic- 家族 (make/do 製作)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>perfect</strong> (完美的)</span> <span class="chip"><strong>infect</strong> (感染傳染)</span> <span class="chip"><strong>affect</strong> (影響)</span> <span class="chip"><strong>effect</strong> (效果)</span> <span class="chip"><strong>defective</strong> (有瑕疵的)</span> <span class="chip"><strong>efficient</strong> (有效率的)</span> <span class="chip"><strong>sufficient</strong> (充足的)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測核心</span>
+      <span class="exam-tip-text">統測 Level 4 超高頻 R03 fac/fec/fic：defective（瑕疵的）、facility（設施）、artificial（人工的）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Taiwan is globally renowned for its advanced capability to ________ high-performance semiconductors.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) manufacture</span> <span class="choice-item">(B) manipulate</span> <span class="choice-item">(C) manifest</span> <span class="choice-item">(D) mandate</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：manufacture 意為「工業化大量製造生產」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">The automaker recalled thousands of vehicles due to a ________ brake system.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) sufficient</span> <span class="choice-item correct">(B) defective</span> <span class="choice-item">(C) proficient</span> <span class="choice-item">(D) magnificent</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：defective (de下 + fect做壞了) 意為「有瑕疵缺陷的」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 16 字</span>
+    <span>manufacture</span>
+    <span class="pg-num">P.16</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 17: 第 17 字 · destruction
+     ────────────────────────────────────────────── -->
+<div class="page" id="p17">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 17 · 核心單字</span>
+      <h1 class="word-title">destruction <span class="word-meaning">(n) 毀壞，破壞</span></h1>
+    </div>
+    <div class="word-badge">down + build + n.</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">de- [down/away 拆除/向下] ＋ -struct [build 建造] ＋ -ion [名詞字尾]</div>
+    <div class="breakdown-desc">語意公式：將已建構之物「往下拆毀（de- ＋ struct）」➔ 徹底破壞、毀滅</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【destruction 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">de- + -struct + -ion</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">拆毀結構 ➔ 颱風震災之嚴重破壞</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">de- = away 去除/向下</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">construction (建設營造)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">instruction (說明指示)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">structure (結構體)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 de- 家族 (away/down 降低/去除)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>debug</strong> (除錯)</span> <span class="chip"><strong>decrease</strong> (減少)</span> <span class="chip"><strong>destroy</strong> (摧毀破壞)</span> <span class="chip"><strong>decline</strong> (下降婉拒)</span> <span class="chip"><strong>degrade</strong> (降解降級)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -struct 家族 (build 建造架構)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>construction</strong> (建設營建)</span> <span class="chip"><strong>instruction</strong> (指導說明)</span> <span class="chip"><strong>structure</strong> (架構體系)</span> <span class="chip"><strong>destructive</strong> (毀滅性的)</span> <span class="chip"><strong>obstruct</strong> (阻礙妨礙)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測延伸</span>
+      <span class="exam-tip-text">struct 建造組：construction（營造建築）、instruction（使用說明書）、destructive（破壞性強的）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">The category 5 hurricane left a trail of utter ________ across the coastal villages.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) construction</span> <span class="choice-item">(B) instruction</span> <span class="choice-item correct">(C) destruction</span> <span class="choice-item">(D) obstruction</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：trail of destruction 意為「滿目瘡痍的毀壞痕跡」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Please follow the safety ________ posted on the laboratory wall before operating the machine.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) structures</span> <span class="choice-item correct">(B) instructions</span> <span class="choice-item">(C) destructions</span> <span class="choice-item">(D) subtractions</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：safety instructions 意為「安全操作指示說明」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 17 字</span>
+    <span>destruction</span>
+    <span class="pg-num">P.17</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 18: 第 18 字 · psychologist
+     ────────────────────────────────────────────── -->
+<div class="page" id="p18">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 18 · 核心單字</span>
+      <h1 class="word-title">psychologist <span class="word-meaning">(n) 心理學家</span></h1>
+    </div>
+    <div class="word-badge">mind + study + specialist</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">psych(o)- [soul/mind 心靈精神] ＋ -(o)logy [study 學科] ＋ -ist [專家]</div>
+    <div class="breakdown-desc">語意公式：專門探討人類「心靈精神運作（psycho-）」的學者 ➔ 心理諮商學家</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【psychologist 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">psych + logy + ist</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">心靈學科專研者 ➔ 心理諮商專家</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">psycho- = mind 心靈靈魂</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">psychology (心理學)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">sociologist (社會學家)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">biologist (生物學家)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 psych(o)- (mind/soul 心靈精神)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>psyche</strong> (心智心靈)</span> <span class="chip"><strong>psychoanalysis</strong> (精神分析)</span> <span class="chip"><strong>psychological</strong> (心理層面的)</span> <span class="chip"><strong>psychiatrist</strong> (精神科醫師)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 學科字尾 -logy ＆ 專家字尾 -ist</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>astrology</strong> (占星學)</span> <span class="chip"><strong>sociology</strong> (社會學)</span> <span class="chip"><strong>zoology</strong> (動物學)</span> <span class="chip"><strong>artist</strong> (藝術家)</span> <span class="chip"><strong>tourist</strong> (觀光客)</span> <span class="chip"><strong>biologist</strong> (生物學家)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測延伸</span>
+      <span class="exam-tip-text">psychology（心理學）、psychologist（心理學者）、psychiatrist（精神科醫生）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Students suffering from exam stress are encouraged to talk with the school ________.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) psychologist</span> <span class="choice-item">(B) archaeologist</span> <span class="choice-item">(C) meteorologist</span> <span class="choice-item">(D) geologist</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：school psychologist 意為「學校駐校心理輔導師」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">A certified ________ is conducting a long-term survey on teenage online social behavior.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) sociologist</span> <span class="choice-item">(B) zoologist</span> <span class="choice-item">(C) dentist</span> <span class="choice-item">(D) pharmacist</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：sociologist (soci群體同伴 + logist專家) 意為「社會學家」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 18 字</span>
+    <span>psychologist</span>
+    <span class="pg-num">P.18</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 19: 第 19 字 · irreversible
+     ────────────────────────────────────────────── -->
+<div class="page" id="p19">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 19 · 核心單字</span>
+      <h1 class="word-title">irreversible <span class="word-meaning">(adj) 不可逆的，不可挽回的</span></h1>
+    </div>
+    <div class="word-badge">not + back + turn + able</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">ir- [not 不] ＋ re- [back 回] ＋ -vers [turn 旋轉轉向] ＋ -ible [能...的]</div>
+    <div class="breakdown-desc">語意公式：無法再「回頭轉向（re- + vers）」的致命局勢 ➔ 不可逆轉的</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【irreversible 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">ir- + re- + vers + -ible</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">轉不回去之變局 ➔ 不可挽回之損害</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">ir- = not 不可能</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">reverse (反轉倒車)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">diverse (多元多樣)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">convert (轉換改造)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 否定字首 ir-, il-, im- 家族 (not 不/無)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>irreplaceable</strong> (不可取代的)</span> <span class="chip"><strong>irregular</strong> (不規則的)</span> <span class="chip"><strong>irresponsible</strong> (不負責任的)</span> <span class="chip"><strong>irresistible</strong> (無法抗拒的)</span> <span class="chip"><strong>illegal</strong> (非法的)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 -vers, -vert 家族 (turn 轉動旋轉)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>reverse</strong> (顛倒反向)</span> <span class="chip"><strong>convert</strong> (轉換轉變)</span> <span class="chip"><strong>diverse</strong> (多元多樣的)</span> <span class="chip"><strong>controversy</strong> (爭議風波)</span> <span class="chip"><strong>anniversary</strong> (週年紀念日)</span> <span class="chip"><strong>extroverted</strong> (外向的)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測核心</span>
+      <span class="exam-tip-text">vers / vert 旋轉考點：reverse（反向倒轉）、convert A into B（將A轉換為B）、diverse（多元多樣的）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Scientists warn that polar ice melting could trigger an ________ environmental catastrophe.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) irresistible</span> <span class="choice-item correct">(B) irreversible</span> <span class="choice-item">(C) irresponsible</span> <span class="choice-item">(D) irregular</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：irreversible damage 意為「不可逆轉、無法復原的環境浩劫」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Solar cells installed on the roof can ________ sunlight into electricity efficiently.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) convert</span> <span class="choice-item">(B) reverse</span> <span class="choice-item">(C) divert</span> <span class="choice-item">(D) avert</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：convert into 意為「轉換成電力」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 19 字</span>
+    <span>irreversible</span>
+    <span class="pg-num">P.19</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 20: 第 20 字 · evacuate
+     ────────────────────────────────────────────── -->
+<div class="page" id="p20">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="back-home-bar no-print">
+    <button class="back-home-btn" onclick="jumpTo('p0')">🔝 回到首頁索引</button>
+  </div>
+
+  <div class="word-banner">
+    <div class="word-banner-left">
+      <span class="word-tag">WORD 20 · 核心單字</span>
+      <h1 class="word-title">evacuate <span class="word-meaning">(v) 清空，疏散，撤離</span></h1>
+    </div>
+    <div class="word-badge">out + empty + v.</div>
+  </div>
+
+  <div class="breakdown-hero">
+    <div class="breakdown-formula">e-, ex- [out 向外] ＋ -vacu- [empty 空的] ＋ -ate [動詞字尾]</div>
+    <div class="breakdown-desc">語意公式：將災區人群「向外帶出並排空（e- + vacu）」➔ 疏散撤離避難</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 詞義網絡圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【evacuate 詞義認知網絡放大圖】</span>
+      <span class="tag">字根家族核心拓撲展開</span>
+    </div>
+    <svg class="network-svg" viewBox="0 0 680 115">
+      <rect x="230" y="35" width="220" height="42" rx="8" fill="#0f4c81"/>
+      <text x="340" y="61" font-size="15" font-family="'JetBrains Mono'" font-weight="bold" fill="#ffffff" text-anchor="middle">e- + -vacu- + -ate</text>
+      <text x="340" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">帶出並清空危樓 ➔ 緊急疏散撤離</text>
+
+      <path d="M 225 56 L 140 30" stroke="#2563eb" stroke-width="2.5"/>
+      <rect x="15" y="12" width="140" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="85" y="33" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">e-, ex- = out 往外</text>
+
+      <path d="M 455 56 L 530 28" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="10" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="30" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">vacant (空閒缺額的)</text>
+
+      <path d="M 455 56 L 530 60" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="46" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="66" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">vacancy (職缺空缺)</text>
+
+      <path d="M 455 56 L 530 92" stroke="#059669" stroke-width="2.5"/>
+      <rect x="525" y="80" width="145" height="32" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="597" y="100" font-size="10.5" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">vacuum (真空吸塵器)</text>
+    </svg>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card prefix-theme">
+      <div class="family-card-title">
+        <span>🔹 字首 e-, ex- 家族 (out 向外離開)</span>
+        <span class="family-badge">前綴方向</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>exit</strong> (出口)</span> <span class="chip"><strong>exclude</strong> (排除在外)</span> <span class="chip"><strong>expand</strong> (擴展膨脹)</span> <span class="chip"><strong>eliminate</strong> (消除淘汰)</span> <span class="chip"><strong>eject</strong> (彈出驅逐)</span> <span class="chip"><strong>extend</strong> (延伸延長)</span>
+      </div>
+    </div>
+
+    <div class="family-card root-theme">
+      <div class="family-card-title">
+        <span>🌿 字根 vac(u)- 家族 (empty 空缺/無人)</span>
+        <span class="family-badge">動作本質</span>
+      </div>
+      <div class="word-chips">
+        <span class="chip"><strong>vacation</strong> (休假假期)</span> <span class="chip"><strong>vacant</strong> (空缺無人的)</span> <span class="chip"><strong>vacancy</strong> (職缺空房)</span> <span class="chip"><strong>vacuum</strong> (真空狀態)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-tip-strip">
+    <div class="exam-tip-left">
+      <span class="exam-tip-badge">統測延伸</span>
+      <span class="exam-tip-text">vac 字根大家族：vacant room（空房）、job vacancy（職缺）、evacuate the building（疏散大樓）。</span>
+    </div>
+    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#b45309; font-weight:bold;">高頻考點</span>
+  </div>
+
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練 (點擊題幹揭曉解答)</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">When the earthquake struck, security staff immediately ordered all shoppers to ________ the mall.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) evaluate</span> <span class="choice-item correct">(B) evacuate</span> <span class="choice-item">(C) eliminate</span> <span class="choice-item">(D) elaborate</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：evacuate the mall 意為「疏散商場內顧客」。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">We are pleased to announce that our department has a job ________ for a senior software engineer.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) vacancy</span> <span class="choice-item">(B) vacuum</span> <span class="choice-item">(C) vacation</span> <span class="choice-item">(D) vanity</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：job vacancy 意為「工作職缺」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>50個字掌握15000單字 · 核心第 20 字</span>
+    <span>evacuate</span>
+    <span class="pg-num">P.20</span>
+  </div>
+</div>
+
+</div><!-- /page-container -->
+
+<!-- ══════════════════════════════════════════════
+     JavaScript 核心互動腳本 (大屏雙模式與板書)
+     ══════════════════════════════════════════════ -->
+<script>
+let showingAll = false;
+let penActive = false;
+let penColor = 'rgba(250,204,21,0.5)';
+let penSize = 3;
+
+/* ── 1. 目錄跳轉與彈窗控制 ── */
+function toggleToc(e) {
+  e.stopPropagation();
+  document.getElementById('tocMenu').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+});
+function jumpTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+}
+
+/* ── 2. 一鍵揭曉 / 隱藏全卷答案 ── */
+function toggleAllAnswers() {
+  showingAll = !showingAll;
+  document.body.classList.toggle('show-ans', showingAll);
+  document.getElementById('ansIcon').textContent = showingAll ? '🙈' : '👁️';
+  if (!showingAll) {
+    document.querySelectorAll('.qa-block').forEach(el => el.classList.remove('show-one'));
+    document.querySelectorAll('.index-zh-ans').forEach(el => el.classList.remove('show'));
+    document.body.classList.remove('show-index-zh');
+    const idxIcon = document.getElementById('indexZhIcon');
+    if (idxIcon) idxIcon.textContent = '👁️';
+    indexZhVisible = false;
+  }
+}
+
+/* ── 3. 逐題點擊秀答案 ── */
+function toggleItemAnswer(el) {
+  if (penActive) return;
+  el.classList.toggle('show-one');
+}
+
+/* ── 3-1. 封面中文意思獨立點擊與一鍵全開 ── */
+let indexZhVisible = false;
+function toggleIndexZh(e, el) {
+  e.stopPropagation();
+  if (penActive) return;
+  const target = el.classList.contains('index-zh-ans') ? el : el.querySelector('.index-zh-ans');
+  if (target) target.classList.toggle('show');
+}
+function toggleAllIndexZh() {
+  indexZhVisible = !indexZhVisible;
+  document.body.classList.toggle('show-index-zh', indexZhVisible);
+  const icon = document.getElementById('indexZhIcon');
+  if (icon) icon.textContent = indexZhVisible ? '🙈' : '👁️';
+  if (!indexZhVisible) {
+    document.querySelectorAll('.index-zh-ans').forEach(el => el.classList.remove('show'));
+  }
+}
+
+/* ── 4. 螢光筆/板書筆模式開關 ── */
+function togglePenMode() {
+  penActive = !penActive;
+  document.body.classList.toggle('pen-mode', penActive);
+  document.getElementById('penBtn').style.background = penActive ? '#bfdbfe' : '';
+  document.getElementById('penOptions').classList.toggle('open', penActive);
+}
+function setPenColor(c, dotEl) {
+  penColor = c;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  dotEl.classList.add('active');
+}
+function setPenSize(s, btn) {
+  penSize = s;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function clearAllDrawings() {
+  document.querySelectorAll('.drawing-canvas').forEach(c => {
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
+  });
+}
+
+/* ── 5. 多頁畫板 Canvas 初始化 ── */
+function initCanvases() {
+  document.querySelectorAll('.drawing-canvas').forEach(canvas => {
+    const page = canvas.parentElement;
+    function resize() {
+      const rect = page.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let drawing = false, lastX, lastY;
+
+    canvas.addEventListener('mousedown', e => {
+      if (!penActive) return;
+      drawing = true;
+      const r = canvas.getBoundingClientRect();
+      lastX = e.clientX - r.left; lastY = e.clientY - r.top;
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!drawing || !penActive) return;
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor; ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      lastX = x; lastY = y;
+    });
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseleave', () => drawing = false);
+
+    canvas.addEventListener('touchstart', e => {
+      if (!penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      lastX = t.clientX - r.left; lastY = t.clientY - r.top;
+      drawing = true;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', e => {
+      if (!drawing || !penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      const x = t.clientX - r.left, y = t.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor; ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      lastX = x; lastY = y;
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => drawing = false);
+  });
+}
+window.addEventListener('load', initCanvases);
+</script>
+</body>
+</html>

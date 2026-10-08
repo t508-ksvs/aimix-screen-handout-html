@@ -43,3 +43,4 @@ AI米克斯_大屏講義解答html製作/
 - 所有回應與文件使用繁體中文
 - 產出嚴格遵守 `self-made-ebook` 規範：字體 14pt、Times New Roman + 標楷體、零操作提示干擾文字、單一 HTML 自包含。
 - GDrive 上執行 Git 操作須保持 `windows.appendAtomically false` 設定。
+- 回覆交付成果時：除了檔案連結外，必須同時提供所在「資料夾連結」（使用 `file:///` 格式），方便使用者直接點選開啟檔案總管。

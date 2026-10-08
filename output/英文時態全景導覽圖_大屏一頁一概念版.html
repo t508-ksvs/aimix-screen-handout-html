@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文時態全景圖解 ｜ 一頁一核心概念 教師大屏教學講義 (P.1–P.15)</title>
+<style>
+/* ── 全域重設與字型標準 (嚴格遵守 self-made-ebook 規範) ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14pt; }
+body {
+  font-family: "Times New Roman", "標楷體", "DFKai-SB", "BiauKai", serif;
+  background: #eef4fb;
+  color: #1a1a2e;
+  padding-top: 65px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 課堂懸浮極簡 Emoji 膠囊工具列 (純圖示、無文字) ── */
+.classroom-toolbar {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 2000; display: flex; align-items: center; gap: 6px;
+  background: rgba(255, 255, 255, 0.96); border-radius: 40px;
+  padding: 6px 18px; box-shadow: 0 6px 24px rgba(15, 76, 129, 0.22);
+  backdrop-filter: blur(12px); border: 1.5px solid #bfdbfe;
+}
+.tool-btn {
+  background: none; border: none; font-size: 1.35rem; cursor: pointer;
+  border-radius: 50%; width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s ease;
+}
+.tool-btn:hover { background: #dbeafe; transform: scale(1.1); }
+.toolbar-divider { width: 1px; height: 24px; background: #cbd5e1; margin: 0 4px; }
+.pen-options { display: none; align-items: center; gap: 6px; }
+.pen-options.open { display: flex; }
+.color-dot {
+  width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: all .15s ease;
+}
+.color-dot:hover { transform: scale(1.2); }
+.color-dot.active { border-color: #0f4c81; transform: scale(1.2); box-shadow: 0 0 6px rgba(15, 76, 129, 0.5); }
+.size-btn {
+  background: #f1f5f9; border: 1px solid #cbd5e1;
+  border-radius: 6px; padding: 2px 8px; font-size: 0.75rem;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.size-btn.active, .size-btn:hover { background: #bfdbfe; font-weight: bold; color: #0f4c81; }
+.sub-divider { width: 1px; height: 18px; background: #cbd5e1; margin: 0 3px; }
+
+/* ── 章節目錄選單 ── */
+.toc-wrapper { position: relative; }
+.toc-menu {
+  display: none; position: absolute; top: 48px; left: -10px;
+  background: #ffffff; border-radius: 12px; box-shadow: 0 10px 36px rgba(15, 76, 129, 0.25);
+  min-width: 320px; max-height: 82vh; overflow-y: auto; padding: 8px 0; z-index: 3000;
+  border: 1px solid #bfdbfe;
+}
+.toc-menu.open { display: block; }
+.toc-menu-title {
+  padding: 8px 18px 6px; font-size: 0.78rem; color: #0f4c81; font-weight: bold;
+  letter-spacing: .06em; border-bottom: 1.5px solid #eff6ff; background: #f8fafc;
+}
+.toc-menu-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 18px; cursor: pointer; transition: background .12s; font-size: 0.85rem;
+  border-bottom: 1px solid #f8fafc;
+}
+.toc-menu-item:hover { background: #eff6ff; color: #0284c7; }
+.toc-page-badge {
+  font-size: 0.72rem; background: #dbeafe; color: #0f4c81; border-radius: 10px;
+  padding: 2px 8px; font-weight: bold; font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── A4 講義頁面容器 (210mm x 297mm 標準) ── */
+.page-container {
+  display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 15px 16px 80px;
+}
+.page {
+  background: #ffffff; width: 210mm; min-height: 297mm; padding: 13mm 16mm 14mm;
+  box-shadow: 0 6px 30px rgba(15, 76, 129, 0.12); border-radius: 6px;
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── 繪圖板 Canvas ── */
+.drawing-canvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 50;
+}
+body.pen-mode .drawing-canvas { pointer-events: auto; cursor: crosshair; }
+
+/* ── 頁首橫幅設計 ── */
+.ch-banner {
+  background: linear-gradient(135deg, #0f4c81 0%, #0284c7 100%);
+  color: #ffffff; border-radius: 8px; padding: 10px 18px 9px; margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ch-banner.past-theme { background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%); }
+.ch-banner.present-theme { background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%); }
+.ch-banner.future-theme { background: linear-gradient(135deg, #064e3b 0%, #10b981 100%); }
+.ch-banner.summary-theme { background: linear-gradient(135deg, #312e81 0%, #6366f1 100%); }
+
+.ch-banner-left { display: flex; flex-direction: column; }
+.ch-tag { font-size: 0.72rem; letter-spacing: .08em; opacity: 0.9; font-weight: bold; }
+.ch-title { font-size: 1.18rem; font-weight: bold; letter-spacing: .03em; margin-top: 1px; }
+.ch-sub { font-size: 0.76rem; opacity: 0.92; margin-top: 2px; }
+.ch-badge {
+  background: rgba(255, 255, 255, 0.22); border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 3px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: bold;
+  white-space: nowrap; font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── 公式大卡片 ── */
+.formula-hero {
+  background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px;
+  padding: 8px 14px; margin-bottom: 9px; display: flex; align-items: center; justify-content: space-between;
+}
+.formula-hero.orange-border { border-left: 5px solid #ea580c; background: #fffaf5; }
+.formula-hero.blue-border { border-left: 5px solid #3b82f6; background: #f0f7ff; }
+.formula-hero.green-border { border-left: 5px solid #10b981; background: #f0fdf4; }
+.formula-hero.purple-border { border-left: 5px solid #6366f1; background: #f5f3ff; }
+
+.formula-left { display: flex; align-items: center; gap: 10px; }
+.formula-badge {
+  background: #0f4c81; color: white; padding: 2px 8px; border-radius: 4px;
+  font-size: 0.74rem; font-weight: bold; letter-spacing: .04em;
+}
+.formula-hero.orange-border .formula-badge { background: #ea580c; }
+.formula-hero.blue-border .formula-badge { background: #2563eb; }
+.formula-hero.green-border .formula-badge { background: #059669; }
+.formula-hero.purple-border .formula-badge { background: #4f46e5; }
+
+.formula-code {
+  font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: bold; color: #0f4c81;
+}
+.formula-hero.orange-border .formula-code { color: #c2410c; }
+.formula-hero.blue-border .formula-code { color: #1d4ed8; }
+.formula-hero.green-border .formula-code { color: #047857; }
+.formula-hero.purple-border .formula-code { color: #4338ca; }
+
+.formula-right {
+  font-size: 0.78rem; font-weight: bold; color: #475569;
+}
+
+/* ── 放大版 SVG 圖解展示箱 (核心焦點) ── */
+.visual-stage {
+  background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 8px;
+  padding: 10px 14px 8px; margin-bottom: 9px; box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+}
+.visual-stage-title {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.82rem; font-weight: bold; color: #0f4c81; margin-bottom: 6px;
+  border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px;
+}
+.visual-stage-title .tag {
+  background: #e0f2fe; color: #0369a1; padding: 1px 7px; border-radius: 4px; font-size: 0.7rem;
+}
+.timeline-svg { width: 100%; height: auto; display: block; }
+
+/* ── 3C 認知語法核心概念解析箱 ── */
+.concept-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 9px;
+}
+.concept-card {
+  background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px;
+  padding: 7px 10px; font-size: 0.82rem;
+}
+.concept-card.highlight {
+  background: #fffbeb; border-color: #fde68a; border-left: 4px solid #f59e0b;
+}
+.concept-card.orange {
+  background: #fff7ed; border-color: #ffedd5; border-left: 4px solid #ea580c;
+}
+.concept-card.blue {
+  background: #eff6ff; border-color: #dbeafe; border-left: 4px solid #3b82f6;
+}
+.concept-card.green {
+  background: #ecfdf5; border-color: #d1fae5; border-left: 4px solid #10b981;
+}
+.concept-card-title {
+  font-weight: bold; font-size: 0.84rem; color: #0f4c81; margin-bottom: 3px;
+  display: flex; align-items: center; gap: 5px;
+}
+.concept-card.orange .concept-card-title { color: #c2410c; }
+.concept-card.blue .concept-card-title { color: #1d4ed8; }
+.concept-card.green .concept-card-title { color: #047857; }
+
+.concept-text {
+  font-size: 0.8rem; line-height: 1.5; color: #334155;
+}
+.concept-text strong { color: #0f4c81; }
+.concept-card.orange .concept-text strong { color: #c2410c; }
+.concept-card.blue .concept-text strong { color: #1e40af; }
+.concept-card.green .concept-text strong { color: #065f46; }
+
+/* ── 經典對比／語意透視框 ── */
+.compare-strip {
+  background: #f1f5f9; border-radius: 6px; padding: 7px 10px;
+  margin-bottom: 9px; font-size: 0.82rem; border-left: 4px solid #64748b;
+}
+.compare-strip.active { border-left-color: #ea580c; background: #fff7ed; }
+.compare-strip-title {
+  font-weight: bold; font-size: 0.82rem; color: #1e293b; margin-bottom: 3px;
+}
+.compare-strip.active .compare-strip-title { color: #c2410c; }
+.sent-en {
+  font-family: 'JetBrains Mono', 'Times New Roman', serif;
+  font-size: 0.88rem; font-weight: bold; color: #0f4c81; margin: 2px 0;
+}
+.compare-strip.active .sent-en { color: #c2410c; }
+.sent-zh { font-size: 0.78rem; color: #475569; line-height: 1.45; }
+
+/* ── 課堂隨堂互動練習 (點擊逐題秀答案) ── */
+.exercise-panel {
+  background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px;
+  padding: 8px 12px; margin-top: auto;
+}
+.exercise-panel-title {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.84rem; font-weight: bold; color: #0f4c81; margin-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;
+}
+.qa-block {
+  display: flex; align-items: flex-start; gap: 8px; cursor: pointer;
+  padding: 5px 8px; border-radius: 6px; margin: 3px 0; transition: background .15s; font-size: 0.85rem;
+}
+.qa-block:hover { background: #f0f7fc; }
+.qa-block.show-one { background: #fef2f2; }
+.qa-num {
+  min-width: 26px; background: #e2e8f0; border-radius: 4px; text-align: center;
+  padding: 1px 4px; font-size: 0.78rem; font-weight: bold; flex-shrink: 0; margin-top: 2px; color: #1e293b;
+}
+.qa-block.show-one .qa-num { background: #fecaca; color: #dc2626; }
+.qa-body { flex: 1; }
+.qa-stem { line-height: 1.5; color: #1e293b; }
+.choices-row {
+  display: flex; gap: 14px; margin-top: 3px; font-size: 0.82rem; flex-wrap: wrap;
+}
+.choice-item { display: inline-block; padding: 0 2px; transition: all .2s; }
+.ans-reveal {
+  color: transparent; font-weight: bold; transition: color .25s;
+  border-bottom: 2px dashed #94a3b8; min-width: 28px; display: inline-block;
+  text-align: center; padding: 0 4px;
+}
+.show-one .ans-reveal, .show-ans .ans-reveal {
+  color: #dc2626 !important; border-bottom-color: #dc2626;
+}
+.show-one .choice-item.correct, .show-ans .choice-item.correct {
+  color: #dc2626 !important; font-weight: bold !important; border: 2px solid #dc2626 !important;
+  border-radius: 12px !important; background: #fef2f2 !important; padding: 0 6px !important;
+}
+.qa-explain {
+  display: none; font-size: 0.76rem; color: #dc2626; margin-top: 3px; line-height: 1.4;
+  border-top: 1px dashed #fca5a5; padding-top: 2px;
+}
+.show-one .qa-explain, .show-ans .qa-explain { display: block; }
+
+/* ── 頁尾 ── */
+.page-footer {
+  margin-top: 8px; padding-top: 6px; border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.72rem; color: #64748b; font-family: 'JetBrains Mono', monospace;
+}
+.page-footer .pg-num {
+  background: #0f4c81; color: white; border-radius: 10px; padding: 1px 8px; font-weight: bold;
+}
+
+/* ── 列印專用樣式 (學生端純淨 A4 列印，無答案、無工具列) ── */
+@media print {
+  @page { size: A4 portrait; margin: 10mm 14mm 12mm; }
+  body { background: white; padding-top: 0; }
+  .no-print, .classroom-toolbar, .drawing-canvas { display: none !important; }
+  .page-container { gap: 0; padding: 0; }
+  .page {
+    box-shadow: none; border-radius: 0; width: 100%; min-height: 275mm;
+    page-break-after: always; padding: 0; margin-bottom: 0;
+  }
+  .ans-reveal { color: transparent !important; border-bottom: 1.5px solid #000 !important; }
+  .qa-explain { display: none !important; }
+  .choice-item.correct { color: inherit !important; font-weight: normal !important; border: none !important; background: none !important; }
+  .qa-block { background: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     課堂懸浮極簡 Emoji 膠囊工具列 (純圖示、無文字)
+     ══════════════════════════════════════════════ -->
+<div class="classroom-toolbar no-print">
+  <!-- 1. 章節目錄選單 -->
+  <div class="toc-wrapper">
+    <button class="tool-btn" id="tocBtn" onclick="toggleToc(event)" title="章節目錄導覽 (15 頁速翻)">
+      📑
+    </button>
+    <div class="toc-menu" id="tocMenu">
+      <div class="toc-menu-title">📖 英文時態全景圖解 · 15 頁單元目錄</div>
+      <div class="toc-menu-item" onclick="jumpTo('p1')"><span>P.1 全景導覽 · 時態本質公式</span><span class="toc-page-badge">P.1</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p2')"><span>P.2 手繪時間軸 4 大動態符號</span><span class="toc-page-badge">P.2</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p3')"><span>P.3 現在簡單式（常態本質）</span><span class="toc-page-badge">P.3</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p4')"><span>P.4 現在進行式（當下動態）</span><span class="toc-page-badge">P.4</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p5')"><span>P.5 現在完成式（連結當下）</span><span class="toc-page-badge">P.5</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p6')"><span>P.6 現在完成進行式（未完待續）</span><span class="toc-page-badge">P.6</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p7')"><span>P.7 過去簡單式（孤立歷史點）</span><span class="toc-page-badge">P.7</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p8')"><span>P.8 過去進行式（背景長鏡頭）</span><span class="toc-page-badge">P.8</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p9')"><span>P.9 過去完成式（時間階梯）</span><span class="toc-page-badge">P.9</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p10')"><span>P.10 過去完成進行式（持續推進）</span><span class="toc-page-badge">P.10</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p11')"><span>P.11 未來簡單式（意願與徵兆）</span><span class="toc-page-badge">P.11</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p12')"><span>P.12 未來進行式（預想動態畫面）</span><span class="toc-page-badge">P.12</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p13')"><span>P.13 未來完成式（終點線回看）</span><span class="toc-page-badge">P.13</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p14')"><span>P.14 未來完成進行式（時長里程碑）</span><span class="toc-page-badge">P.14</span></div>
+      <div class="toc-menu-item" onclick="jumpTo('p15')"><span>P.15 大考迷思破解 ＆ 秒殺 3 步法</span><span class="toc-page-badge">P.15</span></div>
+    </div>
+  </div>
+
+  <div class="toolbar-divider"></div>
+
+  <!-- 2. 一鍵全開/全關解答 -->
+  <button class="tool-btn" id="toggleAllAnsBtn" onclick="toggleAllAnswers()" title="一鍵揭曉/隱藏全卷答案">
+    <span id="ansIcon">👁️</span>
+  </button>
+
+  <div class="toolbar-divider"></div>
+
+  <!-- 3. 螢光筆/板書筆工具 -->
+  <button class="tool-btn" id="penBtn" onclick="togglePenMode()" title="螢光筆/板書筆">
+    ✏️
+  </button>
+  <div class="pen-options" id="penOptions">
+    <div class="color-dot active" style="background:#facc15;" onclick="setPenColor('rgba(250,204,21,0.5)', this)" title="螢光黃"></div>
+    <div class="color-dot" style="background:#4ade80;" onclick="setPenColor('rgba(74,222,128,0.5)', this)" title="螢光綠"></div>
+    <div class="color-dot" style="background:#f472b6;" onclick="setPenColor('rgba(244,114,182,0.5)', this)" title="粉紅筆"></div>
+    <div class="color-dot" style="background:#38bdf8;" onclick="setPenColor('rgba(56,189,248,0.55)', this)" title="天藍筆"></div>
+    <div class="color-dot" style="background:#ef4444;" onclick="setPenColor('#ef4444', this)" title="重點紅筆"></div>
+    <div class="sub-divider"></div>
+    <button class="size-btn active" onclick="setPenSize(3, this)">細</button>
+    <button class="size-btn" onclick="setPenSize(6, this)">中</button>
+    <button class="size-btn" onclick="setPenSize(12, this)">粗</button>
+  </div>
+
+  <!-- 4. 清除筆跡 -->
+  <button class="tool-btn" onclick="clearAllDrawings()" title="一鍵清除所有板書筆跡">
+    🧹
+  </button>
+
+  <div class="toolbar-divider"></div>
+
+  <!-- 5. 學生端 A4 純淨列印 -->
+  <button class="tool-btn" onclick="window.print()" title="列印學生端純淨學習單 (無答案)">
+    🖨️
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     講義頁面容器
+     ══════════════════════════════════════════════ -->
+<div class="page-container">
+
+<!-- ──────────────────────────────────────────────
+     PAGE 1: 總覽篇 · 時態本質全景公式
+     ────────────────────────────────────────────── -->
+<div class="page" id="p1">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner summary-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">CORE ARCHITECTURE · 核心認知架構</span>
+      <h1 class="ch-title">英文時態全景導覽 ｜ 時態本質公式</h1>
+      <span class="ch-sub">客觀三大時間 × 主觀四種動態 ＝ 掌握英語 12 大時態幾何本質</span>
+    </div>
+    <div class="ch-badge">OVERVIEW</div>
+  </div>
+
+  <div class="formula-hero purple-border">
+    <div class="formula-left">
+      <span class="formula-badge">黃金公式</span>
+      <span class="formula-code">時態 ＝ 3 大時間（客觀時光） ＋ 4 種動態（心理視角） ＝ 12 時態</span>
+    </div>
+    <div class="formula-right">李櫻教授 3C 功能語法</div>
+  </div>
+
+  <!-- 大尺寸 SVG 時間軸 3x4 全景矩陣放大圖 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【12 時態時間軸全景幾何矩陣】</span>
+      <span class="tag">大屏放大版 · 橫向時間位移 × 縱向動態變化</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 160">
+      <!-- 背景三欄劃分 -->
+      <rect x="10" y="24" width="210" height="130" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <rect x="235" y="24" width="210" height="130" rx="6" fill="#fffaf5" stroke="#fed7aa" stroke-width="1.5"/>
+      <rect x="460" y="24" width="210" height="130" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+
+      <!-- 欄位標題 -->
+      <text x="115" y="42" font-size="12" font-family="'Times New Roman', '標楷體'" font-weight="bold" fill="#1e293b" text-anchor="middle">PAST 過去家族</text>
+      <text x="340" y="42" font-size="12" font-family="'Times New Roman', '標楷體'" font-weight="bold" fill="#c2410c" text-anchor="middle">PRESENT 現在家族 (大考核心)</text>
+      <text x="565" y="42" font-size="12" font-family="'Times New Roman', '標楷體'" font-weight="bold" fill="#047857" text-anchor="middle">FUTURE 未來家族</text>
+
+      <!-- 1. 簡單式 -->
+      <text x="20" y="66" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#475569">① 簡單式</text>
+      <circle cx="115" cy="62" r="5" fill="#3b82f6"/>
+      <text x="115" y="74" font-size="9" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">V-ed</text>
+
+      <line x1="260" y1="62" x2="420" y2="62" stroke="#ea580c" stroke-width="2" stroke-dasharray="4,2"/>
+      <circle cx="340" cy="62" r="5" fill="#ea580c"/>
+      <text x="340" y="74" font-size="9" font-family="'JetBrains Mono'" fill="#c2410c" text-anchor="middle">V / V-s</text>
+
+      <circle cx="565" cy="62" r="5" fill="#10b981"/>
+      <text x="565" y="74" font-size="9" font-family="'JetBrains Mono'" fill="#059669" text-anchor="middle">will + V</text>
+
+      <!-- 2. 進行式 -->
+      <text x="20" y="93" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#475569">② 進行式</text>
+      <rect x="90" y="88" width="50" height="8" rx="4" fill="#3b82f6" opacity="0.85"/>
+      <text x="115" y="104" font-size="9" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">was/were + Ving</text>
+
+      <rect x="315" y="88" width="50" height="8" rx="4" fill="#ea580c"/>
+      <text x="340" y="104" font-size="9" font-family="'JetBrains Mono'" fill="#c2410c" text-anchor="middle">is/am/are + Ving</text>
+
+      <rect x="540" y="88" width="50" height="8" rx="4" fill="#10b981" opacity="0.85"/>
+      <text x="565" y="104" font-size="9" font-family="'JetBrains Mono'" fill="#059669" text-anchor="middle">will be + Ving</text>
+
+      <!-- 3. 完成式 -->
+      <text x="20" y="121" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#475569">③ 完成式</text>
+      <line x1="75" y1="117" x2="135" y2="117" stroke="#3b82f6" stroke-width="2"/>
+      <polygon points="138,117 132,114 132,120" fill="#3b82f6"/>
+      <circle cx="143" cy="117" r="3.5" fill="#1e293b"/>
+      <text x="115" y="131" font-size="9" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">had + p.p.</text>
+
+      <line x1="295" y1="117" x2="365" y2="117" stroke="#ea580c" stroke-width="2.2"/>
+      <polygon points="368,117 362,114 362,120" fill="#ea580c"/>
+      <circle cx="372" cy="117" r="3.5" fill="#1e293b"/>
+      <text x="340" y="131" font-size="9" font-family="'JetBrains Mono'" fill="#c2410c" text-anchor="middle">have/has + p.p.</text>
+
+      <line x1="520" y1="117" x2="590" y2="117" stroke="#10b981" stroke-width="2"/>
+      <polygon points="593,117 587,114 587,120" fill="#10b981"/>
+      <circle cx="598" cy="117" r="3.5" fill="#1e293b"/>
+      <text x="565" y="131" font-size="9" font-family="'JetBrains Mono'" fill="#059669" text-anchor="middle">will have + p.p.</text>
+
+      <!-- 4. 完成進行式 -->
+      <text x="20" y="146" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#475569">④ 完進行</text>
+      <line x1="75" y1="143" x2="135" y2="143" stroke="#3b82f6" stroke-width="1.8"/>
+      <circle cx="138" cy="143" r="3" fill="#1e293b"/>
+      <text x="115" y="156" font-size="8.5" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">had been Ving</text>
+
+      <line x1="295" y1="143" x2="365" y2="143" stroke="#ea580c" stroke-width="2"/>
+      <circle cx="368" cy="143" r="3" fill="#1e293b"/>
+      <line x1="371" y1="143" x2="395" y2="143" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="340" y="156" font-size="8.5" font-family="'JetBrains Mono'" fill="#c2410c" text-anchor="middle">have been Ving</text>
+
+      <line x1="520" y1="143" x2="590" y2="143" stroke="#10b981" stroke-width="1.8"/>
+      <circle cx="593" cy="143" r="3" fill="#1e293b"/>
+      <text x="565" y="156" font-size="8.5" font-family="'JetBrains Mono'" fill="#059669" text-anchor="middle">will have been Ving</text>
+    </svg>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card highlight">
+      <div class="concept-card-title">💡 為什麼需要學時態？</div>
+      <div class="concept-text">中文靠副詞（「昨天」、「正在」、「已經」），而英文直接把<strong>「時間點」與「心理視角」熔鑄在動詞變化中</strong>。時態是說話者傳達溝通意圖的精密透鏡。</div>
+    </div>
+    <div class="concept-card orange">
+      <div class="concept-card-title">🎯 大考高分心法：三維解題法</div>
+      <div class="concept-text">
+        <strong>1. 找時間錨點：</strong>上下文句子鎖定 Past / Now / Future。<br>
+        <strong>2. 定動作態樣：</strong>是單點事實、長鏡頭、衝擊現在還是未完待續？<br>
+        <strong>3. 配主詞單複數：</strong>確認三單加 s 或不規則三態。
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂小試 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 觀念即時破冰演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">英文的時態是由「3 大時間」乘以「幾種動作態樣」組合而成的？</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) 2 種</span>
+          <span class="choice-item">(B) 3 種</span>
+          <span class="choice-item correct">(C) 4 種</span>
+          <span class="choice-item">(D) 5 種</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：3 大時間（過去、現在、未來）× 4 種動態（簡單、進行、完成、完成進行）＝ 12 大時態。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">「動作在說話當下之前發生，但深深影響著現在的生活情境」，這是哪一種動態的核心心理視角？</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) 簡單式</span>
+          <span class="choice-item">(B) 進行式</span>
+          <span class="choice-item correct">(C) 完成式</span>
+          <span class="choice-item">(D) 過去式</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：完成式本質即「站在基準點回頭看，過去累積的結果衝擊當下」。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>3C 功能語法 × 時間軸視覺化</span>
+    <span class="pg-num">P.1</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 2: 符號篇 · 手繪時間軸 4 大動態符號系統
+     ────────────────────────────────────────────── -->
+<div class="page" id="p2">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner summary-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">NOTATION SYSTEM · 符號視覺化</span>
+      <h1 class="ch-title">手繪時間軸 4 大動態幾何符號系統</h1>
+      <span class="ch-sub">只需 4 種簡易線條，秒懂所有動詞時態的幾何拓撲本質</span>
+    </div>
+    <div class="ch-badge">SYMBOLS</div>
+  </div>
+
+  <div class="formula-hero purple-border">
+    <div class="formula-left">
+      <span class="formula-badge">幾何密碼</span>
+      <span class="formula-code">● 單點常態 ｜ ▬ 加粗區段 ｜ ──► 連結箭頭 ｜ ═► 雙軌推進</span>
+    </div>
+    <div class="formula-right">秒懂時態幾何特徵</div>
+  </div>
+
+  <!-- 放大版 4 大動態符號 SVG 展示 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【4 大動態符號超大圖解】</span>
+      <span class="tag">幾何本質對照</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 185">
+      <!-- 符號 1 -->
+      <g transform="translate(15, 10)">
+        <rect x="0" y="0" width="315" height="75" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+        <text x="12" y="20" font-size="12" font-family="'標楷體'" font-weight="bold" fill="#0f4c81">① 簡單式 (Simple)：單點 / 跨時常態</text>
+        <line x1="20" y1="42" x2="295" y2="42" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <line x1="60" y1="42" x2="250" y2="42" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <circle cx="155" cy="42" r="6" fill="#ea580c"/>
+        <text x="155" y="62" font-size="10" font-family="'JetBrains Mono'" fill="#475569" text-anchor="middle">客觀事實 · 無時間長度包袱</text>
+      </g>
+
+      <!-- 符號 2 -->
+      <g transform="translate(350, 10)">
+        <rect x="0" y="0" width="315" height="75" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+        <text x="12" y="20" font-size="12" font-family="'標楷體'" font-weight="bold" fill="#0f4c81">② 進行式 (Continuous)：加粗區段 / 正在進行</text>
+        <line x1="20" y1="42" x2="295" y2="42" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <rect x="105" y="35" width="105" height="14" rx="7" fill="#ea580c" opacity="0.85"/>
+        <line x1="157" y1="28" x2="157" y2="56" stroke="#1e293b" stroke-width="1.8"/>
+        <text x="157" y="64" font-size="10" font-family="'JetBrains Mono'" fill="#1e293b" text-anchor="middle">鎖定基準刻度 · 暫時動態</text>
+      </g>
+
+      <!-- 符號 3 -->
+      <g transform="translate(15, 98)">
+        <rect x="0" y="0" width="315" height="75" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+        <text x="12" y="20" font-size="12" font-family="'標楷體'" font-weight="bold" fill="#0f4c81">③ 完成式 (Perfect)：起點箭頭 ──► 基準點</text>
+        <line x1="20" y1="42" x2="295" y2="42" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <circle cx="55" cy="42" r="4.5" fill="#fff" stroke="#0f4c81" stroke-width="2"/>
+        <line x1="62" y1="42" x2="210" y2="42" stroke="#ea580c" stroke-width="3"/>
+        <polygon points="216,42 206,37 206,47" fill="#ea580c"/>
+        <circle cx="225" cy="42" r="6" fill="#1e293b"/>
+        <text x="225" y="62" font-size="10" font-family="'JetBrains Mono'" fill="#1e293b" text-anchor="middle">基準點 (回看已累積影響)</text>
+      </g>
+
+      <!-- 符號 4 -->
+      <g transform="translate(350, 98)">
+        <rect x="0" y="0" width="315" height="75" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+        <text x="12" y="20" font-size="12" font-family="'標楷體'" font-weight="bold" fill="#0f4c81">④ 完成進行式 (Perf. Cont.)：雙軌推進 ═►</text>
+        <line x1="20" y1="42" x2="295" y2="42" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <circle cx="50" cy="42" r="4" fill="#fff" stroke="#0f4c81" stroke-width="1.5"/>
+        <line x1="56" y1="39" x2="200" y2="39" stroke="#ea580c" stroke-width="2.2"/>
+        <line x1="56" y1="45" x2="200" y2="45" stroke="#ea580c" stroke-width="2.2"/>
+        <circle cx="205" cy="42" r="5.5" fill="#1e293b"/>
+        <line x1="212" y1="42" x2="265" y2="42" stroke="#ea580c" stroke-width="1.8" stroke-dasharray="3,2"/>
+        <polygon points="270,42 263,38 263,46" fill="#ea580c"/>
+        <text x="157" y="62" font-size="10" font-family="'JetBrains Mono'" fill="#ea580c" text-anchor="middle">持續累積 · 絲毫不斷 · 未完待續</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card blue">
+      <div class="concept-card-title">📌 簡單式 vs. 進行式</div>
+      <div class="concept-text">簡單式是「遠景全景鏡頭」，看重的是本質、身分與客觀真理；進行式是「特寫鏡頭」，看重的是此刻眼前的變動畫面。</div>
+    </div>
+    <div class="concept-card green">
+      <div class="concept-card-title">📌 完成式 vs. 完成進行式</div>
+      <div class="concept-text">完成式強調「已經收割的成果與對當下的衝擊」；完成進行式強調「動作還在持續流汗進行中，根本還沒停下來」。</div>
+    </div>
+  </div>
+
+  <!-- 隨堂互動練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 符號幾何直覺配對練習</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">「一條橫跨基準點前後的彩色加粗線段（▬）」，最能代表哪一種動態？</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) 簡單式</span>
+          <span class="choice-item correct">(B) 進行式</span>
+          <span class="choice-item">(C) 完成式</span>
+          <span class="choice-item">(D) 完成進行式</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：加粗線段代表動作橫跨基準刻度，正在進行中且具暫時性。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">「從過去拉出一條能量箭頭撞擊基準點（──►●）」，代表說話者最在乎什麼？</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) 動作精確發生的秒數</span>
+          <span class="choice-item correct">(B) 過去動作在基準點產生的結果與影響</span>
+          <span class="choice-item">(C) 事情是否永久不變</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：完成式本質為「現在擁有過去的影響」，起點箭頭指引至當下。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>4 大動態符號幾何系統</span>
+    <span class="pg-num">P.2</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 3: 現在家族 1 · 現在簡單式 (Simple Present)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p3">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner present-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PRESENT TENSES · 現在家族 ①</span>
+      <h1 class="ch-title">現在簡單式 (Simple Present Tense)</h1>
+      <span class="ch-sub">核心概念：常態事實、職業本質與不變真理（即便當下沒在做也成立）</span>
+    </div>
+    <div class="ch-badge">SIMPLE PRES.</div>
+  </div>
+
+  <div class="formula-hero orange-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ V / V-(e)s ｜ 否定：don't / doesn't ＋ V</span>
+    </div>
+    <div class="formula-right">三單主詞（he/she/it）動詞加 s/es</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【現在簡單式時間軸放大圖：橫跨時間的常態貫穿線】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <!-- 基準時間軸 -->
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+      <!-- 過去、現在、未來標線 -->
+      <line x1="160" y1="35" x2="160" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="160" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">PAST</text>
+
+      <line x1="340" y1="20" x2="340" y2="70" stroke="#1e293b" stroke-width="2"/>
+      <text x="340" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW (基準點)</text>
+
+      <line x1="520" y1="35" x2="520" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="520" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">FUTURE</text>
+
+      <!-- 貫穿橫跨的常態粗虛線與核心單點 -->
+      <line x1="90" y1="45" x2="590" y2="45" stroke="#ea580c" stroke-width="4" stroke-dasharray="8,4"/>
+      <circle cx="340" cy="45" r="8" fill="#ea580c"/>
+      <circle cx="340" cy="45" r="3" fill="#ffffff"/>
+      <text x="340" y="15" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">職業身份 / 恆常習慣 / 自然真理（跨越時空）</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語義透視：公車司機的晝與夜</div>
+    <div class="sent-en">He drives a bus.（他是個公車司機。）</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>即便司機<strong>半夜躺在床上打呼睡覺（Zzz...）</strong>，我們依然說 He drives a bus！因為這是他的「常態職業與身份認同」，完全不代表他此時此刻手正握著方向盤。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card orange">
+      <div class="concept-card-title">📘 使用時機三大支柱</div>
+      <div class="concept-text">
+        <strong>1. 習慣與日常作息：</strong>搭配 always, usually, every day。<br>
+        <strong>2. 客觀真理與科學事實：</strong>Water boils at 100°C.<br>
+        <strong>3. 現階段恆常狀態：</strong>She lives in Taipei.
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 大考避坑地雷</div>
+      <div class="concept-text">
+        客觀真理<strong>不受主要子句過去式影響</strong>，永遠用現在簡單式！<br>
+        例：Our teacher told us that the earth <strong>moves</strong> around the sun.（絕不可用 moved！）
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Mr. Davis is a baker. He ________ delicious bread every morning.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) is baking</span>
+          <span class="choice-item correct">(B) bakes</span>
+          <span class="choice-item">(C) baked</span>
+          <span class="choice-item">(D) will bake</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：every morning 表習慣規律，主詞三單 Mr. Davis 動詞字尾加 s。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Light ________ much faster than sound. (客觀物理真理)</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) travels</span>
+          <span class="choice-item">(B) is traveling</span>
+          <span class="choice-item">(C) traveled</span>
+          <span class="choice-item">(D) will travel</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：科學事實與自然定理，一律使用現在簡單式。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>現在簡單式 (Simple Present)</span>
+    <span class="pg-num">P.3</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 4: 現在家族 2 · 現在進行式 (Present Continuous)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p4">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner present-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PRESENT TENSES · 現在家族 ②</span>
+      <h1 class="ch-title">現在進行式 (Present Continuous Tense)</h1>
+      <span class="ch-sub">核心概念：說話當下正在上演的動態鏡頭，具備暫時性與未完成性</span>
+    </div>
+    <div class="ch-badge">PRES. CONT.</div>
+  </div>
+
+  <div class="formula-hero orange-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ am / is / are ＋ V-ing</span>
+    </div>
+    <div class="formula-right">否定：be ＋ not ＋ V-ing</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【現在進行式時間軸放大圖：NOW 基準點上的動態加粗區段】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="160" y1="35" x2="160" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="160" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">PAST</text>
+
+      <line x1="340" y1="18" x2="340" y2="72" stroke="#1e293b" stroke-width="2.5"/>
+      <text x="340" y="86" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW (說話刻度)</text>
+
+      <line x1="520" y1="35" x2="520" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="520" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">FUTURE</text>
+
+      <!-- NOW 處的加粗活躍區段 -->
+      <rect x="250" y="36" width="180" height="18" rx="9" fill="#ea580c" opacity="0.9"/>
+      <circle cx="340" cy="45" r="5" fill="#ffffff"/>
+      <text x="340" y="16" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#c2410c" text-anchor="middle">【當下動態鏡頭】正在發生 · 暫時進行 · 未完成</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：握著方向盤踩油門中！</div>
+    <div class="sent-en">He is driving a bus right now.（他現在正在開公車。）</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>說話當下，他正<strong>坐在駕駛座上握著方向盤踩油門</strong>！進行式強調「肉眼所見、變動中的即時動作」，一旦公車到站熄火，這個狀態便隨之結束。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card orange">
+      <div class="concept-card-title">🎬 常見情境指標詞彙</div>
+      <div class="concept-text">
+        <strong>1. 當下提示詞：</strong>now, right now, at the moment。<br>
+        <strong>2. 感官感嘆句開頭：</strong>Look! The bus is coming. / Listen! Someone is crying.<br>
+        <strong>3. 近期暫時狀態：</strong>I am staying with my uncle this week.
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 必考地雷：狀態動詞禁忌</div>
+      <div class="concept-text">
+        表示<strong>心理狀態、知覺、擁有</strong>的動詞通常不用進行式：<br>
+        ❌ I am knowing the answer. → ✔️ I <strong>know</strong> the answer.<br>
+        ❌ She is having two cats. → ✔️ She <strong>has</strong> two cats.（擁有）
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Listen! The baby ________ in the next room. Let's go check.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) cries</span>
+          <span class="choice-item correct">(B) is crying</span>
+          <span class="choice-item">(C) cried</span>
+          <span class="choice-item">(D) was crying</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：Listen! 提示聽覺當下正在發生的動作，選現在進行式 is crying。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">I ________ what you mean, but I still disagree with you.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) understand</span>
+          <span class="choice-item">(B) am understanding</span>
+          <span class="choice-item">(C) understood</span>
+          <span class="choice-item">(D) have understood</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：understand（理解）屬於心理狀態認知動詞，習慣不用進行式。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>現在進行式 (Present Continuous)</span>
+    <span class="pg-num">P.4</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 5: 現在家族 3 · 現在完成式 (Present Perfect)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p5">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner present-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PRESENT TENSES · 現在家族 ③</span>
+      <h1 class="ch-title">現在完成式 (Present Perfect Tense)</h1>
+      <span class="ch-sub">核心概念：「現在擁有過去」（Connecting Past to Present），過去衝擊當下</span>
+    </div>
+    <div class="ch-badge">PRES. PERFECT</div>
+  </div>
+
+  <div class="formula-hero orange-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ have / has ＋ p.p. (過去分詞)</span>
+    </div>
+    <div class="formula-right">三單主詞用 has ＋ p.p.</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【現在完成式時間軸放大圖：過去起點箭頭直擊 NOW 基準點】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="160" y1="35" x2="160" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="160" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">PAST (過去起點)</text>
+
+      <line x1="480" y1="18" x2="480" y2="72" stroke="#1e293b" stroke-width="2.5"/>
+      <text x="480" y="86" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW (衝擊當下)</text>
+
+      <!-- 粗能量推進箭頭 -->
+      <circle cx="160" cy="45" r="5" fill="#ffffff" stroke="#0f4c81" stroke-width="2"/>
+      <line x1="170" y1="45" x2="465" y2="45" stroke="#ea580c" stroke-width="4"/>
+      <polygon points="475,45 460,38 460,52" fill="#ea580c"/>
+      <circle cx="480" cy="45" r="7" fill="#1e293b"/>
+
+      <!-- 衝擊波特效 -->
+      <circle cx="480" cy="45" r="14" fill="none" stroke="#ea580c" stroke-width="1.5" opacity="0.6"/>
+      <text x="320" y="32" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">過去經驗／動作已累積並對「現在」造成具體結果！</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：鑰匙失竊記</div>
+    <div class="sent-en">I have lost my keys!（我把鑰匙弄丟了！）</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>重點根本不是「何時弄丟」，而是<strong>「現在的慘烈後果」</strong>！＝「我現在進不去家門，正站在門外發抖，你能幫我開門嗎？」。過去的事件直接延伸影響現在。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card orange">
+      <div class="concept-card-title">🔑 三大核心用法與關鍵字</div>
+      <div class="concept-text">
+        <strong>1. 經驗：</strong>ever, never, once, before。<br>
+        <strong>2. 完成：</strong>already, just, yet（否定/疑問）。<br>
+        <strong>3. 持續：</strong>since ＋ 過去時間點 / for ＋ 一段時間。
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 大考致命陷阱：絕不搭配明確過去時間</div>
+      <div class="concept-text">
+        現在完成式<strong>嚴禁</strong>與 yesterday, ago, last night, in 2010 等過去點連用！<br>
+        ❌ I have met him yesterday. → ✔️ I <strong>met</strong> him yesterday.
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Ken is not hungry because he ________ lunch already.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) ate</span>
+          <span class="choice-item correct">(B) has eaten</span>
+          <span class="choice-item">(C) eats</span>
+          <span class="choice-item">(D) had eaten</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：already 與現在不餓的狀態連結，使用現在完成式 has eaten。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Ms. White has lived in Tainan ________ she graduated from university.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) for</span>
+          <span class="choice-item correct">(B) since</span>
+          <span class="choice-item">(C) in</span>
+          <span class="choice-item">(D) at</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：since 接過去時間點或過去式子句，與現在完成式完美搭配。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>現在完成式 (Present Perfect)</span>
+    <span class="pg-num">P.5</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 6: 現在家族 4 · 現在完成進行式 (Present Perfect Continuous)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p6">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner present-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PRESENT TENSES · 現在家族 ④</span>
+      <h1 class="ch-title">現在完成進行式 (Present Perfect Continuous)</h1>
+      <span class="ch-sub">核心概念：從過去一刻未停持續累積至今，而且「此刻還在進行中」！</span>
+    </div>
+    <div class="ch-badge">PRES. PERF. CONT.</div>
+  </div>
+
+  <div class="formula-hero orange-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ have / has been ＋ V-ing</span>
+    </div>
+    <div class="formula-right">強調「動作的不中斷性」與「時長流汗感」</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【現在完成進行式時間軸放大圖：雙軌能量流貫穿 NOW 並繼續延伸】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+      <line x1="160" y1="35" x2="160" y2="55" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="160" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">PAST (持續起點)</text>
+
+      <line x1="460" y1="18" x2="460" y2="72" stroke="#1e293b" stroke-width="2.5"/>
+      <text x="460" y="86" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW (此刻未停)</text>
+
+      <!-- 雙軌推進流 -->
+      <circle cx="160" cy="45" r="4.5" fill="#fff" stroke="#0f4c81" stroke-width="2"/>
+      <line x1="168" y1="42" x2="450" y2="42" stroke="#ea580c" stroke-width="2.8"/>
+      <line x1="168" y1="48" x2="450" y2="48" stroke="#ea580c" stroke-width="2.8"/>
+      <circle cx="460" cy="45" r="6" fill="#1e293b"/>
+
+      <!-- 向未來延伸的虛線箭頭 (未完待續) -->
+      <line x1="470" y1="45" x2="570" y2="45" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="4,3"/>
+      <polygon points="578,45 568,40 568,50" fill="#ea580c"/>
+      <text x="310" y="30" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#ea580c" text-anchor="middle">【雙軌推進】持續數小時/年，絲毫無中斷，目前還在做！</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：下了一整天的傾盆大雨</div>
+    <div class="sent-en">It has been raining all day.（雨已經下了一整天了。）</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>站在窗邊往外看，雨從清晨一直下到下午，而且<strong>「說話當下雨還在嘩啦啦地下」</strong>！此時若用 has rained 僅表示「今天下過雨」，只有 has been raining 能傳達「此刻還沒停」的臨場感。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card orange">
+      <div class="concept-card-title">⚡ 現在完成式 vs. 現在完成進行式</div>
+      <div class="concept-text">
+        • I have painted the wall.（<strong>成果：</strong>牆漆好了，已完工！）<br>
+        • I have been painting the wall.（<strong>過程：</strong>衣服沾滿油漆，正汗流浹背漆著！）
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 必記特徵詞與語氣</div>
+      <div class="concept-text">
+        常搭配 <strong>all day / all morning / how long</strong>。<br>
+        例：How long have you been waiting here?（你到底在這裡等多久了？帶有不耐煩情緒）
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Amy's eyes are red because she ________ on the computer for six hours straight.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) works</span>
+          <span class="choice-item">(B) is working</span>
+          <span class="choice-item correct">(C) has been working</span>
+          <span class="choice-item">(D) worked</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：眼睛紅且連續六小時沒中斷，強調當下造成的持續動態痕跡，選 has been working。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">They ________ in the rain for an hour and are still waiting for the bus.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) have been standing</span>
+          <span class="choice-item">(B) stood</span>
+          <span class="choice-item">(C) are standing</span>
+          <span class="choice-item">(D) will stand</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：持續了一小時且 and are still waiting 明確提示當下未停，選現在完成進行式。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>現在完成進行式 (Pres. Perf. Cont.)</span>
+    <span class="pg-num">P.6</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 7: 過去家族 1 · 過去簡單式 (Simple Past)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p7">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner past-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PAST TENSES · 過去家族 ①</span>
+      <h1 class="ch-title">過去簡單式 (Simple Past Tense)</h1>
+      <span class="ch-sub">核心概念：過去孤立發生的歷史事件，已徹底結束且與現在斷鉤</span>
+    </div>
+    <div class="ch-badge">SIMPLE PAST</div>
+  </div>
+
+  <div class="formula-hero blue-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ V-ed (不規則過去式) ｜ 否定：didn't ＋ 原形V</span>
+    </div>
+    <div class="formula-right">動詞三態變化熟記是關鍵</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【過去簡單式時間軸放大圖：過去歷史獨立錨點，與 NOW 隔絕】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- 過去獨立點 -->
+      <circle cx="200" cy="45" r="9" fill="#3b82f6"/>
+      <text x="200" y="25" font-size="12" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">已結束的歷史單點 (V-ed)</text>
+      <text x="200" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#475569" text-anchor="middle">yesterday / last year</text>
+
+      <!-- 斷裂隔絕線 (不牽扯現在) -->
+      <line x1="340" y1="30" x2="340" y2="60" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="3,3"/>
+      <text x="340" y="22" font-size="9" font-family="'標楷體'" fill="#dc2626" text-anchor="middle">斷鉤！不論現在</text>
+
+      <!-- NOW 基準點 -->
+      <line x1="480" y1="20" x2="480" y2="70" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="480" cy="45" r="5" fill="#94a3b8"/>
+      <text x="480" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：錢包遺失事件</div>
+    <div class="sent-en">I lost my wallet yesterday.（我昨天弄丟了皮夾。）</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>這只是一句<strong>「陳述昨天發生的歷史事實」</strong>。至於「現在有沒有找到皮夾？」這句話完全不在乎，也不作保證。說話者純粹提供客觀歷史資訊。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card blue">
+      <div class="concept-card-title">📅 過去明確時間指標字</div>
+      <div class="concept-text">
+        看到下列字詞，毫不猶豫選過去簡單式：<br>
+        <strong>yesterday, last night/week, ... ago, in 1995, just now（剛才）, then（那時）</strong>。
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 93 年基測震撼題回顧</div>
+      <div class="concept-text">
+        "I looked for her for thirty minutes."<br>
+        雖然有 for 30 minutes，但動作<strong>在過去已經結束且與現在斷開</strong>，答案是 looked，絕非現在完成式！
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">My family ________ to Japan two years ago and had a wonderful trip.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) goes</span>
+          <span class="choice-item correct">(B) went</span>
+          <span class="choice-item">(C) has gone</span>
+          <span class="choice-item">(D) was going</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：two years ago 是明確過去時間副詞，動詞用過去式 went。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Where ________ you buy this stylish jacket last weekend?</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) did</span>
+          <span class="choice-item">(B) do</span>
+          <span class="choice-item">(C) have</span>
+          <span class="choice-item">(D) were</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：一般動詞過去式的疑問句，助動詞一律用 did ＋ 原形動詞 buy。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>過去簡單式 (Simple Past)</span>
+    <span class="pg-num">P.7</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 8: 過去家族 2 · 過去進行式 (Past Continuous)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p8">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner past-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PAST TENSES · 過去家族 ②</span>
+      <h1 class="ch-title">過去進行式 (Past Continuous Tense)</h1>
+      <span class="ch-sub">核心概念：過去精確時刻的「背景長鏡頭」vs. 突發瞬間插播</span>
+    </div>
+    <div class="ch-badge">PAST CONT.</div>
+  </div>
+
+  <div class="formula-hero blue-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ was / were ＋ V-ing</span>
+    </div>
+    <div class="formula-right">I / He / She / It 用 was ｜ You / We / They 用 were</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【過去進行式時間軸放大圖：長鏡頭背景 vs. 快門閃光插播】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- 過去背景區段 (長鏡頭) -->
+      <rect x="130" y="36" width="180" height="18" rx="9" fill="#3b82f6" opacity="0.85"/>
+      <text x="220" y="26" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">【長背景】...was taking a shower (洗澡中)</text>
+
+      <!-- 垂直插入的單點事件 (快門插播) -->
+      <line x1="220" y1="12" x2="220" y2="40" stroke="#ef4444" stroke-width="3"/>
+      <polygon points="220,44 214,34 226,34" fill="#ef4444"/>
+      <circle cx="220" cy="45" r="5" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+      <text x="220" y="72" font-size="10" font-family="'標楷體'" font-weight="bold" fill="#dc2626" text-anchor="middle">【快門插播】phone rang (電話突然響)</text>
+
+      <!-- NOW 基準點 -->
+      <line x1="480" y1="20" x2="480" y2="70" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="480" cy="45" r="5" fill="#94a3b8"/>
+      <text x="480" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：洗澡與電話交錯</div>
+    <div class="sent-en">I was taking a shower when the phone rang.</div>
+    <div class="sent-zh">
+      <strong>鏡頭語言：</strong>洗澡需要 15 分鐘，像一台<strong>攝影機長鏡頭持續運鏡（was taking）</strong>；而電話響是一瞬間發生的<strong>快門插播（rang）</strong>。過去進行式專門用來建構電影般的背景情境。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card blue">
+      <div class="concept-card-title">🕒 兩大常見考驗情境</div>
+      <div class="concept-text">
+        <strong>1. 過去精確時間刻度：</strong>At 8:00 last night, I was watching TV.<br>
+        <strong>2. when / while 子句交會：</strong><br>
+        • When ＋ 瞬間動作 (V-ed)，長背景用 was/were V-ing。<br>
+        • While ＋ 持續動作 (was/were V-ing)。
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">💡 雙背景同時平行推進</div>
+      <div class="concept-text">
+        如果過去兩個長動作同時進行，兩邊皆用進行式：<br>
+        While Mom <strong>was cooking</strong>, Dad <strong>was reading</strong> the paper.
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">What were you doing at 9:00 last night? — I ________ for the test.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) study</span>
+          <span class="choice-item">(B) studied</span>
+          <span class="choice-item correct">(C) was studying</span>
+          <span class="choice-item">(D) have studied</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：at 9:00 last night 是過去精確時間點，回答相應使用過去進行式 was studying。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">The lights went out while we ________ dinner together.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) have</span>
+          <span class="choice-item">(B) had</span>
+          <span class="choice-item correct">(C) were having</span>
+          <span class="choice-item">(D) are having</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：while 導引持續進行的背景動作，主詞 we 搭配 were having。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>過去進行式 (Past Continuous)</span>
+    <span class="pg-num">P.8</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 9: 過去家族 3 · 過去完成式 (Past Perfect)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p9">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner past-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PAST TENSES · 過去家族 ③</span>
+      <h1 class="ch-title">過去完成式 (Past Perfect Tense)</h1>
+      <span class="ch-sub">核心概念：時間階梯！在「過去某基準錨點」之前更早發生的動作</span>
+    </div>
+    <div class="ch-badge">PAST PERFECT</div>
+  </div>
+
+  <div class="formula-hero blue-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ had ＋ p.p. (過去分詞)</span>
+    </div>
+    <div class="formula-right">黃金鐵律：無過去錨點，就無過去完成式！</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【過去完成式時間軸放大圖：過去的過去 → 過去基準錨點】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- 過去的過去 (更早發生) -->
+      <circle cx="120" cy="45" r="5" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+      <line x1="130" y1="45" x2="280" y2="45" stroke="#3b82f6" stroke-width="3.5"/>
+      <polygon points="288,45 276,39 276,51" fill="#3b82f6"/>
+      <text x="180" y="32" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">【先發生】had + p.p. (火車開走 8:00)</text>
+
+      <!-- 過去基準錨點 (後發生) -->
+      <circle cx="300" cy="45" r="7" fill="#1e293b"/>
+      <text x="300" y="70" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1e293b" text-anchor="middle">【後發生】V-ed (我們趕到 8:05)</text>
+
+      <!-- NOW 基準點 -->
+      <line x1="500" y1="20" x2="500" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="500" cy="45" r="5" fill="#cbd5e1"/>
+      <text x="500" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#94a3b8" text-anchor="middle">NOW</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：火車站的遺憾與時間階梯</div>
+    <div class="sent-en">The train had already left before we arrived at the station.</div>
+    <div class="sent-zh">
+      <strong>時空階梯拆解：</strong>火車在 8:00 就開走了（先發生，用 had left）；我們 8:05 才氣喘吁吁趕到車站（後發生，用 arrived）。若沒有 arrived 這個過去錨點做對照，had left 就失去存在的座標意義！
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card blue">
+      <div class="concept-card-title">🪜 時空先後雙煞句型</div>
+      <div class="concept-text">
+        <strong>1. before 句型：</strong>[先 had p.p.] before [後 V-ed].<br>
+        <strong>2. after 句型：</strong>[後 V-ed] after [先 had p.p.].<br>
+        <strong>3. By the time 句型：</strong>By the time S ＋ V-ed, S ＋ had p.p.
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 大考判斷最高法則</div>
+      <div class="concept-text">
+        孤立單句<strong>絕對不要亂填 had + p.p.</strong>！<br>
+        必須在句子或上下文中找到明確的<strong>「過去式錨點（V-ed）」</strong>作為參照，才能成立「過去的過去」。
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">By the time the police arrived, the robber ________ away.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) runs</span>
+          <span class="choice-item">(B) is running</span>
+          <span class="choice-item">(C) ran</span>
+          <span class="choice-item correct">(D) had run</span>
+          <span class="ans-reveal">(D)</span>
+        </div>
+        <div class="qa-explain">解析：警方到達是過去式 arrived，搶匪更早一步逃跑，用過去完成式 had run。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Leo realized that he ________ his umbrella on the bus.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) had left</span>
+          <span class="choice-item">(B) leaves</span>
+          <span class="choice-item">(C) has left</span>
+          <span class="choice-item">(D) was leaving</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：realized（察覺）是過去錨點，雨傘遺忘在公車上是更早前發生的事，選 had left。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>過去完成式 (Past Perfect)</span>
+    <span class="pg-num">P.9</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 10: 過去家族 4 · 過去完成進行式 (Past Perfect Continuous)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p10">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner past-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">PAST TENSES · 過去家族 ④</span>
+      <h1 class="ch-title">過去完成進行式 (Past Perfect Continuous)</h1>
+      <span class="ch-sub">核心概念：在過去基準錨點之前，一刻不停地持續推進進行</span>
+    </div>
+    <div class="ch-badge">PAST PERF. CONT.</div>
+  </div>
+
+  <div class="formula-hero blue-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ had been ＋ V-ing</span>
+    </div>
+    <div class="formula-right">持續累積到過去某刻，強調心力與時長</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【過去完成進行式時間軸放大圖：雙軌推進直達過去基準點】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- 過去起點 -->
+      <circle cx="100" cy="45" r="4.5" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+      <!-- 雙軌推進 -->
+      <line x1="110" y1="42" x2="310" y2="42" stroke="#3b82f6" stroke-width="2.5"/>
+      <line x1="110" y1="48" x2="310" y2="48" stroke="#3b82f6" stroke-width="2.5"/>
+
+      <!-- 過去基準點 -->
+      <circle cx="320" cy="45" r="7" fill="#1e293b"/>
+      <text x="320" y="70" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1e293b" text-anchor="middle">過去錨點 (before he moved)</text>
+      <text x="210" y="30" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#1d4ed8" text-anchor="middle">整整持續苦讀 10 年（絲毫未中斷）</text>
+
+      <!-- NOW 基準點 -->
+      <line x1="500" y1="20" x2="500" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="500" cy="45" r="5" fill="#cbd5e1"/>
+      <text x="500" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#94a3b8" text-anchor="middle">NOW</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：十年磨一劍的苦讀歷程</div>
+    <div class="sent-en">He had been studying English for 10 years before he moved to the US.</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>在他移民美國這個「過去錨點（moved）」之前，這十年間他<strong>每天都在苦讀英文、從未放棄中斷</strong>。此句強調的是過去長期的堅持與付出動態。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card blue">
+      <div class="concept-card-title">🔍 had p.p. vs. had been V-ing</div>
+      <div class="concept-text">
+        • The ground was wet because it <strong>had been raining</strong>.（強調剛才持續下了很久的雨，地面還積水！）<br>
+        • It <strong>had rained</strong> three times that week.（強調已發生的次數成果）。
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">💡 解題快速鎖定公式</div>
+      <div class="concept-text">
+        句子中若同時出現：<br>
+        <strong>1. 過去式背景（was tired / felt sick）</strong><br>
+        <strong>2. for + 一段時間</strong><br>
+        往往正是 had been V-ing 展現原因的最佳時機！
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Tony was out of breath when he arrived because he ________ for the bus.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) has been running</span>
+          <span class="choice-item correct">(B) had been running</span>
+          <span class="choice-item">(C) was running</span>
+          <span class="choice-item">(D) ran</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：arrived 是過去錨點，在此之前一路奔跑導致氣喘吁吁，選 had been running。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">They ________ for two hours before the train finally came.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) had been waiting</span>
+          <span class="choice-item">(B) have been waiting</span>
+          <span class="choice-item">(C) were waiting</span>
+          <span class="choice-item">(D) waited</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：火車來是過去式 came，在此之前已經等了兩小時，選 had been waiting。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教料大屏講義</span>
+    <span>過去完成進行式 (Past Perf. Cont.)</span>
+    <span class="pg-num">P.10</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 11: 未來家族 1 · 未來簡單式 (Simple Future)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p11">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner future-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">FUTURE TENSES · 未來家族 ①</span>
+      <h1 class="ch-title">未來簡單式 (Simple Future Tense)</h1>
+      <span class="ch-sub">核心概念：當下瞬間意願承諾 vs. 預先計畫或客觀徵兆預測</span>
+    </div>
+    <div class="ch-badge">SIMPLE FUTURE</div>
+  </div>
+
+  <div class="formula-hero green-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">will ＋ 原形V ｜ be going to ＋ 原形V</span>
+    </div>
+    <div class="formula-right">否定：will not (won't) ＋ 原形V</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【未來簡單式時間軸放大圖：NOW 躍遷至未來單點】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- NOW 說話點 -->
+      <line x1="220" y1="20" x2="220" y2="70" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="220" cy="45" r="5" fill="#1e293b"/>
+      <text x="220" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW (發出意向/預測)</text>
+
+      <!-- 躍遷弧線至未來點 -->
+      <path d="M 225 40 Q 360 8 485 40" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="6,3"/>
+      <polygon points="492,44 480,36 486,48" fill="#10b981"/>
+
+      <!-- 未來點 -->
+      <circle cx="500" cy="45" r="8" fill="#10b981"/>
+      <text x="500" y="25" font-size="12" font-family="'標楷體'" font-weight="bold" fill="#047857" text-anchor="middle">未來點 (will / be going to)</text>
+      <text x="500" y="70" font-size="10" font-family="'JetBrains Mono'" fill="#475569" text-anchor="middle">tomorrow / next week</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：will vs. be going to 關鍵分水嶺</div>
+    <div class="sent-en">
+      • "The phone is ringing." — "I'll get it!"（瞬間決定，用 will）<br>
+      • "Look at those dark clouds! It is going to rain."（已有明確徵兆，用 be going to）
+    </div>
+    <div class="sent-zh">
+      <strong>意圖解密：</strong>will 代表<strong>說話當下的臨時起意、主觀承諾</strong>；而 be going to 則代表<strong>「眼前已有鐵證徵兆」或「早已規劃好的行程」</strong>。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card green">
+      <div class="concept-card-title">📅 未來常見時間詞</div>
+      <div class="concept-text">
+        tomorrow, next month/year, soon, in three days（三天後）, in the future。
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 大考第一鐵律：條件與時間副詞子句</div>
+      <div class="concept-text">
+        遇到 <strong>if（如果）/ when（當...時）</strong> 引導的副詞子句：<br>
+        <strong>「現在式代替未來式」！</strong><br>
+        If it <strong>rains</strong> tomorrow, we will stay home.（絕不用 will rain！）
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">If the weather ________ fine tomorrow, we will go on a picnic.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) is</span>
+          <span class="choice-item">(B) will be</span>
+          <span class="choice-item">(C) was</span>
+          <span class="choice-item">(D) has been</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：if 引導條件副詞子句，即便有 tomorrow 仍必須用現在式代替未來式。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">Watch out! That ladder ________ fall!</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) will</span>
+          <span class="choice-item correct">(B) is going to</span>
+          <span class="choice-item">(C) has</span>
+          <span class="choice-item">(D) falls</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：Watch out! 表示眼前梯子搖晃已有明顯即將發生的徵兆，選 is going to fall。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>未來簡單式 (Simple Future)</span>
+    <span class="pg-num">P.11</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 12: 未來家族 2 · 未來進行式 (Future Continuous)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p12">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner future-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">FUTURE TENSES · 未來家族 ②</span>
+      <h1 class="ch-title">未來進行式 (Future Continuous Tense)</h1>
+      <span class="ch-sub">核心概念：預想未來某個精確時刻「正在上演的動態畫面」</span>
+    </div>
+    <div class="ch-badge">FUTURE CONT.</div>
+  </div>
+
+  <div class="formula-hero green-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ will be ＋ V-ing</span>
+    </div>
+    <div class="formula-right">預設未來時間點展開的動態影音鏡頭</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【未來進行式時間軸放大圖：未來精確刻度上的動態區段】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- NOW 說話點 -->
+      <line x1="180" y1="20" x2="180" y2="70" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <circle cx="180" cy="45" r="4.5" fill="#94a3b8"/>
+      <text x="180" y="85" font-size="11" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">NOW (此刻)</text>
+
+      <!-- 未來進行區段 -->
+      <rect x="400" y="36" width="160" height="18" rx="9" fill="#10b981" opacity="0.85"/>
+      <line x1="480" y1="20" x2="480" y2="70" stroke="#1e293b" stroke-width="2.5"/>
+      <circle cx="480" cy="45" r="4" fill="#ffffff"/>
+      <text x="480" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">未來時刻 (This time tomorrow)</text>
+      <text x="480" y="24" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#047857" text-anchor="middle">【未來鏡頭】will be having an exam (正奮筆疾書中)</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：墾丁沙灘上的白日夢</div>
+    <div class="sent-en">This time tomorrow, I will be lying on the beach in Kenting!</div>
+    <div class="sent-zh">
+      <strong>畫面感解密：</strong>這不是冷冰冰地交代行程，而是在腦海中<strong>「投影出明天此時自己正戴著墨鏡、躺在沙灘椅上吹海風」的動態畫面</strong>！未來進行式能賦予語言生動的臨場想像。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card green">
+      <div class="concept-card-title">🎯 常用特定時點指標詞</div>
+      <div class="concept-text">
+        • This time tomorrow / next week。<br>
+        • At 3:00 tomorrow afternoon。<br>
+        • When you arrive tomorrow, I will be waiting for you.
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">💡 禮貌詢問他人計畫</div>
+      <div class="concept-text">
+        未來進行式也常用於<strong>極具禮貌、客氣詢問他人未來行程</strong>：<br>
+        Will you be using your car tonight?（今晚會用到車嗎？比 will you use 委婉得多）
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">Please don't call me at 10:00 tomorrow morning; I ________ an important meeting.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) have</span>
+          <span class="choice-item">(B) will have</span>
+          <span class="choice-item correct">(C) will be having</span>
+          <span class="choice-item">(D) had</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：at 10:00 tomorrow morning 明確鎖定未來特定時刻，該時刻正處於會議中，選 will be having。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">When you step off the plane, our guide ________ for you with a sign.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) will be waiting</span>
+          <span class="choice-item">(B) waited</span>
+          <span class="choice-item">(C) waits</span>
+          <span class="choice-item">(D) is waiting</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：下飛機時導遊正拿著牌子等待的畫面，選未來進行式 will be waiting。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>未來進行式 (Future Continuous)</span>
+    <span class="pg-num">P.12</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 13: 未來家族 3 · 未來完成式 (Future Perfect)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p13">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner future-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">FUTURE TENSES · 未來家族 ③</span>
+      <h1 class="ch-title">未來完成式 (Future Perfect Tense)</h1>
+      <span class="ch-sub">核心概念：站在未來的終點線，回頭看已完成的累積成果</span>
+    </div>
+    <div class="ch-badge">FUTURE PERFECT</div>
+  </div>
+
+  <div class="formula-hero green-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ will have ＋ p.p. (過去分詞)</span>
+    </div>
+    <div class="formula-right">關鍵字：By ＋ 未來時間（截止終點線）</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【未來完成式時間軸放大圖：推進至未來終點線並插旗收割】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- NOW -->
+      <line x1="160" y1="20" x2="160" y2="70" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="160" cy="45" r="4.5" fill="#1e293b"/>
+      <text x="160" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#1e293b" text-anchor="middle">NOW</text>
+
+      <!-- 推進至未來終點線 -->
+      <line x1="170" y1="45" x2="480" y2="45" stroke="#10b981" stroke-width="3.5"/>
+      <polygon points="488,45 476,39 476,51" fill="#10b981"/>
+
+      <!-- 未來截止旗幟 (Deadline Flag) -->
+      <line x1="495" y1="15" x2="495" y2="70" stroke="#047857" stroke-width="2.5"/>
+      <polygon points="495,15 525,25 495,35" fill="#ef4444"/>
+      <circle cx="495" cy="45" r="6" fill="#1e293b"/>
+      <text x="495" y="85" font-size="11" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">By next Monday (終點線)</text>
+      <text x="330" y="32" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#047857" text-anchor="middle">will have taken 6 exams (站終點回看成果)</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：段考結束時的如釋重負</div>
+    <div class="sent-en">By next Friday, I will have finished all my final exams!</div>
+    <div class="sent-zh">
+      <strong>心理視角：</strong>站在下週五那個未來的<strong>「截止終點線（Deadline）」</strong>往前看，所有惱人的段考科目都已經通通考完了、成果已經收割入袋！未來完成式永遠需要一條未來的終點線。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card green">
+      <div class="concept-card-title">🚩 必備兩大引導句型</div>
+      <div class="concept-text">
+        <strong>1. By ＋ 未來時間片語：</strong>By 2030, by the end of this month。<br>
+        <strong>2. By the time ＋ 現在式子句：</strong><br>
+        By the time you return, I <strong>will have cleaned</strong> the room.
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">⚠️ 大考關鍵辨析</div>
+      <div class="concept-text">
+        • By the time S ＋ <strong>過去式</strong> → S ＋ <strong>had p.p.</strong><br>
+        • By the time S ＋ <strong>現在式</strong> → S ＋ <strong>will have p.p.</strong><br>
+        這是統測與學測時態題的頂級秒殺密碼！
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">By the end of this year, the workers ________ the construction of the bridge.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) complete</span>
+          <span class="choice-item">(B) are completing</span>
+          <span class="choice-item correct">(C) will have completed</span>
+          <span class="choice-item">(D) have completed</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：By the end of this year 表未來截止點，搭配未來完成式 will have completed。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">By the time David comes home, his mother ________ dinner.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) cooked</span>
+          <span class="choice-item correct">(B) will have cooked</span>
+          <span class="choice-item">(C) cooks</span>
+          <span class="choice-item">(D) had cooked</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：comes 是現在式（代未來），主要子句對應未來完成式 will have cooked。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>未來完成式 (Future Perfect)</span>
+    <span class="pg-num">P.13</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 14: 未來家族 4 · 未來完成進行式 (Future Perfect Continuous)
+     ────────────────────────────────────────────── -->
+<div class="page" id="p14">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner future-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">FUTURE TENSES · 未來家族 ④</span>
+      <h1 class="ch-title">未來完成進行式 (Future Perfect Continuous)</h1>
+      <span class="ch-sub">核心概念：動作持續延伸至未來某刻，特別強調年資或時長里程碑</span>
+    </div>
+    <div class="ch-badge">FUT. PERF. CONT.</div>
+  </div>
+
+  <div class="formula-hero green-border">
+    <div class="formula-left">
+      <span class="formula-badge">動詞公式</span>
+      <span class="formula-code">主詞 ＋ will have been ＋ V-ing</span>
+    </div>
+    <div class="formula-right">持續累積年限 ＋ 未來時間里程碑刻度</div>
+  </div>
+
+  <!-- 大尺寸專屬 SVG 時間軸圖解 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【未來完成進行式時間軸放大圖：長程雙軌能量流貫穿至未來里程碑】</span>
+      <span class="tag">超大屏視覺圖解</span>
+    </div>
+    <svg class="timeline-svg" viewBox="0 0 680 95">
+      <line x1="30" y1="45" x2="650" y2="45" stroke="#cbd5e1" stroke-width="2"/>
+
+      <!-- PAST / NOW -->
+      <circle cx="100" cy="45" r="4" fill="#94a3b8"/>
+      <text x="100" y="65" font-size="10" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">過去開始任教</text>
+
+      <line x1="250" y1="25" x2="250" y2="65" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <text x="250" y="80" font-size="11" font-family="'JetBrains Mono'" fill="#64748b" text-anchor="middle">NOW (已教25年)</text>
+
+      <!-- 雙軌推進直達未來里程碑 -->
+      <line x1="110" y1="42" x2="490" y2="42" stroke="#10b981" stroke-width="2.5"/>
+      <line x1="110" y1="48" x2="490" y2="48" stroke="#10b981" stroke-width="2.5"/>
+
+      <!-- 未來里程碑刻度 -->
+      <line x1="500" y1="15" x2="500" y2="70" stroke="#047857" stroke-width="3"/>
+      <circle cx="500" cy="45" r="7" fill="#1e293b"/>
+      <text x="500" y="85" font-size="12" font-family="'JetBrains Mono'" font-weight="bold" fill="#047857" text-anchor="middle">2030 (累積滿 30 年)</text>
+      <text x="360" y="30" font-size="11" font-family="'標楷體'" font-weight="bold" fill="#047857" text-anchor="middle">will have been teaching for 30 yrs (時長里程碑)</text>
+    </svg>
+  </div>
+
+  <!-- 李櫻教授 3C 認知經典反差 -->
+  <div class="compare-strip active">
+    <div class="compare-strip-title">🔥 3C 認知語意透視：三十載春風化雨的教學里程碑</div>
+    <div class="sent-en">By then, Mr. Lin will have been teaching for 35 years!</div>
+    <div class="sent-zh">
+      <strong>情境解密：</strong>到那時為止，林老師就已經在學校任教整整 35 年了！未來完成進行式專門用來計算<strong>「推進到未來某個指定時刻時，所達成的不間斷時長里程碑」</strong>。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card green">
+      <div class="concept-card-title">🏆 12 時態公式速查記憶宮殿</div>
+      <div class="concept-text">
+        <strong>• 簡單態：</strong>V-(s) ｜ V-ed ｜ will V<br>
+        <strong>• 進行態：</strong>be ＋ V-ing（am/is/are ｜ was/were ｜ will be）<br>
+        <strong>• 完成態：</strong>have ＋ p.p.（have/has ｜ had ｜ will have）<br>
+        <strong>• 完進態：</strong>have been ＋ V-ing
+      </div>
+    </div>
+    <div class="concept-card highlight">
+      <div class="concept-card-title">💡 語感核心驗收</div>
+      <div class="concept-text">
+        遇到非持續性動作（如 finish, graduate, die），不能用完成進行式；只有持續性動詞（work, live, teach, study）才是完成進行式的常客。
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂隨堂練習 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 課堂即時演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">By next month, I ________ at this company for exactly twenty years.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) will work</span>
+          <span class="choice-item correct">(B) will have been working</span>
+          <span class="choice-item">(C) am working</span>
+          <span class="choice-item">(D) have worked</span>
+          <span class="ans-reveal">(B)</span>
+        </div>
+        <div class="qa-explain">解析：By next month ＋ for twenty years，強調持續至未來的年資里程碑，選 will have been working。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">When the bell rings, the students ________ for three hours.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) will have been testing</span>
+          <span class="choice-item">(B) tested</span>
+          <span class="choice-item">(C) test</span>
+          <span class="choice-item">(D) are testing</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：鐘響是未來的現在代式，配上持續三小時的動態，選未來完成進行式。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>未來完成進行式 (Fut. Perf. Cont.)</span>
+    <span class="pg-num">P.14</span>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     PAGE 15: 實戰心法篇 · 李櫻 3C 語法大考迷思破解 ＆ 秒殺 3 步法
+     ────────────────────────────────────────────── -->
+<div class="page" id="p15">
+  <canvas class="drawing-canvas"></canvas>
+
+  <div class="ch-banner summary-theme">
+    <div class="ch-banner-left">
+      <span class="ch-tag">EXAM MASTERY · 統測/會考/學測秒殺實戰</span>
+      <h1 class="ch-title">李櫻教授 3C 語法大考迷思破解 ＆ 解題 3 步定心法</h1>
+      <span class="ch-sub">拒絕死背填鴨公式！時態由 Context（語境）與 Communication（溝通視角）決定</span>
+    </div>
+    <div class="ch-badge">3C RULES</div>
+  </div>
+
+  <div class="formula-hero purple-border">
+    <div class="formula-left">
+      <span class="formula-badge">解題口訣</span>
+      <span class="formula-code">一找錨點（時） ➔ 二定態樣（態） ➔ 三配主謂（人稱三態）</span>
+    </div>
+    <div class="formula-right">秒殺所有大考題</div>
+  </div>
+
+  <!-- 大考迷思大震撼 -->
+  <div class="visual-stage">
+    <div class="visual-stage-title">
+      <span>【打破死背填鴨迷思：93 年基測全台經典爭議題】</span>
+      <span class="tag">大考震撼彈解密</span>
+    </div>
+    <div style="padding: 6px 4px; font-size: 0.83rem; line-height: 1.6; color: #1e293b;">
+      <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 6px 12px; margin-bottom: 6px; border-radius: 4px;">
+        <strong>【原題重現】</strong> "I ________ for her for thirty minutes. Everyone was looking at me, and I felt so embarrassed..."<br>
+        很多傳統教學教導學生：「只要看到 <code>for + 一段時間</code>，就要選現在完成式！」因此無數考生誤選 has looked。<br>
+        <strong>正解卻是過去簡單式 looked！</strong>
+      </div>
+      <strong>3C 功能語法深度剖析：</strong>
+      說話者當時找了她 30 分鐘，這件事情<strong>早在過去就已經結束</strong>，跟現在說話時完全斷開連結！時態由<strong>上下文語境（Context：當時大家都看著我）與說話者的溝通意圖（Communication）</strong>決定，絕非機械式套口訣。
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card highlight">
+      <div class="concept-card-title">🎯 大考時態 3 步定心法</div>
+      <div class="concept-text">
+        <strong>1. 找錨點：</strong>從上下文抓出基準時間（Now / Past / Future）。<br>
+        <strong>2. 定態樣：</strong>是常態事實(•)、當下進行(~)、跨期影響(──►)還是持續中(═►)？<br>
+        <strong>3. 配主謂：</strong>套用公式，確認單複數、第三人稱與不規則動詞變化。
+      </div>
+    </div>
+    <div class="concept-card purple">
+      <div class="concept-card-title">🔑 3C 認知語法三大支柱</div>
+      <div class="concept-text">
+        <strong>• Context（語境）：</strong>依據上下文推敲客觀背景。<br>
+        <strong>• Communication（溝通）：</strong>體會說話者想傳達的重點。<br>
+        <strong>• Cognition（認知）：</strong>用幾何時間軸取代死背中文翻譯。
+      </div>
+    </div>
+  </div>
+
+  <!-- 課堂大考綜合會診實戰試題 -->
+  <div class="exercise-panel">
+    <div class="exercise-panel-title">
+      <span>✏️ 大考綜合會診演練</span>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">1</span>
+      <div class="qa-body">
+        <div class="qa-stem">I was so exhausted yesterday because I ________ in the garden for four hours before lunch.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) work</span>
+          <span class="choice-item">(B) have worked</span>
+          <span class="choice-item correct">(C) had been working</span>
+          <span class="choice-item">(D) will work</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：昨日筋疲力盡（was exhausted）是過去錨點，在午餐前持續工作四小時，選 had been working。</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">2</span>
+      <div class="qa-body">
+        <div class="qa-stem">The scientist explained to the students that sound ________ slower than light.</div>
+        <div class="choices-row">
+          <span class="choice-item correct">(A) travels</span>
+          <span class="choice-item">(B) traveled</span>
+          <span class="choice-item">(C) was traveling</span>
+          <span class="choice-item">(D) had traveled</span>
+          <span class="ans-reveal">(A)</span>
+        </div>
+        <div class="qa-explain">解析：聲速比光速慢是客觀自然真理，即便主要子句是 explained 過去式，從屬子句仍堅持現在簡單式 travels！</div>
+      </div>
+    </div>
+    <div class="qa-block" onclick="toggleItemAnswer(this)">
+      <span class="qa-num">3</span>
+      <div class="qa-body">
+        <div class="qa-stem">By the time the rescue team reached the village, the flood ________ almost all the houses.</div>
+        <div class="choices-row">
+          <span class="choice-item">(A) destroys</span>
+          <span class="choice-item">(B) is destroying</span>
+          <span class="choice-item correct">(C) had destroyed</span>
+          <span class="choice-item">(D) will destroy</span>
+          <span class="ans-reveal">(C)</span>
+        </div>
+        <div class="qa-explain">解析：搜救隊抵達是過去式 reached，洪水更早前已摧毀房屋，選過去完成式 had destroyed。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>英文時態全景圖解 · 教師大屏講義</span>
+    <span>李櫻 3C 語法心法 ＆ 大考破解</span>
+    <span class="pg-num">P.15</span>
+  </div>
+</div>
+
+</div><!-- /page-container -->
+
+<!-- ══════════════════════════════════════════════
+     JavaScript 核心互動腳本 (大屏雙模式與板書)
+     ══════════════════════════════════════════════ -->
+<script>
+let showingAll = false;
+let penActive = false;
+let penColor = 'rgba(250,204,21,0.5)';
+let penSize = 3;
+
+/* ── 1. 目錄跳轉與彈窗控制 ── */
+function toggleToc(e) {
+  e.stopPropagation();
+  document.getElementById('tocMenu').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+});
+function jumpTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const m = document.getElementById('tocMenu');
+  if (m) m.classList.remove('open');
+}
+
+/* ── 2. 一鍵揭曉 / 隱藏全卷答案 ── */
+function toggleAllAnswers() {
+  showingAll = !showingAll;
+  document.body.classList.toggle('show-ans', showingAll);
+  document.getElementById('ansIcon').textContent = showingAll ? '🙈' : '👁️';
+  if (!showingAll) {
+    document.querySelectorAll('.qa-block').forEach(el => el.classList.remove('show-one'));
+  }
+}
+
+/* ── 3. 逐題點擊秀答案 ── */
+function toggleItemAnswer(el) {
+  if (penActive) return; // 畫筆模式時不觸發答案點擊
+  el.classList.toggle('show-one');
+}
+
+/* ── 4. 螢光筆/板書筆模式開關 ── */
+function togglePenMode() {
+  penActive = !penActive;
+  document.body.classList.toggle('pen-mode', penActive);
+  document.getElementById('penBtn').style.background = penActive ? '#bfdbfe' : '';
+  document.getElementById('penOptions').classList.toggle('open', penActive);
+}
+function setPenColor(c, dotEl) {
+  penColor = c;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  dotEl.classList.add('active');
+}
+function setPenSize(s, btn) {
+  penSize = s;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function clearAllDrawings() {
+  document.querySelectorAll('.drawing-canvas').forEach(c => {
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
+  });
+}
+
+/* ── 5. 多頁畫板 Canvas 初始化 (支援觸控大屏與滑鼠) ── */
+function initCanvases() {
+  document.querySelectorAll('.drawing-canvas').forEach(canvas => {
+    const page = canvas.parentElement;
+    function resize() {
+      const rect = page.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let drawing = false, lastX, lastY;
+
+    // 滑鼠事件
+    canvas.addEventListener('mousedown', e => {
+      if (!penActive) return;
+      drawing = true;
+      const r = canvas.getBoundingClientRect();
+      lastX = e.clientX - r.left;
+      lastY = e.clientY - r.top;
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!drawing || !penActive) return;
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      lastX = x; lastY = y;
+    });
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseleave', () => drawing = false);
+
+    // 觸控螢幕事件 (大屏 ViewBoard / 平板)
+    canvas.addEventListener('touchstart', e => {
+      if (!penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      lastX = t.clientX - r.left; lastY = t.clientY - r.top;
+      drawing = true;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', e => {
+      if (!drawing || !penActive) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches[0];
+      const x = t.clientX - r.left, y = t.clientY - r.top;
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = penColor; ctx.lineWidth = penSize;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      lastX = x; lastY = y;
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => drawing = false);
+  });
+}
+window.addEventListener('load', initCanvases);
+</script>
+</body>
+</html>

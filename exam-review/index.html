@@ -288,13 +288,16 @@
         const q = query.trim().toLocaleLowerCase('zh-Hant');
         searches.forEach(input => { if (input.value !== query) input.value = query; });
         if (!q) { resultBoxes.forEach(box => { box.classList.remove('show'); box.innerHTML = ''; }); return; }
-        const topicMatches = [...document.querySelectorAll('.topic')]
-          .filter(el => el.innerText.toLocaleLowerCase('zh-Hant').includes(q));
+        const topics = [...document.querySelectorAll('.topic')];
+        const titleMatches = topics.filter(el =>
+          el.querySelector(':scope > .topic-title')?.innerText.toLocaleLowerCase('zh-Hant').includes(q));
+        const bodyMatches = topics.filter(el =>
+          !titleMatches.includes(el) && el.innerText.toLocaleLowerCase('zh-Hant').includes(q));
         const chapterMatches = [...document.querySelectorAll('.chapter')]
           .filter(el => [...el.children]
             .filter(child => !child.matches('.topic'))
             .some(child => child.innerText.toLocaleLowerCase('zh-Hant').includes(q)));
-        const candidates = [...topicMatches, ...chapterMatches]
+        const candidates = [...titleMatches, ...bodyMatches, ...chapterMatches]
           .slice(0, 30)
           .map(el => {
             const heading = el.querySelector(':scope > .topic-title, :scope > .chapter-title');

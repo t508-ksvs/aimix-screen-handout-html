@@ -101,3 +101,18 @@
 - 更新者：Antigravity
 - Git push：已推送至 GitHub Pages 發布
 
+---
+
+## 📱 統測英文複習講義電子版（2026-10-10）
+
+- 新增路徑：`exam-review/`；未覆蓋既有根目錄 `index.html`。
+- 內容真本：`自編_統測重點20250423_重新排版_大綱索引版v1.docx`，原始 DOCX 未修改。
+- 線上網址：`https://t508-ksvs.github.io/aimix-screen-handout-html/exam-review/`
+- 結構：27 個大章、133 個二級重點、26 個三級重點、13 個表格、6 次圖片呈現。
+- 跨載具功能：桌面固定目錄、手機彈出目錄與底部快捷列、44px 觸控區、表格橫向滑動、安全區內距、響應式字級。
+- 閱讀功能：全文搜尋、字級調整、深色模式、閱讀位置續接、列印樣式與回到頁首。
+- 技術策略：單一自包含 HTML；圖片以 data URI 內嵌，無外部 CSS／JavaScript 依賴。
+- 驗證：HTML 結構、搜尋 JSON、錨點、圖片、響應式樣式與 JavaScript 語法皆通過自動稽核；發布後另以 GitHub Pages 正式網址做瀏覽器驗收。
+
+後續若 DOCX 內容更新，請由 DOCX 重新產生 `exam-review/index.html`，不要把網頁當作內容真本直接維護。
+
